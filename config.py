@@ -29,3 +29,5 @@ PICK_COST_WOOD = 2
 PICK_COST_STONE = 0
 
 QUEST_TEXT = 'Quest: Build a house and get "2 rare stones".'
+NEW_QUEST_TEXT = 'New Quest: Make "2 fire" and return home.'
+QUEST_COUNT = 5
