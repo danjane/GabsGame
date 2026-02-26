@@ -60,6 +60,8 @@ Use these folders for downloaded/generated images:
 - Commit after each meaningful code or structure change.
 - Push to `origin/main` when network allows.
 - Current environment may intermittently fail DNS for `github.com`; if push fails, leave a clean local commit and report exact command to run.
+- In this client UI, approval prompts currently appear as one-time only (no persistent prefix/rule option exposed).
+- Expect repeated approval prompts for git write operations (`git add`, `git commit`, `git push`) during AI-initiated actions.
 
 ## Known Open Work
 - Integrate actual sprite animations from `assets/` into render pipeline.
