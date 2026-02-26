@@ -2,6 +2,22 @@
 
 A Python + Pygame survival prototype with crafting, resource gathering, random quests, and a 2.5D isometric rendering style.
 
+![Player Sprite](assets/sprites/player/player.png)
+
+## For Third Parties
+
+GabsGame is an educational, family-friendly game project being developed incrementally with AI-assisted coding.
+
+- Audience: beginner-friendly and suitable for young children.
+- Content policy: no nudity, no violence, and no horror.
+- Goal: build a clear, maintainable Pygame codebase while teaching programming basics through real project work.
+- Current phase: gameplay systems and architecture are in place; visual polish and persistence are next.
+
+If you are reviewing, contributing, or evaluating this project:
+- Start with this README and `AI_MEMORY.md` for current engineering context.
+- Use small, testable changes and keep commits focused.
+- Preserve child-safe design constraints.
+
 ## Project Plan
 
 1. Stabilize core gameplay loop
