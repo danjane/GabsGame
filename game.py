@@ -115,7 +115,9 @@ class Game:
     def load_player_sprite(self) -> None:
         sprite_path = "assets/sprites/player/player.png"
         try:
-            sprite = pygame.image.load(sprite_path).convert_alpha()
+            sprite = pygame.image.load(sprite_path).convert()
+            bg_key = sprite.get_at((0, 0))
+            sprite.set_colorkey(bg_key)
             self.player_sprite = pygame.transform.smoothscale(sprite, (96, 96))
         except (pygame.error, FileNotFoundError):
             self.player_sprite = None

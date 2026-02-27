@@ -61,3 +61,7 @@ Notes:
 - `2026-02-26 | TurnID: S-024`
   - Prompt: "can the main character be the drawing"
   - AI summary: Implemented player rendering using the uploaded sprite, with fallback if unavailable.
+
+- `2026-02-27 | TurnID: S-025`
+  - Prompt: "can you make that white background of the character transparent"
+  - AI summary: Updated sprite loading to key out the background color (top-left pixel) so the player background renders transparent.
