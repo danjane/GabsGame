@@ -1,5 +1,6 @@
 import random
 import sys
+from collections import deque
 
 import pygame
 
@@ -115,12 +116,59 @@ class Game:
     def load_player_sprite(self) -> None:
         sprite_path = "assets/sprites/player/player.png"
         try:
-            sprite = pygame.image.load(sprite_path).convert()
-            bg_key = sprite.get_at((0, 0))
-            sprite.set_colorkey(bg_key)
+            sprite = pygame.image.load(sprite_path).convert_alpha()
+            sprite = self.remove_edge_background(sprite, tolerance=36)
             self.player_sprite = pygame.transform.smoothscale(sprite, (96, 96))
         except (pygame.error, FileNotFoundError):
             self.player_sprite = None
+
+    def remove_edge_background(self, sprite: pygame.Surface, tolerance: int = 36) -> pygame.Surface:
+        width, height = sprite.get_size()
+        if width == 0 or height == 0:
+            return sprite
+
+        bg = sprite.get_at((0, 0))
+
+        def similar(c: pygame.Color) -> bool:
+            return (
+                abs(int(c.r) - int(bg.r)) <= tolerance
+                and abs(int(c.g) - int(bg.g)) <= tolerance
+                and abs(int(c.b) - int(bg.b)) <= tolerance
+            )
+
+        visited = bytearray(width * height)
+        queue: deque[tuple[int, int]] = deque()
+
+        def push_if_bg(x: int, y: int) -> None:
+            idx = y * width + x
+            if visited[idx]:
+                return
+            visited[idx] = 1
+            if similar(sprite.get_at((x, y))):
+                queue.append((x, y))
+
+        for x in range(width):
+            push_if_bg(x, 0)
+            push_if_bg(x, height - 1)
+        for y in range(height):
+            push_if_bg(0, y)
+            push_if_bg(width - 1, y)
+
+        while queue:
+            x, y = queue.popleft()
+            pixel = sprite.get_at((x, y))
+            sprite.set_at((x, y), pygame.Color(pixel.r, pixel.g, pixel.b, 0))
+
+            if x > 0:
+                push_if_bg(x - 1, y)
+            if x < width - 1:
+                push_if_bg(x + 1, y)
+            if y > 0:
+                push_if_bg(x, y - 1)
+            if y < height - 1:
+                push_if_bg(x, y + 1)
+
+        return sprite
 
     def iso_point(self, wx: float, wy: float) -> tuple[int, int]:
         dx = wx - self.player.centerx

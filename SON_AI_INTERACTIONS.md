@@ -65,3 +65,7 @@ Notes:
 - `2026-02-27 | TurnID: S-025`
   - Prompt: "can you make that white background of the character transparent"
   - AI summary: Updated sprite loading to key out the background color (top-left pixel) so the player background renders transparent.
+
+- `2026-02-27 | TurnID: S-026`
+  - Prompt: "but it did not work"
+  - AI summary: Replaced simple color-keying with edge-connected flood-fill background removal for more reliable transparency cleanup.
