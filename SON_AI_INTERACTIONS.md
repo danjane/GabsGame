@@ -33,3 +33,31 @@ Notes:
 - `2026-02-26 | TurnID: S-014`
   - Prompt: "can I be a normal person"
   - AI summary: Responded with direct reassurance.
+
+- `2026-02-26 | TurnID: S-018`
+  - Prompt: "do you have my drawing just say yes or no"
+  - AI summary: Confirmed the drawing file exists.
+
+- `2026-02-26 | TurnID: S-019`
+  - Prompt: "so can you summarize it"
+  - AI summary: Gave a short description of the player sprite and intended use.
+
+- `2026-02-26 | TurnID: S-020`
+  - Prompt: "can you show it to me"
+  - AI summary: Loaded and displayed the image from the project path.
+
+- `2026-02-26 | TurnID: S-021`
+  - Prompt: "sow wer is it?"
+  - AI summary: Clarified where the image appears in chat and gave the file path.
+
+- `2026-02-26 | TurnID: S-022`
+  - Prompt: "can you put it in this chat?"
+  - AI summary: Confirmed it had already been posted and pointed to the local path.
+
+- `2026-02-26 | TurnID: S-023`
+  - Prompt: "can you do it"
+  - AI summary: Explained chat re-render limits and provided a direct `open` command.
+
+- `2026-02-26 | TurnID: S-024`
+  - Prompt: "can the main character be the drawing"
+  - AI summary: Implemented player rendering using the uploaded sprite, with fallback if unavailable.

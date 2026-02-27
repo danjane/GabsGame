@@ -44,6 +44,8 @@ class Game:
         self.small_font = pygame.font.SysFont(None, 22)
         self.iso_scale_x = 0.9
         self.iso_scale_y = 0.45
+        self.player_sprite: pygame.Surface | None = None
+        self.load_player_sprite()
 
         self.player = pygame.Rect(START_POS[0], START_POS[1], PLAYER_WIDTH, PLAYER_HEIGHT)
         self.home_area = pygame.Rect(
@@ -109,6 +111,14 @@ class Game:
         self.craft_panel = pygame.Rect(10, 60, 310, 170)
         self.craft_btn_axe = pygame.Rect(20, 100, 290, 40)
         self.craft_btn_pick = pygame.Rect(20, 145, 290, 40)
+
+    def load_player_sprite(self) -> None:
+        sprite_path = "assets/sprites/player/player.png"
+        try:
+            sprite = pygame.image.load(sprite_path).convert_alpha()
+            self.player_sprite = pygame.transform.smoothscale(sprite, (96, 96))
+        except (pygame.error, FileNotFoundError):
+            self.player_sprite = None
 
     def iso_point(self, wx: float, wy: float) -> tuple[int, int]:
         dx = wx - self.player.centerx
@@ -557,14 +567,21 @@ class Game:
                 roof_peak = ((roof[0][0] + roof[1][0]) // 2, min(roof[0][1], roof[1][1]) - 24)
                 pygame.draw.polygon(self.screen, (120, 60, 40), [roof[0], roof[1], roof_peak])
             elif kind == "player":
-                self.draw_iso_prism(
-                    self.screen,
-                    rect,
-                    height=20,
-                    top_color=(170, 98, 38),
-                    left_color=(110, 62, 24),
-                    right_color=(138, 78, 30),
-                )
+                if self.player_sprite is not None:
+                    px, py = self.iso_point(rect.centerx, rect.centery)
+                    # Anchor sprite so feet align near the character's world position.
+                    sx = px - self.player_sprite.get_width() // 2
+                    sy = py - self.player_sprite.get_height() + 22
+                    self.screen.blit(self.player_sprite, (sx, sy))
+                else:
+                    self.draw_iso_prism(
+                        self.screen,
+                        rect,
+                        height=20,
+                        top_color=(170, 98, 38),
+                        left_color=(110, 62, 24),
+                        right_color=(138, 78, 30),
+                    )
 
     def draw_inventory(self) -> None:
         self.inv_item_rects.clear()
