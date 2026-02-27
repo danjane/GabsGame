@@ -69,3 +69,7 @@ Notes:
 - `2026-02-27 | TurnID: S-026`
   - Prompt: "but it did not work"
   - AI summary: Replaced simple color-keying with edge-connected flood-fill background removal for more reliable transparency cleanup.
+
+- `2026-02-27 | TurnID: S-027`
+  - Prompt: "when all quest completed flowers grow and fireworks go"
+  - AI summary: Added end-game celebration effects: animated flower growth and repeating fireworks once all quests are completed.

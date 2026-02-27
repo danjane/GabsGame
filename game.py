@@ -95,6 +95,10 @@ class Game:
         self.quest_ready_to_turn_in = False
         self.last_quest_kind: str | None = None
         self.current_quest: dict[str, int | str] | None = None
+        self.celebration_active = False
+        self.flowers: list[dict[str, float | int]] = []
+        self.firework_particles: list[dict[str, float | tuple[int, int, int]]] = []
+        self.firework_timer = 0.0
         self.assign_next_quest()
 
         self.action_mode: str | None = None
@@ -357,6 +361,7 @@ class Game:
         if self.completed_quests >= self.total_quests:
             self.current_quest = None
             self.show_message("All quests complete! 🎉", seconds=3.0)
+            self.start_celebration()
             return
 
         self.assign_next_quest()
@@ -369,6 +374,72 @@ class Game:
         if self.current_quest_completed():
             self.quest_ready_to_turn_in = True
             self.show_message("Quest done! Press 🏠 to claim next quest.", seconds=3.0)
+
+    def start_celebration(self) -> None:
+        if self.celebration_active:
+            return
+        self.celebration_active = True
+        self.firework_timer = 0.0
+        self.flowers.clear()
+        self.firework_particles.clear()
+
+        for _ in range(70):
+            x = random.randint(30, WIDTH - 30)
+            y = random.randint(100, HEIGHT - 90)
+            self.flowers.append(
+                {
+                    "x": float(x),
+                    "y": float(y),
+                    "size": 0.0,
+                    "target": float(random.randint(4, 8)),
+                    "growth": float(random.uniform(4.0, 8.0)),
+                    "color_idx": int(random.randint(0, 3)),
+                }
+            )
+
+    def spawn_firework_burst(self) -> None:
+        cx = random.randint(80, WIDTH - 80)
+        cy = random.randint(80, HEIGHT - 220)
+        colors = [(255, 80, 80), (255, 220, 90), (120, 220, 255), (170, 255, 130), (245, 170, 255)]
+        color = colors[random.randint(0, len(colors) - 1)]
+
+        for _ in range(24):
+            angle = random.uniform(0.0, 6.28318530718)
+            speed = random.uniform(70.0, 170.0)
+            self.firework_particles.append(
+                {
+                    "x": float(cx),
+                    "y": float(cy),
+                    "vx": float(speed * pygame.math.Vector2(1, 0).rotate_rad(angle).x),
+                    "vy": float(speed * pygame.math.Vector2(1, 0).rotate_rad(angle).y),
+                    "life": float(random.uniform(0.8, 1.4)),
+                    "color": color,
+                }
+            )
+
+    def update_celebration(self, dt: float) -> None:
+        if not self.celebration_active:
+            return
+
+        for flower in self.flowers:
+            if float(flower["size"]) < float(flower["target"]):
+                new_size = float(flower["size"]) + float(flower["growth"]) * dt
+                flower["size"] = min(float(flower["target"]), new_size)
+
+        self.firework_timer -= dt
+        if self.firework_timer <= 0:
+            self.spawn_firework_burst()
+            self.firework_timer = random.uniform(0.4, 0.9)
+
+        gravity = 140.0
+        for particle in self.firework_particles[:]:
+            particle["life"] = float(particle["life"]) - dt
+            if float(particle["life"]) <= 0:
+                self.firework_particles.remove(particle)
+                continue
+            particle["x"] = float(particle["x"]) + float(particle["vx"]) * dt
+            particle["y"] = float(particle["y"]) + float(particle["vy"]) * dt
+            particle["vy"] = float(particle["vy"]) + gravity * dt
 
     def add_wood_drop(self) -> None:
         wood_type = random.choice(list(self.resource_types["wood+branches"].keys()))
@@ -554,6 +625,7 @@ class Game:
         self.update_respawns(dt)
         self.update_actions(dt)
         self.update_quest_status()
+        self.update_celebration(dt)
 
     def draw_world(self) -> None:
         self.screen.fill((22, 96, 42))
@@ -563,6 +635,19 @@ class Game:
 
         home_base = self.iso_rect_poly(self.home_area)
         pygame.draw.polygon(self.screen, (20, 110, 20), home_base, 2)
+
+        if self.celebration_active:
+            flower_colors = [(255, 100, 120), (255, 220, 90), (170, 140, 255), (255, 150, 240)]
+            for flower in self.flowers:
+                size = int(float(flower["size"]))
+                if size <= 0:
+                    continue
+                px, py = self.iso_point(float(flower["x"]), float(flower["y"]))
+                stem_top = (px, py - size - 2)
+                stem_bottom = (px, py + 2)
+                pygame.draw.line(self.screen, (40, 160, 70), stem_bottom, stem_top, 2)
+                color = flower_colors[int(flower["color_idx"]) % len(flower_colors)]
+                pygame.draw.circle(self.screen, color, stem_top, max(2, size // 2))
 
         drawables: list[tuple[int, str, pygame.Rect]] = []
         for tree in self.trees:
@@ -632,6 +717,14 @@ class Game:
                         left_color=(110, 62, 24),
                         right_color=(138, 78, 30),
                     )
+
+        if self.celebration_active:
+            for particle in self.firework_particles:
+                px, py = self.iso_point(float(particle["x"]), float(particle["y"]))
+                life = max(0.0, min(1.0, float(particle["life"])))
+                radius = 2 if life < 0.5 else 3
+                color = particle["color"]
+                pygame.draw.circle(self.screen, color, (px, py), radius)
 
     def draw_inventory(self) -> None:
         self.inv_item_rects.clear()
