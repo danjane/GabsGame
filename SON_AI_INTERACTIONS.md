@@ -73,3 +73,7 @@ Notes:
 - `2026-02-27 | TurnID: S-027`
   - Prompt: "when all quest completed flowers grow and fireworks go"
   - AI summary: Added end-game celebration effects: animated flower growth and repeating fireworks once all quests are completed.
+
+- `2026-02-27 | TurnID: S-028`
+  - Prompt: "can the trees change small to big and it is only when they ar big that you can cut them"
+  - AI summary: Added tree growth stages over time and restricted cutting to mature trees only; respawned trees now regrow from small to big.

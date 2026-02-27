@@ -60,6 +60,9 @@ class Game:
             random_spawn_rect(WIDTH, HEIGHT, self.home_area, TREE_SIZE[0], TREE_SIZE[1])
             for _ in range(INITIAL_TREE_COUNT)
         ]
+        self.tree_growth = [random.uniform(0.55, 1.0) for _ in range(INITIAL_TREE_COUNT)]
+        self.tree_mature_threshold = 0.95
+        self.tree_growth_rate = 0.06
         self.stones = [
             random_spawn_rect(WIDTH, HEIGHT, self.home_area, STONE_SIZE[0], STONE_SIZE[1])
             for _ in range(INITIAL_STONE_COUNT)
@@ -207,12 +210,29 @@ class Game:
         self.message = text
         self.message_timer = seconds
 
+    def get_tree_rect(self, index: int) -> pygame.Rect:
+        base = self.trees[index]
+        growth = max(0.2, min(1.0, float(self.tree_growth[index])))
+        scale = 0.45 + 0.55 * growth
+        width = max(12, int(base.width * scale))
+        height = max(16, int(base.height * scale))
+        x = base.centerx - width // 2
+        y = base.bottom - height
+        return pygame.Rect(x, y, width, height)
+
+    def is_tree_mature(self, index: int) -> bool:
+        return float(self.tree_growth[index]) >= self.tree_mature_threshold
+
     def start_cutting(self) -> None:
         if self.action_mode is not None or self.craft_menu_open:
             return
 
-        for i, tree in enumerate(self.trees):
+        for i, _tree in enumerate(self.trees):
+            tree = self.get_tree_rect(i)
             if is_near(self.player, tree, distance=25):
+                if not self.is_tree_mature(i):
+                    self.show_message("This tree is still growing!")
+                    return
                 self.action_mode = "cut"
                 self.action_timer = 0.0
                 self.action_target_index = i
@@ -568,16 +588,22 @@ class Game:
             if item["time"] <= 0:
                 if item["kind"] == "tree":
                     self.trees.append(random_spawn_rect(WIDTH, HEIGHT, self.home_area, TREE_SIZE[0], TREE_SIZE[1]))
+                    self.tree_growth.append(0.0)
                 elif item["kind"] == "stone":
                     self.stones.append(random_spawn_rect(WIDTH, HEIGHT, self.home_area, STONE_SIZE[0], STONE_SIZE[1]))
                 self.respawn_queue.remove(item)
+
+    def update_tree_growth(self, dt: float) -> None:
+        for i in range(len(self.tree_growth)):
+            if self.tree_growth[i] < 1.0:
+                self.tree_growth[i] = min(1.0, float(self.tree_growth[i]) + self.tree_growth_rate * dt)
 
     def update_cut_action(self, dt: float) -> None:
         if self.action_target_index is None or self.action_target_index >= len(self.trees):
             self.action_mode = None
             return
 
-        target = self.trees[self.action_target_index]
+        target = self.get_tree_rect(self.action_target_index)
         if not is_near(self.player, target, distance=35):
             self.action_mode = None
             self.show_message("Cut cancelled (too far).")
@@ -587,6 +613,7 @@ class Game:
         total_time = CUT_TIME_WITH_AXE if self.inventory["axe"] else CUT_TIME_SECONDS
         if self.action_timer >= total_time:
             self.trees.pop(self.action_target_index)
+            self.tree_growth.pop(self.action_target_index)
             self.respawn_queue.append({"time": TREE_RESPAWN_SECONDS, "kind": "tree"})
             self.action_mode = None
             self.action_target_index = None
@@ -623,6 +650,7 @@ class Game:
         self.update_movement()
         self.update_message_timer(dt)
         self.update_respawns(dt)
+        self.update_tree_growth(dt)
         self.update_actions(dt)
         self.update_quest_status()
         self.update_celebration(dt)
@@ -650,20 +678,27 @@ class Game:
                 pygame.draw.circle(self.screen, color, stem_top, max(2, size // 2))
 
         drawables: list[tuple[int, str, pygame.Rect]] = []
-        for tree in self.trees:
-            drawables.append((tree.bottom, "tree", tree))
+        for i, _tree in enumerate(self.trees):
+            tree_rect = self.get_tree_rect(i)
+            drawables.append((tree_rect.bottom, "tree", tree_rect, i))
         for stone in self.stones:
-            drawables.append((stone.bottom, "stone", stone))
+            drawables.append((stone.bottom, "stone", stone, -1))
         if self.house_built:
             house_rect = pygame.Rect(self.home_area.x + 15, self.home_area.y + 15, 70, 70)
-            drawables.append((house_rect.bottom, "house", house_rect))
-        drawables.append((self.player.bottom, "player", self.player))
+            drawables.append((house_rect.bottom, "house", house_rect, -1))
+        drawables.append((self.player.bottom, "player", self.player, -1))
         drawables.sort(key=lambda item: item[0])
 
-        for _, kind, rect in drawables:
+        for _, kind, rect, idx in drawables:
             if kind == "tree":
-                trunk = pygame.Rect(rect.x + 18, rect.y + 50, 14, 20)
-                canopy = rect.inflate(10, 0).move(-5, -18)
+                trunk_w = max(6, rect.width // 5)
+                trunk_h = max(12, rect.height // 3)
+                trunk = pygame.Rect(rect.centerx - trunk_w // 2, rect.bottom - trunk_h, trunk_w, trunk_h)
+                canopy = pygame.Rect(rect.x - 5, rect.y - max(10, rect.height // 4), rect.width + 10, max(14, rect.height // 2))
+                if idx >= 0 and not self.is_tree_mature(idx):
+                    # Young trees are smaller and lighter.
+                    trunk = pygame.Rect(rect.x + rect.width // 2 - 4, rect.bottom - 14, 8, 14)
+                    canopy = pygame.Rect(rect.x - 2, rect.y - 10, rect.width + 4, max(14, rect.height // 2))
                 self.draw_iso_prism(
                     self.screen,
                     trunk,
@@ -877,7 +912,8 @@ class Game:
                     label_color=(180, 80, 220),
                 )
         elif kind in ("cut_trees", "collect_wood"):
-            nearest_tree = nearest_rect(self.player, self.trees)
+            tree_rects = [self.get_tree_rect(i) for i in range(len(self.trees))]
+            nearest_tree = nearest_rect(self.player, tree_rects)
             if nearest_tree is not None:
                 draw_marker_line(
                     self.screen,
