@@ -34,6 +34,9 @@ Purpose: operating rules for AI agents working on this project to reduce token u
   - `config.py`: constants/settings
 - Introduce one concept at a time (variable, function, loop, class, module).
 - Commit in small working checkpoints.
+- Stage AI-owned files explicitly by path before committing.
+- If unrelated user changes are present, leave them unstaged and say which files were not included.
+- Avoid `git add .` unless every changed file is part of the current task.
 - Prefer safe commands and avoid destructive git operations.
 
 ## Adaptive Teaching Rules (Required)

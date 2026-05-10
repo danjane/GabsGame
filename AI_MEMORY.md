@@ -68,6 +68,9 @@ Use these folders for downloaded/generated images:
 
 ## Git / Commit Workflow
 - Commit after each meaningful code or structure change.
+- Before committing, stage the files changed by the AI session explicitly by path.
+- If the worktree has unrelated user changes, do not skip staging entirely; stage only the AI-owned files and mention any unrelated changes left unstaged.
+- Avoid broad `git add .` unless the full worktree is known to belong to the current AI task.
 - Push to `origin/main` when network allows.
 - Current environment may intermittently fail DNS for `github.com`; if push fails, leave a clean local commit and report exact command to run.
 - In this client UI, approval prompts currently appear as one-time only (no persistent prefix/rule option exposed).
