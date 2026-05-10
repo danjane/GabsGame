@@ -77,3 +77,19 @@ Notes:
 - `2026-02-27 | TurnID: S-028`
   - Prompt: "can the trees change small to big and it is only when they ar big that you can cut them"
   - AI summary: Added tree growth stages over time and restricted cutting to mature trees only; respawned trees now regrow from small to big.
+
+- `2026-02-27 | TurnID: S-029`
+  - Prompt: "can you find an image of a sapling and a mature tree" / "yes pleas" / "I've added the tree pngs to the project. Find them, and then randomly choose which type of tree is growing. Make the image grow in size, starting small"
+  - AI summary: Detected the new tree sprites in the project, then updated tree rendering so each tree randomly chooses a sprite type and grows from a small version to full size over time.
+
+- `2026-05-10 | TurnID: S-030`
+  - Prompt: "can you make an image of a stone and replays it by the one in the game"
+  - AI summary: Generated a new stone sprite, saved it under `assets/sprites/stones/stone.png`, and updated stone rendering to use the sprite with the old drawn rock as fallback.
+
+- `2026-05-10 | TurnID: S-031`
+  - Prompt: "can you make a sprite of a pickaxe"
+  - AI summary: Generated a new transparent pickaxe sprite and saved it under `assets/sprites/tools/pickaxe.png`.
+
+- `2026-05-10 | TurnID: S-032`
+  - Prompt: "can you show it when we press \"x (mine)\""
+  - AI summary: Updated mining rendering so the pickaxe sprite appears with a small swinging animation while mining with `X`.

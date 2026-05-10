@@ -56,6 +56,16 @@ Use these folders for downloaded/generated images:
 - `SON_AI_INTERACTIONS.md` should be maintained accordingly.
 - Dan requested commits after each code/structure change.
 
+## Child Learning Mode (active)
+- Primary goal is now dual-track: ship working game improvements and teach Python through those exact changes.
+- Teaching should be file-grounded: every explanation should connect Python concepts to `main.py`, `game.py`, `ui.py`, `world.py`, or `config.py`.
+- Wrong answers from child should not stop progress; continue with corrected guidance.
+- Weak topics must be recorded in `LEARNING_LOG.md` and revisited in later sessions.
+- Difficulty should adapt based on logged outcomes:
+  - Repeated success -> slightly harder checks/examples.
+  - Repeated mistakes -> simpler explanations and smaller tasks.
+- Use short learning loops: explain -> quick check -> correct if needed -> continue building.
+
 ## Git / Commit Workflow
 - Commit after each meaningful code or structure change.
 - Push to `origin/main` when network allows.
@@ -73,5 +83,7 @@ Use these folders for downloaded/generated images:
 1. Run compile check: `python3 -m py_compile main.py game.py config.py ui.py world.py`
 2. Run game: `python main.py`
 3. Confirm controls + quest turn-in work.
-4. If touching summaries, update `SON_AI_INTERACTIONS.md` with `(Dan)` filtering.
-5. Commit + push.
+4. Teach one Python concept tied to one project file before or during code changes.
+5. Record topic outcome in `LEARNING_LOG.md` (including weak-topic flags).
+6. If touching summaries, update `SON_AI_INTERACTIONS.md` with `(Dan)` filtering.
+7. Commit + push.

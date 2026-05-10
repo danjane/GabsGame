@@ -1,6 +1,8 @@
+import math
 import random
 import sys
 from collections import deque
+import os
 
 import pygame
 
@@ -28,6 +30,8 @@ from config import (
     TREE_RESPAWN_SECONDS,
     TREE_SIZE,
     WIDTH,
+    WORLD_HEIGHT,
+    WORLD_WIDTH,
     WINDOW_TITLE,
 )
 from ui import draw_craft_menu, draw_marker_line, draw_panel
@@ -46,7 +50,13 @@ class Game:
         self.iso_scale_x = 0.9
         self.iso_scale_y = 0.45
         self.player_sprite: pygame.Surface | None = None
+        self.pickaxe_sprite: pygame.Surface | None = None
+        self.stone_sprite: pygame.Surface | None = None
+        self.tree_sprites: list[pygame.Surface] = []
         self.load_player_sprite()
+        self.load_pickaxe_sprite()
+        self.load_stone_sprite()
+        self.load_tree_sprites()
 
         self.player = pygame.Rect(START_POS[0], START_POS[1], PLAYER_WIDTH, PLAYER_HEIGHT)
         self.home_area = pygame.Rect(
@@ -57,14 +67,15 @@ class Game:
         )
 
         self.trees = [
-            random_spawn_rect(WIDTH, HEIGHT, self.home_area, TREE_SIZE[0], TREE_SIZE[1])
+            random_spawn_rect(WORLD_WIDTH, WORLD_HEIGHT, self.home_area, TREE_SIZE[0], TREE_SIZE[1])
             for _ in range(INITIAL_TREE_COUNT)
         ]
-        self.tree_growth = [random.uniform(0.55, 1.0) for _ in range(INITIAL_TREE_COUNT)]
+        self.tree_growth = [random.uniform(0.08, 0.30) for _ in range(INITIAL_TREE_COUNT)]
+        self.tree_types = [self.random_tree_type() for _ in range(INITIAL_TREE_COUNT)]
         self.tree_mature_threshold = 0.95
         self.tree_growth_rate = 0.06
         self.stones = [
-            random_spawn_rect(WIDTH, HEIGHT, self.home_area, STONE_SIZE[0], STONE_SIZE[1])
+            random_spawn_rect(WORLD_WIDTH, WORLD_HEIGHT, self.home_area, STONE_SIZE[0], STONE_SIZE[1])
             for _ in range(INITIAL_STONE_COUNT)
         ]
         self.respawn_queue: list[dict[str, float | str]] = []
@@ -128,6 +139,43 @@ class Game:
             self.player_sprite = pygame.transform.smoothscale(sprite, (96, 96))
         except (pygame.error, FileNotFoundError):
             self.player_sprite = None
+
+    def load_stone_sprite(self) -> None:
+        sprite_path = "assets/sprites/stones/stone.png"
+        try:
+            sprite = pygame.image.load(sprite_path).convert_alpha()
+            self.stone_sprite = pygame.transform.smoothscale(sprite, (72, 64))
+        except (pygame.error, FileNotFoundError):
+            self.stone_sprite = None
+
+    def load_pickaxe_sprite(self) -> None:
+        sprite_path = "assets/sprites/tools/pickaxe.png"
+        try:
+            sprite = pygame.image.load(sprite_path).convert_alpha()
+            self.pickaxe_sprite = pygame.transform.smoothscale(sprite, (44, 48))
+        except (pygame.error, FileNotFoundError):
+            self.pickaxe_sprite = None
+
+    def load_tree_sprites(self) -> None:
+        self.tree_sprites = []
+        tree_dir = "assets/sprites/trees"
+        if not os.path.isdir(tree_dir):
+            return
+
+        for name in sorted(os.listdir(tree_dir)):
+            if not name.lower().endswith(".png"):
+                continue
+            path = os.path.join(tree_dir, name)
+            try:
+                sprite = pygame.image.load(path).convert_alpha()
+                self.tree_sprites.append(sprite)
+            except pygame.error:
+                continue
+
+    def random_tree_type(self) -> int:
+        if not self.tree_sprites:
+            return -1
+        return random.randint(0, len(self.tree_sprites) - 1)
 
     def remove_edge_background(self, sprite: pygame.Surface, tolerance: int = 36) -> pygame.Surface:
         width, height = sprite.get_size()
@@ -205,6 +253,64 @@ class Game:
         pygame.draw.polygon(surface, left_color, [base[3], base[2], top[2], top[3]])
         pygame.draw.polygon(surface, right_color, [base[1], base[2], top[2], top[1]])
         pygame.draw.polygon(surface, top_color, top)
+
+    def draw_iso_rock(self, surface: pygame.Surface, rect: pygame.Rect) -> None:
+        base = self.iso_rect_poly(rect)
+        height = max(10, rect.height // 2 + 2)
+        top = [(x, y - height) for x, y in base]
+
+        seed = abs((rect.x * 73856093) ^ (rect.y * 19349663) ^ (rect.width * 83492791) ^ (rect.height * 15485863))
+        rng = random.Random(seed)
+        tone_shift = (seed % 17) - 8
+
+        def clamp(value: int) -> int:
+            return max(0, min(255, value))
+
+        # A softer, natural stone palette with slight warm/cool variation.
+        top_color = (clamp(126 + tone_shift), clamp(132 + tone_shift), clamp(138 + tone_shift))
+        left_color = (clamp(88 + tone_shift), clamp(94 + tone_shift), clamp(101 + tone_shift))
+        right_color = (clamp(101 + tone_shift), clamp(108 + tone_shift), clamp(115 + tone_shift))
+
+        shadow = [(x, y + 6) for x, y in base]
+        pygame.draw.polygon(surface, (18, 58, 24), shadow)
+
+        cx = (top[0][0] + top[1][0] + top[2][0] + top[3][0]) // 4
+        cy = (top[0][1] + top[1][1] + top[2][1] + top[3][1]) // 4
+        edge01 = ((top[0][0] + top[1][0]) // 2, (top[0][1] + top[1][1]) // 2)
+        edge12 = ((top[1][0] + top[2][0]) // 2, (top[1][1] + top[2][1]) // 2)
+        edge23 = ((top[2][0] + top[3][0]) // 2, (top[2][1] + top[3][1]) // 2)
+        edge30 = ((top[3][0] + top[0][0]) // 2, (top[3][1] + top[0][1]) // 2)
+        ridge = (cx + rng.randint(-4, 3), cy + rng.randint(-2, 2))
+
+        pygame.draw.polygon(surface, left_color, [base[3], base[2], top[2], top[3]])
+        pygame.draw.polygon(surface, right_color, [base[1], base[2], top[2], top[1]])
+        pygame.draw.polygon(surface, top_color, [edge30, top[0], edge01, edge12, top[2], edge23])
+
+        highlight_color = (clamp(top_color[0] + 16), clamp(top_color[1] + 16), clamp(top_color[2] + 14))
+        shadow_facet_color = (clamp(top_color[0] - 18), clamp(top_color[1] - 18), clamp(top_color[2] - 16))
+        pygame.draw.polygon(surface, highlight_color, [top[0], edge01, ridge, edge30])
+        pygame.draw.polygon(surface, shadow_facet_color, [edge01, top[1], edge12, ridge])
+
+        crack_start = edge30 if seed % 2 == 0 else (cx - 3, cy - 2)
+        crack_mid = (cx + (seed % 5) - 2, cy + (seed % 4))
+        crack_end = edge12 if seed % 3 == 0 else (cx + 5, cy + 2)
+        crack_color = (clamp(top_color[0] - 45), clamp(top_color[1] - 45), clamp(top_color[2] - 45))
+        pygame.draw.line(surface, crack_color, crack_start, crack_mid, 2)
+        pygame.draw.line(surface, crack_color, crack_mid, crack_end, 1)
+
+        # Mineral flecks break up flat color and look more rock-like.
+        for _ in range(4):
+            fx = rng.randint(min(top[0][0], top[3][0]), max(top[1][0], top[2][0]))
+            fy = rng.randint(min(top[0][1], top[1][1]), max(top[2][1], top[3][1]))
+            fc = (
+                clamp(top_color[0] + rng.randint(-24, 20)),
+                clamp(top_color[1] + rng.randint(-24, 20)),
+                clamp(top_color[2] + rng.randint(-24, 20)),
+            )
+            pygame.draw.circle(surface, fc, (fx, fy), 1)
+
+        rim_color = (clamp(top_color[0] - 8), clamp(top_color[1] - 8), clamp(top_color[2] - 8))
+        pygame.draw.polygon(surface, rim_color, [edge30, top[0], edge01, edge12, top[2], edge23], 1)
 
     def show_message(self, text: str, seconds: float = 2.0) -> None:
         self.message = text
@@ -532,8 +638,11 @@ class Game:
         if self.home_button.collidepoint(mx, my):
             self.craft_menu_open = False
             self.go_home()
+            # Re-evaluate quest progress immediately after teleporting home.
+            self.update_quest_status()
             if self.quest_ready_to_turn_in:
                 self.complete_and_turn_in_quest()
+            return
 
         for name, rect in self.inv_item_rects.items():
             if rect.collidepoint(mx, my):
@@ -573,8 +682,8 @@ class Game:
             if keys[pygame.K_DOWN]:
                 self.player.y += PLAYER_SPEED
 
-            self.player.x = max(0, min(WIDTH - self.player.width, self.player.x))
-            self.player.y = max(0, min(HEIGHT - self.player.height, self.player.y))
+            self.player.x = max(0, min(WORLD_WIDTH - self.player.width, self.player.x))
+            self.player.y = max(0, min(WORLD_HEIGHT - self.player.height, self.player.y))
 
     def update_message_timer(self, dt: float) -> None:
         if self.message_timer > 0:
@@ -587,10 +696,11 @@ class Game:
             item["time"] -= dt
             if item["time"] <= 0:
                 if item["kind"] == "tree":
-                    self.trees.append(random_spawn_rect(WIDTH, HEIGHT, self.home_area, TREE_SIZE[0], TREE_SIZE[1]))
+                    self.trees.append(random_spawn_rect(WORLD_WIDTH, WORLD_HEIGHT, self.home_area, TREE_SIZE[0], TREE_SIZE[1]))
                     self.tree_growth.append(0.0)
+                    self.tree_types.append(self.random_tree_type())
                 elif item["kind"] == "stone":
-                    self.stones.append(random_spawn_rect(WIDTH, HEIGHT, self.home_area, STONE_SIZE[0], STONE_SIZE[1]))
+                    self.stones.append(random_spawn_rect(WORLD_WIDTH, WORLD_HEIGHT, self.home_area, STONE_SIZE[0], STONE_SIZE[1]))
                 self.respawn_queue.remove(item)
 
     def update_tree_growth(self, dt: float) -> None:
@@ -614,6 +724,7 @@ class Game:
         if self.action_timer >= total_time:
             self.trees.pop(self.action_target_index)
             self.tree_growth.pop(self.action_target_index)
+            self.tree_types.pop(self.action_target_index)
             self.respawn_queue.append({"time": TREE_RESPAWN_SECONDS, "kind": "tree"})
             self.action_mode = None
             self.action_target_index = None
@@ -658,7 +769,7 @@ class Game:
     def draw_world(self) -> None:
         self.screen.fill((22, 96, 42))
 
-        ground = pygame.Rect(-2200, -2200, 4400, 4400)
+        ground = pygame.Rect(0, 0, WORLD_WIDTH, WORLD_HEIGHT)
         pygame.draw.polygon(self.screen, (34, 139, 34), self.iso_rect_poly(ground))
 
         home_base = self.iso_rect_poly(self.home_area)
@@ -691,39 +802,55 @@ class Game:
 
         for _, kind, rect, idx in drawables:
             if kind == "tree":
-                trunk_w = max(6, rect.width // 5)
-                trunk_h = max(12, rect.height // 3)
-                trunk = pygame.Rect(rect.centerx - trunk_w // 2, rect.bottom - trunk_h, trunk_w, trunk_h)
-                canopy = pygame.Rect(rect.x - 5, rect.y - max(10, rect.height // 4), rect.width + 10, max(14, rect.height // 2))
-                if idx >= 0 and not self.is_tree_mature(idx):
-                    # Young trees are smaller and lighter.
-                    trunk = pygame.Rect(rect.x + rect.width // 2 - 4, rect.bottom - 14, 8, 14)
-                    canopy = pygame.Rect(rect.x - 2, rect.y - 10, rect.width + 4, max(14, rect.height // 2))
-                self.draw_iso_prism(
-                    self.screen,
-                    trunk,
-                    height=26,
-                    top_color=(145, 90, 35),
-                    left_color=(95, 55, 20),
-                    right_color=(120, 70, 30),
+                use_sprite = (
+                    idx >= 0
+                    and idx < len(self.tree_types)
+                    and self.tree_types[idx] >= 0
+                    and self.tree_types[idx] < len(self.tree_sprites)
                 )
-                self.draw_iso_prism(
-                    self.screen,
-                    canopy,
-                    height=24,
-                    top_color=(30, 145, 45),
-                    left_color=(18, 95, 28),
-                    right_color=(22, 115, 34),
-                )
+                if use_sprite:
+                    growth = max(0.12, min(1.0, float(self.tree_growth[idx])))
+                    sprite = self.tree_sprites[self.tree_types[idx]]
+                    w = max(18, int(sprite.get_width() * growth * 0.9))
+                    h = max(20, int(sprite.get_height() * growth * 0.9))
+                    scaled = pygame.transform.smoothscale(sprite, (w, h))
+                    px, py = self.iso_point(rect.centerx, rect.bottom)
+                    sx = px - scaled.get_width() // 2
+                    sy = py - scaled.get_height() + 6
+                    self.screen.blit(scaled, (sx, sy))
+                else:
+                    trunk_w = max(6, rect.width // 5)
+                    trunk_h = max(12, rect.height // 3)
+                    trunk = pygame.Rect(rect.centerx - trunk_w // 2, rect.bottom - trunk_h, trunk_w, trunk_h)
+                    canopy = pygame.Rect(rect.x - 5, rect.y - max(10, rect.height // 4), rect.width + 10, max(14, rect.height // 2))
+                    if idx >= 0 and not self.is_tree_mature(idx):
+                        # Young trees are smaller and lighter.
+                        trunk = pygame.Rect(rect.x + rect.width // 2 - 4, rect.bottom - 14, 8, 14)
+                        canopy = pygame.Rect(rect.x - 2, rect.y - 10, rect.width + 4, max(14, rect.height // 2))
+                    self.draw_iso_prism(
+                        self.screen,
+                        trunk,
+                        height=26,
+                        top_color=(145, 90, 35),
+                        left_color=(95, 55, 20),
+                        right_color=(120, 70, 30),
+                    )
+                    self.draw_iso_prism(
+                        self.screen,
+                        canopy,
+                        height=24,
+                        top_color=(30, 145, 45),
+                        left_color=(18, 95, 28),
+                        right_color=(22, 115, 34),
+                    )
             elif kind == "stone":
-                self.draw_iso_prism(
-                    self.screen,
-                    rect,
-                    height=14,
-                    top_color=(145, 145, 145),
-                    left_color=(95, 95, 95),
-                    right_color=(115, 115, 115),
-                )
+                if self.stone_sprite is not None:
+                    px, py = self.iso_point(rect.centerx, rect.bottom)
+                    sx = px - self.stone_sprite.get_width() // 2
+                    sy = py - self.stone_sprite.get_height() + 8
+                    self.screen.blit(self.stone_sprite, (sx, sy))
+                else:
+                    self.draw_iso_rock(self.screen, rect)
             elif kind == "house":
                 self.draw_iso_prism(
                     self.screen,
@@ -760,6 +887,28 @@ class Game:
                 radius = 2 if life < 0.5 else 3
                 color = particle["color"]
                 pygame.draw.circle(self.screen, color, (px, py), radius)
+
+        self.draw_mining_pickaxe()
+
+    def draw_mining_pickaxe(self) -> None:
+        if (
+            self.action_mode != "mine"
+            or self.pickaxe_sprite is None
+            or self.action_target_index is None
+            or self.action_target_index >= len(self.stones)
+        ):
+            return
+
+        target = self.stones[self.action_target_index]
+        player_x, player_y = self.iso_point(self.player.centerx, self.player.centery)
+        stone_x, stone_y = self.iso_point(target.centerx, target.centery)
+        px = int(player_x * 0.45 + stone_x * 0.55)
+        py = int(player_y * 0.45 + stone_y * 0.55) - 22
+
+        swing = math.sin(self.action_timer * 10.0)
+        angle = -35 + swing * 28
+        rotated = pygame.transform.rotozoom(self.pickaxe_sprite, angle, 1.0)
+        self.screen.blit(rotated, (px - rotated.get_width() // 2, py - rotated.get_height() // 2))
 
     def draw_inventory(self) -> None:
         self.inv_item_rects.clear()

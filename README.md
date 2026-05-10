@@ -17,6 +17,16 @@ If you are reviewing, contributing, or evaluating this project:
 - Start with this README and `AI_MEMORY.md` for current engineering context.
 - Use small, testable changes and keep commits focused.
 - Preserve child-safe design constraints.
+- Follow adaptive teaching rules in `CODEX_CHILD_DEV_RULES.md` and log learning in `LEARNING_LOG.md`.
+
+## Child Learning Workflow
+
+When developing with the child:
+- Teach one Python concept tied to one project file at a time.
+- Ask one short check question per concept.
+- If answer is wrong, correct briefly and continue progress anyway.
+- Record weak topics in `LEARNING_LOG.md` and revisit them after 2-3 successful tasks.
+- Adjust difficulty up/down based on recent checks.
 
 ## Project Plan
 

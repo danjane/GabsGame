@@ -2,7 +2,10 @@ WIDTH, HEIGHT = 900, 600
 WINDOW_TITLE = "Survival Game"
 FPS = 60
 
-START_POS = (420, 280)
+# World-space size (bigger than the visible screen for exploration).
+WORLD_WIDTH, WORLD_HEIGHT = 2200, 1600
+
+START_POS = (WORLD_WIDTH // 2, WORLD_HEIGHT // 2)
 PLAYER_WIDTH = 40
 PLAYER_HEIGHT = 40
 PLAYER_SPEED = 5

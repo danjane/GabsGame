@@ -36,6 +36,24 @@ Purpose: operating rules for AI agents working on this project to reduce token u
 - Commit in small working checkpoints.
 - Prefer safe commands and avoid destructive git operations.
 
+## Adaptive Teaching Rules (Required)
+- Wrong answers must never block coding progress or the next learning step.
+- If the child answer is incorrect, continue with a short correction, then move forward with guided help.
+- Log weak topics in `LEARNING_LOG.md` so the next sessions can adapt difficulty.
+- Use a "circle back" pattern: revisit weak topics in short checks after 2-3 successful tasks.
+- Keep questions low pressure: quick checks, hints first, then the answer if needed.
+- Adjust level by observed performance:
+  - If child gets 2+ checks right on a topic, increase difficulty slightly.
+  - If child misses 2+ checks on a topic, reduce complexity and add one concrete example.
+- Focus learning on real project files by linking each concept to one file change.
+
+## Teaching Session Format
+- 1) File focus: name one file and its role.
+- 2) Python concept: explain one concept used in that file.
+- 3) Tiny check: ask one short question.
+- 4) Continue anyway: if wrong, correct and proceed without blocking.
+- 5) Log outcome: update `LEARNING_LOG.md` topic status.
+
 ## Safety and Content Policy
 - Design for young children: content suitable for 6-year-olds.
 - No nudity, no violence, no horror content.
