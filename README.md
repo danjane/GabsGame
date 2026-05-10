@@ -4,6 +4,28 @@ A Python + Pygame survival prototype with crafting, resource gathering, random q
 
 ![Player Sprite](assets/sprites/player/player.png)
 
+## Codex Session Starter
+
+Copy this at the start of a new Codex session:
+
+```text
+Please read README.md, AI_MEMORY.md, CODEX_CHILD_DEV_RULES.md, and LEARNING_LOG.md before making changes.
+
+This is a child-learning Pygame project. For every non-(Dan) coding or asset request:
+- ship the requested game improvement,
+- teach one tiny Python concept tied to the exact file/change,
+- ask one short Python check question,
+- gently correct any spelling/wording mistake once,
+- later ask one quick follow-up check for that corrected word/phrase,
+- log learning outcomes in LEARNING_LOG.md,
+- update SON_AI_INTERACTIONS.md for non-(Dan) interactions,
+- run `python3 -m py_compile main.py game.py config.py ui.py world.py`,
+- stage only AI-owned files explicitly by path,
+- commit after meaningful code/structure changes.
+
+Do not use `git add .` unless every changed file belongs to the current task.
+```
+
 ## For Third Parties
 
 GabsGame is an educational, family-friendly game project being developed incrementally with AI-assisted coding.
