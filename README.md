@@ -24,7 +24,9 @@ If you are reviewing, contributing, or evaluating this project:
 When developing with the child:
 - Teach one Python concept tied to one project file at a time.
 - Ask one short check question per concept.
+- Include one Python check for every child coding or asset request, even small visual tasks.
 - If answer is wrong, correct briefly and continue progress anyway.
+- Gently correct spelling or wording mistakes once, then ask one later follow-up check.
 - Record weak topics in `LEARNING_LOG.md` and revisit them after 2-3 successful tasks.
 - Adjust difficulty up/down based on recent checks.
 

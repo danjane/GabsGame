@@ -6,6 +6,8 @@ Purpose: track Python learning progress without blocking game progress.
 - Wrong answers do not block progress.
 - Record mistakes to adapt teaching level.
 - Circle back to weak topics in later sessions.
+- Every non-`(Dan)` coding or asset request should produce one Python check entry.
+- Spelling and wording corrections should be tracked when they are corrected and tested.
 
 ## Topic Tracker
 
@@ -21,6 +23,7 @@ Use status values:
 | Game loop basics | `game.py` | new |  |  |
 | Imports and modules | `main.py` | new |  |  |
 | UI drawing flow | `ui.py` | new |  |  |
+| Spelling and wording | chat prompts | practicing | 2026-05-10 | Correct gently, then test one corrected word later. |
 
 ## Session Entries
 
@@ -36,3 +39,6 @@ Template:
 - Did progress continue: yes/no
 - Next level adjustment:
 - Circle-back topic (if needed):
+- Spelling/wording correction (if any):
+- Spelling/wording follow-up check:
+- Spelling/wording outcome:

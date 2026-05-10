@@ -22,6 +22,10 @@ Purpose: operating rules for AI agents working on this project to reduce token u
 - Teach while coding: include "What this does" and "Why this matters".
 - Structure help as: Do this -> Run this -> What you should see.
 - Ask one question at a time when clarification is needed.
+- For every non-`(Dan)` coding or asset request, ask one tiny Python question tied to the exact file or change.
+- Do not skip the learning check just because the task is small, visual, or asset-focused.
+- If the child makes spelling or wording mistakes, gently write the corrected phrase once without shaming.
+- Later in the same session, ask one quick spelling/wording check using the corrected word or phrase.
 - Treat bugs as normal clues, not failures.
 
 ## Beginner Learning Support
@@ -43,6 +47,8 @@ Purpose: operating rules for AI agents working on this project to reduce token u
 - Wrong answers must never block coding progress or the next learning step.
 - If the child answer is incorrect, continue with a short correction, then move forward with guided help.
 - Log weak topics in `LEARNING_LOG.md` so the next sessions can adapt difficulty.
+- Log skipped, missed, or unanswered Python checks as `practicing`, not as success.
+- Log spelling/wording corrections and whether the later check was correct.
 - Use a "circle back" pattern: revisit weak topics in short checks after 2-3 successful tasks.
 - Keep questions low pressure: quick checks, hints first, then the answer if needed.
 - Adjust level by observed performance:
@@ -55,7 +61,9 @@ Purpose: operating rules for AI agents working on this project to reduce token u
 - 2) Python concept: explain one concept used in that file.
 - 3) Tiny check: ask one short question.
 - 4) Continue anyway: if wrong, correct and proceed without blocking.
-- 5) Log outcome: update `LEARNING_LOG.md` topic status.
+- 5) Spelling/wording: model one correction if needed.
+- 6) Circle back: ask one later check for any missed Python or spelling point.
+- 7) Log outcome: update `LEARNING_LOG.md` topic and spelling status.
 
 ## Safety and Content Policy
 - Design for young children: content suitable for 6-year-olds.

@@ -59,8 +59,11 @@ Use these folders for downloaded/generated images:
 ## Child Learning Mode (active)
 - Primary goal is now dual-track: ship working game improvements and teach Python through those exact changes.
 - Teaching should be file-grounded: every explanation should connect Python concepts to `main.py`, `game.py`, `ui.py`, `world.py`, or `config.py`.
+- Every non-`(Dan)` coding or asset request must include a tiny Python learning check tied to the change, even if the implementation is simple.
+- When the child makes spelling or wording mistakes, gently model the corrected wording once, then include one short follow-up check later in the session.
 - Wrong answers from child should not stop progress; continue with corrected guidance.
 - Weak topics must be recorded in `LEARNING_LOG.md` and revisited in later sessions.
+- Spelling/wording corrections and follow-up checks should also be logged in `LEARNING_LOG.md` when they occur.
 - Difficulty should adapt based on logged outcomes:
   - Repeated success -> slightly harder checks/examples.
   - Repeated mistakes -> simpler explanations and smaller tasks.
@@ -87,6 +90,8 @@ Use these folders for downloaded/generated images:
 2. Run game: `python main.py`
 3. Confirm controls + quest turn-in work.
 4. Teach one Python concept tied to one project file before or during code changes.
-5. Record topic outcome in `LEARNING_LOG.md` (including weak-topic flags).
-6. If touching summaries, update `SON_AI_INTERACTIONS.md` with `(Dan)` filtering.
-7. Commit + push.
+5. Ask one tiny Python check question and later record whether the answer was correct.
+6. If the child had spelling/wording mistakes, model the corrected wording and test one corrected word later.
+7. Record topic outcome in `LEARNING_LOG.md` (including weak-topic and spelling flags).
+8. If touching summaries, update `SON_AI_INTERACTIONS.md` with `(Dan)` filtering.
+9. Commit + push.
