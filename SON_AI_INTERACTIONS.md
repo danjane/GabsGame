@@ -109,3 +109,7 @@ Notes:
 - `2026-05-13 | TurnID: S-036`
   - Prompt: "like in Minecraft"
   - AI summary: Refined the monster sprites to look more blocky and Minecraft-inspired while keeping them original and child-safe.
+
+- `2026-05-13 | TurnID: S-037`
+  - Prompt: "a bit more"
+  - AI summary: Pushed the original monster sprites further toward a blocky voxel look with square arms, taller faces, pixel patches, and stronger square features.
