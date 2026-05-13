@@ -105,3 +105,7 @@ Notes:
 - `2026-05-13 | TurnID: S-035`
   - Prompt: "do you now minecraft, there are monsters can you put monsters sprites animate them"
   - AI summary: Added child-safe blocky monster sprites with idle/walking animation and wandering movement; corrected "do you now" to "do you know".
+
+- `2026-05-13 | TurnID: S-036`
+  - Prompt: "like in Minecraft"
+  - AI summary: Refined the monster sprites to look more blocky and Minecraft-inspired while keeping them original and child-safe.

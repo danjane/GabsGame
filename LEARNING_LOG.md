@@ -21,6 +21,7 @@ Use status values:
 | Variables and values | `config.py` | new |  |  |
 | Functions and parameters | `world.py` | new |  |  |
 | Game loop basics | `game.py` | practicing | 2026-05-13 | Added animated animals and monsters through update/draw loop; awaiting check answer. |
+| If statements | `game.py` | new | 2026-05-13 | Used `if kind == "moss_cube"` to choose one monster sprite style. |
 | Imports and modules | `main.py` | new |  |  |
 | UI drawing flow | `ui.py` | new |  |  |
 | Spelling and wording | chat prompts | practicing | 2026-05-13 | Corrected "cheep" to "sheep" successfully; corrected "do you now" to "do you know", awaiting follow-up. |
@@ -69,4 +70,18 @@ Template:
 - Circle-back topic (if needed): Dictionaries in `game.py`
 - Spelling/wording correction (if any): Modeled "Do you know Minecraft?" instead of "do you now minecraft".
 - Spelling/wording follow-up check: Which word fits here: "Do you ___ Minecraft?" `know` or `now`?
+- Spelling/wording outcome: Not answered yet.
+
+### 2026-05-13
+- File focus: `game.py`
+- Python concept: An `if` statement lets the code choose between two paths; `if kind == "moss_cube"` draws the green block monster, otherwise it draws the purple one.
+- Check question: In `game.py`, what does the `if kind == "moss_cube"` line help choose?
+- Child answer summary: Not answered yet.
+- Correct/incorrect: practicing
+- What correction was given: Not yet; answer pending.
+- Did progress continue: yes
+- Next level adjustment: Use simple visual examples for `if` checks.
+- Circle-back topic (if needed): If statements in `game.py`
+- Spelling/wording correction (if any): None.
+- Spelling/wording follow-up check: Previous check still open: Which word fits here, `know` or `now`?
 - Spelling/wording outcome: Not answered yet.

@@ -257,30 +257,38 @@ class Game:
 
     def create_monster_sprite(self, kind: str, step: int) -> pygame.Surface:
         sprite = pygame.Surface((64, 64), pygame.SRCALPHA)
-        pygame.draw.ellipse(sprite, (0, 0, 0, 50), (12, 48, 42, 8))
+        pygame.draw.ellipse(sprite, (0, 0, 0, 55), (12, 51, 42, 8))
 
-        wobble = 2 if step == 1 else 0
+        bob = 2 if step == 1 else 0
+        leg_step = 4 if step == 1 else 0
         if kind == "moss_cube":
-            body = pygame.Rect(15, 14 + wobble, 34, 34)
-            pygame.draw.rect(sprite, (74, 166, 95), body, border_radius=5)
-            pygame.draw.rect(sprite, (36, 105, 54), body, 3, border_radius=5)
-            pygame.draw.rect(sprite, (32, 80, 42), (22, 25 + wobble, 6, 6), border_radius=2)
-            pygame.draw.rect(sprite, (32, 80, 42), (36, 25 + wobble, 6, 6), border_radius=2)
-            pygame.draw.rect(sprite, (125, 210, 110), (20, 15 + wobble, 10, 5), border_radius=2)
-            pygame.draw.rect(sprite, (105, 190, 95), (38, 45 + wobble, 9, 4), border_radius=2)
+            body = pygame.Rect(19, 17 + bob, 26, 30)
+            head = pygame.Rect(17, 6 + bob, 30, 22)
+            pygame.draw.rect(sprite, (78, 176, 91), body)
+            pygame.draw.rect(sprite, (94, 196, 101), head)
+            pygame.draw.rect(sprite, (42, 120, 55), body, 2)
+            pygame.draw.rect(sprite, (42, 120, 55), head, 2)
+            pygame.draw.rect(sprite, (34, 76, 38), (23, 14 + bob, 6, 6))
+            pygame.draw.rect(sprite, (34, 76, 38), (36, 14 + bob, 6, 6))
+            pygame.draw.rect(sprite, (30, 68, 34), (29, 23 + bob, 7, 4))
+            pygame.draw.rect(sprite, (116, 218, 112), (19, 7 + bob, 8, 5))
+            pygame.draw.rect(sprite, (55, 143, 61), (39, 36 + bob, 6, 6))
         else:
-            body = pygame.Rect(14, 16 - wobble, 36, 32)
-            pygame.draw.ellipse(sprite, (116, 96, 210), body)
-            pygame.draw.ellipse(sprite, (70, 58, 145), body, 3)
-            pygame.draw.circle(sprite, (230, 245, 160), (26, 29 - wobble), 4)
-            pygame.draw.circle(sprite, (230, 245, 160), (39, 29 - wobble), 4)
-            pygame.draw.arc(sprite, (235, 210, 255), (25, 32 - wobble, 15, 9), 0.1, 3.0, 2)
-            pygame.draw.circle(sprite, (150, 130, 235), (18, 20 - wobble), 5)
-            pygame.draw.circle(sprite, (150, 130, 235), (47, 22 - wobble), 4)
+            body = pygame.Rect(18, 18 - bob, 28, 30)
+            head = pygame.Rect(16, 7 - bob, 32, 24)
+            pygame.draw.rect(sprite, (100, 83, 190), body)
+            pygame.draw.rect(sprite, (126, 100, 220), head)
+            pygame.draw.rect(sprite, (65, 51, 132), body, 2)
+            pygame.draw.rect(sprite, (65, 51, 132), head, 2)
+            pygame.draw.rect(sprite, (230, 245, 160), (23, 16 - bob, 6, 6))
+            pygame.draw.rect(sprite, (230, 245, 160), (36, 16 - bob, 6, 6))
+            pygame.draw.rect(sprite, (225, 205, 255), (27, 25 - bob, 10, 4))
+            pygame.draw.rect(sprite, (150, 130, 235), (18, 9 - bob, 6, 5))
+            pygame.draw.rect(sprite, (84, 69, 160), (41, 39 - bob, 5, 5))
 
-        foot_y = 52 - (3 if step == 1 else 0)
-        pygame.draw.line(sprite, (50, 45, 70), (24, 48), (21, foot_y), 4)
-        pygame.draw.line(sprite, (50, 45, 70), (40, 48), (43, 55 - foot_y % 4), 4)
+        foot_color = (45, 58, 48) if kind == "moss_cube" else (50, 45, 80)
+        pygame.draw.rect(sprite, foot_color, (21, 47 + bob, 7, 9 - leg_step // 2))
+        pygame.draw.rect(sprite, foot_color, (37, 47 + bob, 7, 5 + leg_step // 2))
         return sprite
 
     def create_monsters(self) -> list[dict[str, object]]:
