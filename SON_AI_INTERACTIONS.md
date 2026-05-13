@@ -101,3 +101,7 @@ Notes:
 - `2026-05-13 | TurnID: S-034`
   - Prompt: "ok, got it sheep instead"
   - AI summary: Child answered the spelling follow-up correctly, confirming "sheep" is the right animal word.
+
+- `2026-05-13 | TurnID: S-035`
+  - Prompt: "do you now minecraft, there are monsters can you put monsters sprites animate them"
+  - AI summary: Added child-safe blocky monster sprites with idle/walking animation and wandering movement; corrected "do you now" to "do you know".

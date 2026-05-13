@@ -20,10 +20,10 @@ Use status values:
 |---|---|---|---|---|
 | Variables and values | `config.py` | new |  |  |
 | Functions and parameters | `world.py` | new |  |  |
-| Game loop basics | `game.py` | practicing | 2026-05-13 | Added animated animals through update/draw loop; awaiting check answer. |
+| Game loop basics | `game.py` | practicing | 2026-05-13 | Added animated animals and monsters through update/draw loop; awaiting check answer. |
 | Imports and modules | `main.py` | new |  |  |
 | UI drawing flow | `ui.py` | new |  |  |
-| Spelling and wording | chat prompts | practicing | 2026-05-13 | Corrected "cheep" to "sheep"; child answered follow-up correctly. |
+| Spelling and wording | chat prompts | practicing | 2026-05-13 | Corrected "cheep" to "sheep" successfully; corrected "do you now" to "do you know", awaiting follow-up. |
 
 ## Session Entries
 
@@ -56,3 +56,17 @@ Template:
 - Spelling/wording correction (if any): Modeled "sheep" instead of "cheep" for the animal name.
 - Spelling/wording follow-up check: How do you spell the animal: `sheep` or `cheep`?
 - Spelling/wording outcome: Correct; child wrote "sheep" after the correction.
+
+### 2026-05-13
+- File focus: `game.py`
+- Python concept: A dictionary can keep related values together; each monster stores keys like `"kind"`, `"rect"`, `"vx"`, and `"anim_time"`.
+- Check question: In `game.py`, what does the `"kind"` value tell the monster drawing code?
+- Child answer summary: Not answered yet.
+- Correct/incorrect: practicing
+- What correction was given: Not yet; answer pending.
+- Did progress continue: yes
+- Next level adjustment: Keep dictionary examples visible and tied to sprite type selection.
+- Circle-back topic (if needed): Dictionaries in `game.py`
+- Spelling/wording correction (if any): Modeled "Do you know Minecraft?" instead of "do you now minecraft".
+- Spelling/wording follow-up check: Which word fits here: "Do you ___ Minecraft?" `know` or `now`?
+- Spelling/wording outcome: Not answered yet.

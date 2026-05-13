@@ -18,9 +18,13 @@ from config import (
     HOME_AREA_OFFSET,
     HOME_AREA_SIZE,
     INITIAL_ANIMAL_COUNT,
+    INITIAL_MONSTER_COUNT,
     INITIAL_STONE_COUNT,
     INITIAL_TREE_COUNT,
     MINE_TIME_SECONDS,
+    MONSTER_SIZE,
+    MONSTER_SPEED,
+    MONSTER_WANDER_SECONDS,
     PICK_COST_STONE,
     PICK_COST_WOOD,
     PLAYER_HEIGHT,
@@ -58,11 +62,13 @@ class Game:
         self.stone_sprite: pygame.Surface | None = None
         self.tree_sprites: list[pygame.Surface] = []
         self.animal_sprites: dict[str, list[pygame.Surface]] = {}
+        self.monster_sprites: dict[str, list[pygame.Surface]] = {}
         self.load_player_sprite()
         self.load_pickaxe_sprite()
         self.load_stone_sprite()
         self.load_tree_sprites()
         self.load_animal_sprites()
+        self.load_monster_sprites()
 
         self.player = pygame.Rect(START_POS[0], START_POS[1], PLAYER_WIDTH, PLAYER_HEIGHT)
         self.home_area = pygame.Rect(
@@ -85,6 +91,7 @@ class Game:
             for _ in range(INITIAL_STONE_COUNT)
         ]
         self.animals = self.create_animals()
+        self.monsters = self.create_monsters()
         self.respawn_queue: list[dict[str, float | str]] = []
 
         self.inventory: dict[str, int | bool] = {
@@ -241,6 +248,61 @@ class Game:
                 }
             )
         return animals
+
+    def load_monster_sprites(self) -> None:
+        self.monster_sprites = {
+            "moss_cube": [self.create_monster_sprite("moss_cube", 0), self.create_monster_sprite("moss_cube", 1)],
+            "glow_blob": [self.create_monster_sprite("glow_blob", 0), self.create_monster_sprite("glow_blob", 1)],
+        }
+
+    def create_monster_sprite(self, kind: str, step: int) -> pygame.Surface:
+        sprite = pygame.Surface((64, 64), pygame.SRCALPHA)
+        pygame.draw.ellipse(sprite, (0, 0, 0, 50), (12, 48, 42, 8))
+
+        wobble = 2 if step == 1 else 0
+        if kind == "moss_cube":
+            body = pygame.Rect(15, 14 + wobble, 34, 34)
+            pygame.draw.rect(sprite, (74, 166, 95), body, border_radius=5)
+            pygame.draw.rect(sprite, (36, 105, 54), body, 3, border_radius=5)
+            pygame.draw.rect(sprite, (32, 80, 42), (22, 25 + wobble, 6, 6), border_radius=2)
+            pygame.draw.rect(sprite, (32, 80, 42), (36, 25 + wobble, 6, 6), border_radius=2)
+            pygame.draw.rect(sprite, (125, 210, 110), (20, 15 + wobble, 10, 5), border_radius=2)
+            pygame.draw.rect(sprite, (105, 190, 95), (38, 45 + wobble, 9, 4), border_radius=2)
+        else:
+            body = pygame.Rect(14, 16 - wobble, 36, 32)
+            pygame.draw.ellipse(sprite, (116, 96, 210), body)
+            pygame.draw.ellipse(sprite, (70, 58, 145), body, 3)
+            pygame.draw.circle(sprite, (230, 245, 160), (26, 29 - wobble), 4)
+            pygame.draw.circle(sprite, (230, 245, 160), (39, 29 - wobble), 4)
+            pygame.draw.arc(sprite, (235, 210, 255), (25, 32 - wobble, 15, 9), 0.1, 3.0, 2)
+            pygame.draw.circle(sprite, (150, 130, 235), (18, 20 - wobble), 5)
+            pygame.draw.circle(sprite, (150, 130, 235), (47, 22 - wobble), 4)
+
+        foot_y = 52 - (3 if step == 1 else 0)
+        pygame.draw.line(sprite, (50, 45, 70), (24, 48), (21, foot_y), 4)
+        pygame.draw.line(sprite, (50, 45, 70), (40, 48), (43, 55 - foot_y % 4), 4)
+        return sprite
+
+    def create_monsters(self) -> list[dict[str, object]]:
+        monsters: list[dict[str, object]] = []
+        for i in range(INITIAL_MONSTER_COUNT):
+            kind = "moss_cube" if i % 2 == 0 else "glow_blob"
+            rect = random_spawn_rect(WORLD_WIDTH, WORLD_HEIGHT, self.home_area, MONSTER_SIZE[0], MONSTER_SIZE[1])
+            vx = random.choice((-1.0, 1.0)) * MONSTER_SPEED
+            vy = random.uniform(-0.5, 0.5) * MONSTER_SPEED
+            monsters.append(
+                {
+                    "kind": kind,
+                    "rect": rect,
+                    "x": float(rect.x),
+                    "y": float(rect.y),
+                    "vx": vx,
+                    "vy": vy,
+                    "wander_timer": random.uniform(*MONSTER_WANDER_SECONDS),
+                    "anim_time": random.uniform(0.0, 1.0),
+                }
+            )
+        return monsters
 
     def remove_edge_background(self, sprite: pygame.Surface, tolerance: int = 36) -> pygame.Surface:
         width, height = sprite.get_size()
@@ -800,6 +862,33 @@ class Game:
             rect.y = int(float(animal["y"]))
             animal["anim_time"] = float(animal["anim_time"]) + dt
 
+    def update_monsters(self, dt: float) -> None:
+        for monster in self.monsters:
+            rect = monster["rect"]
+            if not isinstance(rect, pygame.Rect):
+                continue
+
+            monster["wander_timer"] = float(monster["wander_timer"]) - dt
+            if float(monster["wander_timer"]) <= 0:
+                monster["wander_timer"] = random.uniform(*MONSTER_WANDER_SECONDS)
+                angle = random.uniform(0.0, math.tau)
+                monster["vx"] = math.cos(angle) * MONSTER_SPEED
+                monster["vy"] = math.sin(angle) * MONSTER_SPEED * 0.7
+
+            monster["x"] = float(monster["x"]) + float(monster["vx"]) * dt
+            monster["y"] = float(monster["y"]) + float(monster["vy"]) * dt
+
+            if float(monster["x"]) < 0 or float(monster["x"]) > WORLD_WIDTH - rect.width:
+                monster["vx"] = -float(monster["vx"])
+            if float(monster["y"]) < 80 or float(monster["y"]) > WORLD_HEIGHT - rect.height - 70:
+                monster["vy"] = -float(monster["vy"])
+
+            monster["x"] = max(0.0, min(float(WORLD_WIDTH - rect.width), float(monster["x"])))
+            monster["y"] = max(80.0, min(float(WORLD_HEIGHT - rect.height - 70), float(monster["y"])))
+            rect.x = int(float(monster["x"]))
+            rect.y = int(float(monster["y"]))
+            monster["anim_time"] = float(monster["anim_time"]) + dt
+
     def update_cut_action(self, dt: float) -> None:
         if self.action_target_index is None or self.action_target_index >= len(self.trees):
             self.action_mode = None
@@ -855,6 +944,7 @@ class Game:
         self.update_respawns(dt)
         self.update_tree_growth(dt)
         self.update_animals(dt)
+        self.update_monsters(dt)
         self.update_actions(dt)
         self.update_quest_status()
         self.update_celebration(dt)
@@ -891,6 +981,10 @@ class Game:
             rect = animal["rect"]
             if isinstance(rect, pygame.Rect):
                 drawables.append((rect.bottom, "animal", rect, i))
+        for i, monster in enumerate(self.monsters):
+            rect = monster["rect"]
+            if isinstance(rect, pygame.Rect):
+                drawables.append((rect.bottom, "monster", rect, i))
         if self.house_built:
             house_rect = pygame.Rect(self.home_area.x + 15, self.home_area.y + 15, 70, 70)
             drawables.append((house_rect.bottom, "house", house_rect, -1))
@@ -960,6 +1054,18 @@ class Game:
                     px, py = self.iso_point(rect.centerx, rect.bottom)
                     bob = int(math.sin(float(animal["anim_time"]) * 8.0) * 2)
                     self.screen.blit(sprite, (px - sprite.get_width() // 2, py - sprite.get_height() + 8 + bob))
+            elif kind == "monster":
+                monster = self.monsters[idx]
+                monster_kind = str(monster["kind"])
+                frames = self.monster_sprites.get(monster_kind, [])
+                if frames:
+                    frame_index = int(float(monster["anim_time"]) * 5) % len(frames)
+                    sprite = frames[frame_index]
+                    if float(monster["vx"]) < 0:
+                        sprite = pygame.transform.flip(sprite, True, False)
+                    px, py = self.iso_point(rect.centerx, rect.bottom)
+                    bob = int(math.sin(float(monster["anim_time"]) * 9.0) * 3)
+                    self.screen.blit(sprite, (px - sprite.get_width() // 2, py - sprite.get_height() + 9 + bob))
             elif kind == "house":
                 self.draw_iso_prism(
                     self.screen,
