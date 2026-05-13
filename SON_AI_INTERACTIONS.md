@@ -97,3 +97,7 @@ Notes:
 - `2026-05-13 | TurnID: S-033`
   - Prompt: "can you put animals like sprites of cheep or cows and animate them"
   - AI summary: Added sheep and cow sprites generated in Pygame, spawned wandering animals in the world, animated their walking frames, and corrected "cheep" to "sheep".
+
+- `2026-05-13 | TurnID: S-034`
+  - Prompt: "ok, got it sheep instead"
+  - AI summary: Child answered the spelling follow-up correctly, confirming "sheep" is the right animal word.

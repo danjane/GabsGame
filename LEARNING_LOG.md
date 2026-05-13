@@ -23,7 +23,7 @@ Use status values:
 | Game loop basics | `game.py` | practicing | 2026-05-13 | Added animated animals through update/draw loop; awaiting check answer. |
 | Imports and modules | `main.py` | new |  |  |
 | UI drawing flow | `ui.py` | new |  |  |
-| Spelling and wording | chat prompts | practicing | 2026-05-13 | Corrected "cheep" to "sheep"; awaiting follow-up answer. |
+| Spelling and wording | chat prompts | practicing | 2026-05-13 | Corrected "cheep" to "sheep"; child answered follow-up correctly. |
 
 ## Session Entries
 
@@ -55,4 +55,4 @@ Template:
 - Circle-back topic (if needed): Lists and loops in `game.py`
 - Spelling/wording correction (if any): Modeled "sheep" instead of "cheep" for the animal name.
 - Spelling/wording follow-up check: How do you spell the animal: `sheep` or `cheep`?
-- Spelling/wording outcome: Not answered yet.
+- Spelling/wording outcome: Correct; child wrote "sheep" after the correction.
