@@ -93,3 +93,7 @@ Notes:
 - `2026-05-10 | TurnID: S-032`
   - Prompt: "can you show it when we press \"x (mine)\""
   - AI summary: Updated mining rendering so the pickaxe sprite appears with a small swinging animation while mining with `X`.
+
+- `2026-05-13 | TurnID: S-033`
+  - Prompt: "can you put animals like sprites of cheep or cows and animate them"
+  - AI summary: Added sheep and cow sprites generated in Pygame, spawned wandering animals in the world, animated their walking frames, and corrected "cheep" to "sheep".

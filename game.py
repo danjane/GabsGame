@@ -7,6 +7,9 @@ import os
 import pygame
 
 from config import (
+    ANIMAL_SIZE,
+    ANIMAL_SPEED,
+    ANIMAL_WANDER_SECONDS,
     AXE_COST_WOOD,
     CUT_TIME_SECONDS,
     CUT_TIME_WITH_AXE,
@@ -14,6 +17,7 @@ from config import (
     HEIGHT,
     HOME_AREA_OFFSET,
     HOME_AREA_SIZE,
+    INITIAL_ANIMAL_COUNT,
     INITIAL_STONE_COUNT,
     INITIAL_TREE_COUNT,
     MINE_TIME_SECONDS,
@@ -53,10 +57,12 @@ class Game:
         self.pickaxe_sprite: pygame.Surface | None = None
         self.stone_sprite: pygame.Surface | None = None
         self.tree_sprites: list[pygame.Surface] = []
+        self.animal_sprites: dict[str, list[pygame.Surface]] = {}
         self.load_player_sprite()
         self.load_pickaxe_sprite()
         self.load_stone_sprite()
         self.load_tree_sprites()
+        self.load_animal_sprites()
 
         self.player = pygame.Rect(START_POS[0], START_POS[1], PLAYER_WIDTH, PLAYER_HEIGHT)
         self.home_area = pygame.Rect(
@@ -78,6 +84,7 @@ class Game:
             random_spawn_rect(WORLD_WIDTH, WORLD_HEIGHT, self.home_area, STONE_SIZE[0], STONE_SIZE[1])
             for _ in range(INITIAL_STONE_COUNT)
         ]
+        self.animals = self.create_animals()
         self.respawn_queue: list[dict[str, float | str]] = []
 
         self.inventory: dict[str, int | bool] = {
@@ -176,6 +183,64 @@ class Game:
         if not self.tree_sprites:
             return -1
         return random.randint(0, len(self.tree_sprites) - 1)
+
+    def load_animal_sprites(self) -> None:
+        self.animal_sprites = {
+            "sheep": [self.create_animal_sprite("sheep", 0), self.create_animal_sprite("sheep", 1)],
+            "cow": [self.create_animal_sprite("cow", 0), self.create_animal_sprite("cow", 1)],
+        }
+
+    def create_animal_sprite(self, kind: str, step: int) -> pygame.Surface:
+        sprite = pygame.Surface((72, 54), pygame.SRCALPHA)
+        pygame.draw.ellipse(sprite, (0, 0, 0, 55), (10, 39, 50, 9))
+
+        leg_lift = 3 if step == 1 else 0
+        back_lift = 0 if step == 1 else 3
+        leg_color = (70, 55, 45) if kind == "cow" else (62, 56, 48)
+        pygame.draw.line(sprite, leg_color, (24, 35), (22, 46 - leg_lift), 4)
+        pygame.draw.line(sprite, leg_color, (34, 36), (34, 47 - back_lift), 4)
+        pygame.draw.line(sprite, leg_color, (46, 35), (48, 46 - leg_lift), 4)
+
+        if kind == "cow":
+            pygame.draw.ellipse(sprite, (245, 245, 235), (13, 15, 42, 24))
+            pygame.draw.ellipse(sprite, (45, 38, 35), (20, 17, 12, 10))
+            pygame.draw.ellipse(sprite, (45, 38, 35), (39, 24, 10, 9))
+            pygame.draw.ellipse(sprite, (245, 245, 235), (49, 17, 17, 15))
+            pygame.draw.circle(sprite, (35, 30, 28), (60, 23), 2)
+            pygame.draw.line(sprite, (215, 190, 130), (53, 17), (50, 12), 2)
+            pygame.draw.line(sprite, (215, 190, 130), (61, 17), (64, 12), 2)
+            pygame.draw.line(sprite, (45, 38, 35), (14, 25), (7, 18), 2)
+        else:
+            wool = (238, 238, 226)
+            for x, y, radius in [(20, 25, 11), (31, 21, 12), (42, 25, 11), (30, 30, 13)]:
+                pygame.draw.circle(sprite, wool, (x, y), radius)
+            pygame.draw.ellipse(sprite, (58, 52, 46), (48, 20, 15, 13))
+            pygame.draw.circle(sprite, (20, 18, 16), (58, 24), 2)
+            pygame.draw.ellipse(sprite, (58, 52, 46), (50, 16, 5, 5))
+            pygame.draw.ellipse(sprite, (58, 52, 46), (58, 16, 5, 5))
+
+        return sprite
+
+    def create_animals(self) -> list[dict[str, object]]:
+        animals: list[dict[str, object]] = []
+        for i in range(INITIAL_ANIMAL_COUNT):
+            kind = "sheep" if i % 2 == 0 else "cow"
+            rect = random_spawn_rect(WORLD_WIDTH, WORLD_HEIGHT, self.home_area, ANIMAL_SIZE[0], ANIMAL_SIZE[1])
+            vx = random.choice((-1.0, 1.0)) * ANIMAL_SPEED
+            vy = random.uniform(-0.45, 0.45) * ANIMAL_SPEED
+            animals.append(
+                {
+                    "kind": kind,
+                    "rect": rect,
+                    "x": float(rect.x),
+                    "y": float(rect.y),
+                    "vx": vx,
+                    "vy": vy,
+                    "wander_timer": random.uniform(*ANIMAL_WANDER_SECONDS),
+                    "anim_time": random.uniform(0.0, 1.0),
+                }
+            )
+        return animals
 
     def remove_edge_background(self, sprite: pygame.Surface, tolerance: int = 36) -> pygame.Surface:
         width, height = sprite.get_size()
@@ -708,6 +773,33 @@ class Game:
             if self.tree_growth[i] < 1.0:
                 self.tree_growth[i] = min(1.0, float(self.tree_growth[i]) + self.tree_growth_rate * dt)
 
+    def update_animals(self, dt: float) -> None:
+        for animal in self.animals:
+            rect = animal["rect"]
+            if not isinstance(rect, pygame.Rect):
+                continue
+
+            animal["wander_timer"] = float(animal["wander_timer"]) - dt
+            if float(animal["wander_timer"]) <= 0:
+                animal["wander_timer"] = random.uniform(*ANIMAL_WANDER_SECONDS)
+                angle = random.uniform(0.0, math.tau)
+                animal["vx"] = math.cos(angle) * ANIMAL_SPEED
+                animal["vy"] = math.sin(angle) * ANIMAL_SPEED * 0.65
+
+            animal["x"] = float(animal["x"]) + float(animal["vx"]) * dt
+            animal["y"] = float(animal["y"]) + float(animal["vy"]) * dt
+
+            if float(animal["x"]) < 0 or float(animal["x"]) > WORLD_WIDTH - rect.width:
+                animal["vx"] = -float(animal["vx"])
+            if float(animal["y"]) < 80 or float(animal["y"]) > WORLD_HEIGHT - rect.height - 70:
+                animal["vy"] = -float(animal["vy"])
+
+            animal["x"] = max(0.0, min(float(WORLD_WIDTH - rect.width), float(animal["x"])))
+            animal["y"] = max(80.0, min(float(WORLD_HEIGHT - rect.height - 70), float(animal["y"])))
+            rect.x = int(float(animal["x"]))
+            rect.y = int(float(animal["y"]))
+            animal["anim_time"] = float(animal["anim_time"]) + dt
+
     def update_cut_action(self, dt: float) -> None:
         if self.action_target_index is None or self.action_target_index >= len(self.trees):
             self.action_mode = None
@@ -762,6 +854,7 @@ class Game:
         self.update_message_timer(dt)
         self.update_respawns(dt)
         self.update_tree_growth(dt)
+        self.update_animals(dt)
         self.update_actions(dt)
         self.update_quest_status()
         self.update_celebration(dt)
@@ -788,12 +881,16 @@ class Game:
                 color = flower_colors[int(flower["color_idx"]) % len(flower_colors)]
                 pygame.draw.circle(self.screen, color, stem_top, max(2, size // 2))
 
-        drawables: list[tuple[int, str, pygame.Rect]] = []
+        drawables: list[tuple[int, str, pygame.Rect, int]] = []
         for i, _tree in enumerate(self.trees):
             tree_rect = self.get_tree_rect(i)
             drawables.append((tree_rect.bottom, "tree", tree_rect, i))
         for stone in self.stones:
             drawables.append((stone.bottom, "stone", stone, -1))
+        for i, animal in enumerate(self.animals):
+            rect = animal["rect"]
+            if isinstance(rect, pygame.Rect):
+                drawables.append((rect.bottom, "animal", rect, i))
         if self.house_built:
             house_rect = pygame.Rect(self.home_area.x + 15, self.home_area.y + 15, 70, 70)
             drawables.append((house_rect.bottom, "house", house_rect, -1))
@@ -851,6 +948,18 @@ class Game:
                     self.screen.blit(self.stone_sprite, (sx, sy))
                 else:
                     self.draw_iso_rock(self.screen, rect)
+            elif kind == "animal":
+                animal = self.animals[idx]
+                animal_kind = str(animal["kind"])
+                frames = self.animal_sprites.get(animal_kind, [])
+                if frames:
+                    frame_index = int(float(animal["anim_time"]) * 4) % len(frames)
+                    sprite = frames[frame_index]
+                    if float(animal["vx"]) < 0:
+                        sprite = pygame.transform.flip(sprite, True, False)
+                    px, py = self.iso_point(rect.centerx, rect.bottom)
+                    bob = int(math.sin(float(animal["anim_time"]) * 8.0) * 2)
+                    self.screen.blit(sprite, (px - sprite.get_width() // 2, py - sprite.get_height() + 8 + bob))
             elif kind == "house":
                 self.draw_iso_prism(
                     self.screen,
