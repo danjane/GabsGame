@@ -117,3 +117,7 @@ Notes:
 - `2026-05-13 | TurnID: S-038`
   - Prompt: "a bit more"
   - AI summary: Made the original monster sprites even more voxel-like with larger square heads, thicker block arms, stronger outlines, and chunkier pixel patches.
+
+- `2026-05-13 | TurnID: S-039`
+  - Prompt: "a bit taler"
+  - AI summary: Made the monster sprites taller by moving heads upward and extending bodies, arms, and feet; corrected "taler" to "taller".

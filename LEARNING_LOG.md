@@ -24,7 +24,7 @@ Use status values:
 | If statements | `game.py` | new | 2026-05-13 | Used `if kind == "moss_cube"` to choose one monster sprite style. |
 | Imports and modules | `main.py` | new |  |  |
 | UI drawing flow | `ui.py` | new |  |  |
-| Spelling and wording | chat prompts | practicing | 2026-05-13 | Corrected "cheep" to "sheep" successfully; corrected "do you now" to "do you know", awaiting follow-up. |
+| Spelling and wording | chat prompts | practicing | 2026-05-13 | Corrected "cheep" to "sheep" successfully; corrected "do you now" to "do you know" and "taler" to "taller", awaiting follow-up. |
 
 ## Session Entries
 
@@ -84,6 +84,20 @@ Template:
 - Circle-back topic (if needed): If statements in `game.py`
 - Spelling/wording correction (if any): None.
 - Spelling/wording follow-up check: Previous check still open: Which word fits here, `know` or `now`?
+- Spelling/wording outcome: Not answered yet.
+
+### 2026-05-13
+- File focus: `game.py`
+- Python concept: Lower `y` values draw sprite parts higher on the screen; moving the head from `y=4` to `y=2` helps make the monster taller.
+- Check question: In `pygame.Rect(14, 2, 36, 27)`, which number controls how high the rectangle starts?
+- Child answer summary: Not answered yet.
+- Correct/incorrect: practicing
+- What correction was given: Not yet; answer pending.
+- Did progress continue: yes
+- Next level adjustment: Keep rectangle-position checks visual and simple.
+- Circle-back topic (if needed): Rect `y` position in `game.py`
+- Spelling/wording correction (if any): Modeled "taller" instead of "taler".
+- Spelling/wording follow-up check: Which spelling is right: `taller` or `taler`?
 - Spelling/wording outcome: Not answered yet.
 
 ### 2026-05-13
