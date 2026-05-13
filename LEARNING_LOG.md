@@ -88,6 +88,20 @@ Template:
 
 ### 2026-05-13
 - File focus: `game.py`
+- Python concept: A rectangle tuple uses `(x, y, width, height)`; changing the width and height makes sprite blocks chunkier.
+- Check question: In `(14, 4, 36, 26)`, which two numbers are width and height?
+- Child answer summary: Not answered yet.
+- Correct/incorrect: practicing
+- What correction was given: Not yet; answer pending.
+- Did progress continue: yes
+- Next level adjustment: Continue with one tiny tuple question at a time.
+- Circle-back topic (if needed): Rect tuples in `game.py`
+- Spelling/wording correction (if any): None.
+- Spelling/wording follow-up check: Previous check still open: Which word fits here, `know` or `now`?
+- Spelling/wording outcome: Not answered yet.
+
+### 2026-05-13
+- File focus: `game.py`
 - Python concept: Changing numbers inside `pygame.Rect(...)` changes where a blocky sprite part is drawn.
 - Check question: In `pygame.Rect(16, 5, 32, 24)`, which number controls the rectangle width?
 - Child answer summary: Not answered yet.
