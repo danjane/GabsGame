@@ -102,6 +102,7 @@ python main.py
 - Make fire: `F` (cost: 1 wood + 2 stone)
 - Build house: `B` (anywhere, costs 2 wood+branches)
 - Enter/leave house view: `H` (near a built house)
+- Use furnace: `U` (near a furnace, turns 1 ruby/sapphire into 1 smelted stone)
 - Craft menu: `C` (at home area)
 - Home teleport / quest turn-in: click `🏠`
 - Close panels/menu: `ESC`
@@ -109,6 +110,7 @@ python main.py
 ## Gameplay Notes
 - Trees and stones respawn over time.
 - Inventory panel is clickable for resource details.
+- Furnace costs 8 stone. A smelted stone pickaxe can be crafted after smelting rare stone and mines faster.
 - Quests are randomized and tracked as a chain (default: 5 quests).
 
 ## Status So Far

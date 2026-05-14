@@ -14,6 +14,8 @@ from config import (
     CUT_TIME_SECONDS,
     CUT_TIME_WITH_AXE,
     FPS,
+    FURNACE_COST_STONE,
+    FURNACE_SIZE,
     HEIGHT,
     HOME_AREA_OFFSET,
     HOME_AREA_SIZE,
@@ -29,6 +31,9 @@ from config import (
     PLAYER_WIDTH,
     QUEST_COUNT,
     RARE_DROP_CHANCE,
+    SMELTED_PICK_COST_SMELTED_STONE,
+    SMELTED_PICK_COST_WOOD,
+    SMELTED_PICK_MINE_TIME_SECONDS,
     START_POS,
     STONE_RESPAWN_SECONDS,
     STONE_SIZE,
@@ -97,15 +102,19 @@ class Game:
             "rare_stone": 0,
             "axe": False,
             "pickaxe": False,
+            "smelted_pickaxe": False,
+            "furnace": False,
             "fire": 0,
+            "smelted_stone": 0,
         }
         self.resource_types: dict[str, dict[str, int]] = {
             "wood+branches": {"oak": 0, "pine": 0},
             "stone": {"granite": 0, "limestone": 0},
-            "rare_stone": {"ruby": 0, "sapphire": 0},
+            "rare_stone": {"ruby": 0, "sapphire": 0, "smelted_stone": 0},
         }
 
         self.houses: list[pygame.Rect] = []
+        self.furnace: pygame.Rect | None = None
         self.inside_house = False
         self.indoor_player = pygame.Rect(WIDTH // 2 - 20, HEIGHT // 2 + 20, PLAYER_WIDTH, PLAYER_HEIGHT)
         self.stats = {
@@ -140,9 +149,11 @@ class Game:
 
         self.home_button = pygame.Rect(10, HEIGHT - 60, 60, 50)
         self.craft_menu_open = False
-        self.craft_panel = pygame.Rect(10, 60, 310, 170)
+        self.craft_panel = pygame.Rect(10, 60, 430, 260)
         self.craft_btn_axe = pygame.Rect(20, 100, 290, 40)
         self.craft_btn_pick = pygame.Rect(20, 145, 290, 40)
+        self.craft_btn_furnace = pygame.Rect(20, 190, 390, 40)
+        self.craft_btn_smelted_pick = pygame.Rect(20, 235, 390, 40)
 
     def load_player_sprite(self) -> None:
         sprite_path = "assets/sprites/player/player.png"
@@ -421,7 +432,7 @@ class Game:
         if self.action_mode is not None or self.craft_menu_open:
             return
 
-        if not self.inventory["pickaxe"]:
+        if not self.inventory["pickaxe"] and not self.inventory["smelted_pickaxe"]:
             self.show_message("You need a pickaxe to mine! (Craft at home: C)")
             return
 
@@ -433,6 +444,11 @@ class Game:
                 return
 
         self.show_message("No stone nearby!")
+
+    def mining_time(self) -> float:
+        if self.inventory["smelted_pickaxe"]:
+            return SMELTED_PICK_MINE_TIME_SECONDS
+        return MINE_TIME_SECONDS
 
     def try_make_fire(self) -> None:
         if self.inventory["wood+branches"] >= 1 and self.inventory["stone"] >= 2:
@@ -462,6 +478,45 @@ class Game:
             self.show_message("House built here! (-2 wood+branches)")
         else:
             self.show_message("Need 2 wood+branches to build a house!")
+
+    def try_craft_furnace(self) -> None:
+        if self.inventory["furnace"]:
+            self.show_message("You already have a furnace!")
+            return
+
+        if self.inventory["stone"] >= FURNACE_COST_STONE:
+            self.inventory["stone"] -= FURNACE_COST_STONE
+            furnace_x = self.player.centerx - FURNACE_SIZE[0] // 2
+            furnace_y = self.player.bottom - FURNACE_SIZE[1]
+            furnace_x = max(0, min(WORLD_WIDTH - FURNACE_SIZE[0], furnace_x))
+            furnace_y = max(0, min(WORLD_HEIGHT - FURNACE_SIZE[1], furnace_y))
+            self.furnace = pygame.Rect(furnace_x, furnace_y, FURNACE_SIZE[0], FURNACE_SIZE[1])
+            self.inventory["furnace"] = True
+            self.show_message("Furnace built! Press U near it to smelt.")
+        else:
+            self.show_message(f"Need {FURNACE_COST_STONE} stone to build a furnace!")
+
+    def try_use_furnace(self) -> None:
+        if self.furnace is None:
+            self.show_message("Craft a furnace first.")
+            return
+        if not is_near(self.player, self.furnace, distance=55):
+            self.show_message("Stand near the furnace and press U.")
+            return
+
+        source_type = None
+        for rare_type in ("ruby", "sapphire"):
+            if self.resource_types["rare_stone"][rare_type] > 0:
+                source_type = rare_type
+                break
+        if source_type is None:
+            self.show_message("Need 1 ruby or sapphire to smelt.")
+            return
+
+        self.resource_types["rare_stone"][source_type] -= 1
+        self.resource_types["rare_stone"]["smelted_stone"] += 1
+        self.inventory["smelted_stone"] += 1
+        self.show_message("Smelted stone made! (-1 rare stone)")
 
     def try_toggle_house_view(self) -> None:
         if self.inside_house:
@@ -699,6 +754,25 @@ class Game:
         else:
             self.show_message("Not enough wood for pickaxe.")
 
+    def try_craft_smelted_pickaxe(self) -> None:
+        if self.inventory["smelted_pickaxe"]:
+            self.show_message("You already have a smelted stone pickaxe!")
+            return
+
+        if (
+            self.inventory["wood+branches"] >= SMELTED_PICK_COST_WOOD
+            and self.inventory["smelted_stone"] >= SMELTED_PICK_COST_SMELTED_STONE
+        ):
+            self.inventory["wood+branches"] -= SMELTED_PICK_COST_WOOD
+            self.inventory["smelted_stone"] -= SMELTED_PICK_COST_SMELTED_STONE
+            self.inventory["rare_stone"] -= SMELTED_PICK_COST_SMELTED_STONE
+            self.resource_types["rare_stone"]["smelted_stone"] -= SMELTED_PICK_COST_SMELTED_STONE
+            self.inventory["smelted_pickaxe"] = True
+            self.inventory["pickaxe"] = True
+            self.show_message("Smelted stone pickaxe crafted! Mining is faster.")
+        else:
+            self.show_message("Need wood and smelted stone for that pickaxe.")
+
     def handle_keydown(self, key: int) -> None:
         if key == pygame.K_l:
             self.start_cutting()
@@ -710,6 +784,8 @@ class Game:
             self.try_build_house()
         if key == pygame.K_h:
             self.try_toggle_house_view()
+        if key == pygame.K_u:
+            self.try_use_furnace()
         if key == pygame.K_ESCAPE:
             self.selected_panel = None
             self.craft_menu_open = False
@@ -744,6 +820,10 @@ class Game:
                 self.try_craft_axe()
             if self.craft_btn_pick.collidepoint(mx, my):
                 self.try_craft_pickaxe()
+            if self.craft_btn_furnace.collidepoint(mx, my):
+                self.try_craft_furnace()
+            if self.craft_btn_smelted_pick.collidepoint(mx, my):
+                self.try_craft_smelted_pickaxe()
 
     def handle_events(self) -> bool:
         for event in pygame.event.get():
@@ -873,7 +953,7 @@ class Game:
             return
 
         self.action_timer += dt
-        if self.action_timer >= MINE_TIME_SECONDS:
+        if self.action_timer >= self.mining_time():
             self.stones.pop(self.action_target_index)
             self.respawn_queue.append({"time": STONE_RESPAWN_SECONDS, "kind": "stone"})
             self.action_mode = None
@@ -937,6 +1017,8 @@ class Game:
                 drawables.append((rect.bottom, "animal", rect, i))
         for house_rect in self.houses:
             drawables.append((house_rect.bottom, "house", house_rect, -1))
+        if self.furnace is not None:
+            drawables.append((self.furnace.bottom, "furnace", self.furnace, -1))
         drawables.append((self.player.bottom, "player", self.player, -1))
         drawables.sort(key=lambda item: item[0])
 
@@ -1015,6 +1097,18 @@ class Game:
                 roof = self.iso_rect_poly(rect)
                 roof_peak = ((roof[0][0] + roof[1][0]) // 2, min(roof[0][1], roof[1][1]) - 24)
                 pygame.draw.polygon(self.screen, (120, 60, 40), [roof[0], roof[1], roof_peak])
+            elif kind == "furnace":
+                self.draw_iso_prism(
+                    self.screen,
+                    rect,
+                    height=22,
+                    top_color=(96, 92, 88),
+                    left_color=(54, 52, 50),
+                    right_color=(70, 68, 64),
+                )
+                front = self.iso_point(rect.centerx, rect.centery + 12)
+                pygame.draw.circle(self.screen, (255, 118, 42), front, 7)
+                pygame.draw.circle(self.screen, (255, 205, 92), front, 3)
             elif kind == "player":
                 if self.player_sprite is not None:
                     px, py = self.iso_point(rect.centerx, rect.centery)
@@ -1128,7 +1222,11 @@ class Game:
             self.inv_item_rects[name] = rect
             cursor_x += rect.width + pad
 
-        tool_text = f"Axe: {'yes' if self.inventory['axe'] else 'no'}   Pickaxe: {'yes' if self.inventory['pickaxe'] else 'no'}"
+        tool_text = (
+            f"Axe: {'yes' if self.inventory['axe'] else 'no'}   "
+            f"Pickaxe: {'smelted' if self.inventory['smelted_pickaxe'] else ('yes' if self.inventory['pickaxe'] else 'no')}   "
+            f"Furnace: {'yes' if self.inventory['furnace'] else 'no'}"
+        )
         tool_surf = self.small_font.render(tool_text, True, (255, 255, 255))
         self.screen.blit(tool_surf, (x0 + 10, y0 + 44))
 
@@ -1154,7 +1252,7 @@ class Game:
             self.screen.blit(qs, ((WIDTH - qs.get_width()) // 2, 17))
 
     def draw_help_and_message(self) -> None:
-        help_text = "Move: arrows | Cut: L | Mine: X | Fire: F | Build: B | House: H | Craft: C | 🏠"
+        help_text = "Move: arrows | Mine: X | Fire: F | Build: B | House: H | Smelt: U | Craft: C | 🏠"
         help_surf = self.small_font.render(help_text, True, (255, 255, 255))
         pygame.draw.rect(self.screen, (0, 0, 0), (80, HEIGHT - 45, help_surf.get_width() + 10, 35))
         self.screen.blit(help_surf, (85, HEIGHT - 38))
@@ -1180,7 +1278,7 @@ class Game:
             total = CUT_TIME_WITH_AXE if self.inventory["axe"] else CUT_TIME_SECONDS
             label = "Cutting..."
         else:
-            total = MINE_TIME_SECONDS
+            total = self.mining_time()
             label = "Mining..."
 
         progress = max(0.0, min(1.0, self.action_timer / total))
@@ -1215,10 +1313,15 @@ class Game:
                 self.craft_panel,
                 self.craft_btn_axe,
                 self.craft_btn_pick,
+                self.craft_btn_furnace,
+                self.craft_btn_smelted_pick,
                 self.inventory,
                 AXE_COST_WOOD,
                 PICK_COST_WOOD,
                 PICK_COST_STONE,
+                FURNACE_COST_STONE,
+                SMELTED_PICK_COST_WOOD,
+                SMELTED_PICK_COST_SMELTED_STONE,
             )
 
     def draw_markers(self) -> None:

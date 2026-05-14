@@ -29,8 +29,9 @@ Use status values:
 | Animation timers | `game.py` | secure | 2026-05-14 | Child correctly chose that `player_anim_time` helps the sprite animate while walking. |
 | Boolean state | `game.py` | new | 2026-05-14 | Added `inside_house` to switch between outside world drawing and house interior drawing; awaiting check answer. |
 | Rect movement | `game.py` | practicing | 2026-05-14 | Added `indoor_player` rectangle so the character can move inside the house view; awaiting check answer. |
+| Dictionaries | `game.py` | practicing | 2026-05-14 | Added inventory keys for `furnace`, `smelted_stone`, and `smelted_pickaxe`; awaiting check answer. |
 | UI drawing flow | `ui.py` | new |  |  |
-| Spelling and wording | chat prompts | practicing | 2026-05-14 | Corrected "cheep" to "sheep", "replays" to "replace", and "to" to "too" successfully; modeled "why" instead of "wy"; "do you now" to "do you know", "taler" to "taller", "make it so", and "changes to brown" still await follow-up. |
+| Spelling and wording | chat prompts | practicing | 2026-05-14 | Corrected "cheep" to "sheep", "replays" to "replace", and "to" to "too" successfully; modeled "pickaxe" instead of "picacks"; "do you now" to "do you know", "taler" to "taller", "make it so", "changes to brown", and "why" still await follow-up. |
 
 ## Session Entries
 
@@ -216,4 +217,18 @@ Template:
 - Circle-back topic (if needed): Rect movement in `game.py`
 - Spelling/wording correction (if any): Modeled "why" instead of "wy".
 - Spelling/wording follow-up check: Pending: Which spelling is right, `why` or `wy`?
+- Spelling/wording outcome: Not answered yet.
+
+### 2026-05-14
+- File focus: `game.py`
+- Python concept: A dictionary stores values by name. The inventory dictionary now has keys like `"furnace"`, `"smelted_stone"`, and `"smelted_pickaxe"`.
+- Check question: In `self.inventory["smelted_stone"]`, what is `"smelted_stone"`? A. A dictionary key B. A screen color
+- Child answer summary: Not answered yet.
+- Correct/incorrect: practicing
+- What correction was given: Not yet; answer pending.
+- Did progress continue: yes
+- Next level adjustment: Keep dictionary checks tied to inventory items.
+- Circle-back topic (if needed): Dictionaries in `game.py`
+- Spelling/wording correction (if any): Modeled "pickaxe" instead of "picacks".
+- Spelling/wording follow-up check: Pending: Which spelling is right, `pickaxe` or `picacks`?
 - Spelling/wording outcome: Not answered yet.

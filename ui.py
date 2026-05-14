@@ -66,10 +66,15 @@ def draw_craft_menu(
     craft_panel: pygame.Rect,
     craft_btn_axe: pygame.Rect,
     craft_btn_pick: pygame.Rect,
+    craft_btn_furnace: pygame.Rect,
+    craft_btn_smelted_pick: pygame.Rect,
     inventory: dict[str, int | bool],
     axe_cost_wood: int,
     pick_cost_wood: int,
     pick_cost_stone: int,
+    furnace_cost_stone: int,
+    smelted_pick_cost_wood: int,
+    smelted_pick_cost_smelted_stone: int,
 ) -> None:
     pygame.draw.rect(screen, (0, 0, 0), craft_panel)
     pygame.draw.rect(screen, (255, 255, 255), craft_panel, 2)
@@ -82,6 +87,15 @@ def draw_craft_menu(
         f"Craft Pickaxe (cost: {pick_cost_wood} wood + {pick_cost_stone} stone)  "
         f"[{'OWNED' if inventory['pickaxe'] else 'click'}]"
     )
+    furnace_label = (
+        f"Craft Furnace (cost: {furnace_cost_stone} stone)  "
+        f"[{'OWNED' if inventory['furnace'] else 'click'}]"
+    )
+    smelted_pick_label = (
+        f"Craft Smelted Stone Pickaxe (cost: {smelted_pick_cost_wood} wood + "
+        f"{smelted_pick_cost_smelted_stone} smelted)  "
+        f"[{'OWNED' if inventory['smelted_pickaxe'] else 'click'}]"
+    )
 
     can_axe = (not inventory["axe"]) and (inventory["wood+branches"] >= axe_cost_wood)
     can_pick = (
@@ -89,19 +103,30 @@ def draw_craft_menu(
         and (inventory["wood+branches"] >= pick_cost_wood)
         and (inventory["stone"] >= pick_cost_stone)
     )
+    can_furnace = (not inventory["furnace"]) and (inventory["stone"] >= furnace_cost_stone)
+    can_smelted_pick = (
+        (not inventory["smelted_pickaxe"])
+        and (inventory["wood+branches"] >= smelted_pick_cost_wood)
+        and (inventory.get("smelted_stone", 0) >= smelted_pick_cost_smelted_stone)
+    )
 
-    pygame.draw.rect(screen, (40, 40, 40), craft_btn_axe)
-    pygame.draw.rect(screen, (255, 255, 255), craft_btn_axe, 1)
-    pygame.draw.rect(screen, (40, 40, 40), craft_btn_pick)
-    pygame.draw.rect(screen, (255, 255, 255), craft_btn_pick, 1)
+    for button in (craft_btn_axe, craft_btn_pick, craft_btn_furnace, craft_btn_smelted_pick):
+        pygame.draw.rect(screen, (40, 40, 40), button)
+        pygame.draw.rect(screen, (255, 255, 255), button, 1)
 
     axe_color = (255, 255, 255) if can_axe else (170, 170, 170)
     pick_color = (255, 255, 255) if can_pick else (170, 170, 170)
+    furnace_color = (255, 255, 255) if can_furnace else (170, 170, 170)
+    smelted_pick_color = (255, 255, 255) if can_smelted_pick else (170, 170, 170)
     axe_surf = small_font.render(axe_label, True, axe_color)
     pick_surf = small_font.render(pick_label, True, pick_color)
+    furnace_surf = small_font.render(furnace_label, True, furnace_color)
+    smelted_pick_surf = small_font.render(smelted_pick_label, True, smelted_pick_color)
 
     screen.blit(axe_surf, (craft_btn_axe.x + 8, craft_btn_axe.y + 10))
     screen.blit(pick_surf, (craft_btn_pick.x + 8, craft_btn_pick.y + 10))
+    screen.blit(furnace_surf, (craft_btn_furnace.x + 8, craft_btn_furnace.y + 10))
+    screen.blit(smelted_pick_surf, (craft_btn_smelted_pick.x + 8, craft_btn_smelted_pick.y + 10))
 
     hint = small_font.render("Press C to close.", True, (200, 200, 200))
     screen.blit(hint, (craft_panel.x + 10, craft_panel.y + craft_panel.height - 28))
