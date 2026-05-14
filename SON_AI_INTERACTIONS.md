@@ -121,3 +121,7 @@ Notes:
 - `2026-05-13 | TurnID: S-039`
   - Prompt: "a bit taler"
   - AI summary: Made the monster sprites taller by moving heads upward and extending bodies, arms, and feet; corrected "taler" to "taller".
+
+- `2026-05-14 | TurnID: S-040`
+  - Prompt: "a" / "a"
+  - AI summary: Child correctly answered a spelling MCQ for "replace" instead of "replays", then correctly answered that a Python `for` loop repeats code for each item.

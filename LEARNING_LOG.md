@@ -21,10 +21,11 @@ Use status values:
 | Variables and values | `config.py` | new |  |  |
 | Functions and parameters | `world.py` | new |  |  |
 | Game loop basics | `game.py` | practicing | 2026-05-13 | Added animated animals and monsters through update/draw loop; awaiting check answer. |
+| For loops | `game.py` | secure | 2026-05-14 | Child correctly chose that a `for` loop repeats code for each item. |
 | If statements | `game.py` | new | 2026-05-13 | Used `if kind == "moss_cube"` to choose one monster sprite style. |
 | Imports and modules | `main.py` | new |  |  |
 | UI drawing flow | `ui.py` | new |  |  |
-| Spelling and wording | chat prompts | practicing | 2026-05-13 | Corrected "cheep" to "sheep" successfully; corrected "do you now" to "do you know" and "taler" to "taller", awaiting follow-up. |
+| Spelling and wording | chat prompts | practicing | 2026-05-14 | Corrected "cheep" to "sheep" successfully; corrected "replays" to "replace" successfully; "do you now" to "do you know" and "taler" to "taller" still await follow-up. |
 
 ## Session Entries
 
@@ -127,3 +128,17 @@ Template:
 - Spelling/wording correction (if any): None.
 - Spelling/wording follow-up check: Previous check still open: Which word fits here, `know` or `now`?
 - Spelling/wording outcome: Not answered yet.
+
+### 2026-05-14
+- File focus: `game.py`
+- Python concept: A `for` loop repeats code for each item in a list; `for animal in self.animals:` lets the game handle each animal one at a time.
+- Check question: What does a `for` loop help Python do? A. Repeat code for each item B. Stop the game forever C. Delete a file
+- Child answer summary: Chose A.
+- Correct/incorrect: correct
+- What correction was given: Confirmed that a `for` loop repeats code for each item.
+- Did progress continue: yes
+- Next level adjustment: For loops can move toward simple "each item has data" examples next time.
+- Circle-back topic (if needed): None.
+- Spelling/wording correction (if any): Modeled "replace" instead of "replays" from an earlier prompt.
+- Spelling/wording follow-up check: Which word fits: `replace`, `replays`, or `replase`?
+- Spelling/wording outcome: Correct; child chose `replace`.
