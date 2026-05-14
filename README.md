@@ -11,7 +11,10 @@ Copy this at the start of a new Codex session:
 ```text
 Please read README.md, AI_MEMORY.md, CODEX_CHILD_DEV_RULES.md, and LEARNING_LOG.md before making changes.
 
-This is a child-learning Pygame project. For every non-(Dan) coding or asset request:
+This is a child-learning Pygame project. The father will prepend commands with (Dan). Codex does not
+need to follow the learning path for (Dan) commands.
+
+For every non-(Dan) coding or asset request:
 - ship the requested game improvement,
 - teach one tiny Python concept tied to the exact file/change,
 - ask one short Python check question,
@@ -23,7 +26,11 @@ This is a child-learning Pygame project. For every non-(Dan) coding or asset req
 - stage only AI-owned files explicitly by path,
 - commit after meaningful code/structure changes.
 
-Do not use `git add .` unless every changed file belongs to the current task.
+Start the current session by scanning SON_AI_INTERACTIONS.md for non-(Dan) spelling mistakes and
+then prompt the child, Gabs, with a single MCQ question on a randomly chosen mistake. Follow up with a
+correction, if necessary. Then read LEARNING_LOG.md and briefly explain a pertinent Python concept.
+Then ask a basic question about this Python concept, explain the mistake if necessary, and update
+LEARNING_LOG.md and SON_AI_INTERACTIONS.md and commit. Only then accept non-(Dan) coding requests.
 ```
 
 ## For Third Parties
