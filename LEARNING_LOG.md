@@ -26,9 +26,9 @@ Use status values:
 | Imports and modules | `main.py` | new |  |  |
 | Lists of objects | `game.py` | new | 2026-05-14 | Changed one house flag into `self.houses`, a list of house rectangles; awaiting check answer. |
 | Removing unused code | `game.py`, `config.py` | new | 2026-05-14 | Removed monster setup, update, drawing, and constants; awaiting check answer. |
-| Animation timers | `game.py` | new | 2026-05-14 | Added `player_anim_time` so the player sprite bobs and squashes while walking; awaiting check answer. |
+| Animation timers | `game.py` | secure | 2026-05-14 | Child correctly chose that `player_anim_time` helps the sprite animate while walking. |
 | UI drawing flow | `ui.py` | new |  |  |
-| Spelling and wording | chat prompts | practicing | 2026-05-14 | Corrected "cheep" to "sheep" successfully; corrected "replays" to "replace" successfully; modeled "too" instead of "to" for "also"; "do you now" to "do you know", "taler" to "taller", and "make it so" still await follow-up. |
+| Spelling and wording | chat prompts | practicing | 2026-05-14 | Corrected "cheep" to "sheep", "replays" to "replace", and "to" to "too" successfully; "do you now" to "do you know", "taler" to "taller", and "make it so" still await follow-up. |
 
 ## Session Entries
 
@@ -178,12 +178,12 @@ Template:
 - File focus: `game.py`
 - Python concept: A timer variable can make animation change over time. `player_anim_time` grows while the player walks, and `math.sin(...)` turns that time into a smooth bobbing motion.
 - Check question: What does `player_anim_time` help the player sprite do? A. Animate while walking B. Stop drawing forever
-- Child answer summary: Not answered yet.
-- Correct/incorrect: practicing
-- What correction was given: Not yet; answer pending.
+- Child answer summary: Chose A.
+- Correct/incorrect: correct
+- What correction was given: Confirmed that `player_anim_time` helps the sprite animate while walking.
 - Did progress continue: yes
 - Next level adjustment: Keep animation explanations tied to visible movement.
 - Circle-back topic (if needed): Animation timers in `game.py`
 - Spelling/wording correction (if any): Modeled "too" instead of "to" in "could the main character be animated too".
 - Spelling/wording follow-up check: Pending: Which word means "also", `too` or `to`?
-- Spelling/wording outcome: Not answered yet.
+- Spelling/wording outcome: Correct; child chose `too`.

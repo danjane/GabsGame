@@ -137,3 +137,7 @@ Notes:
 - `2026-05-14 | TurnID: S-043`
   - Prompt: "great! could the main character be animated to"
   - AI summary: Added a simple walking animation to the main character using a timer, bobbing/squashing the sprite while moving, and flipping it when moving left; modeled "too" instead of "to" for "also".
+
+- `2026-05-14 | TurnID: S-044`
+  - Prompt: "a"
+  - AI summary: Child correctly answered that `player_anim_time` helps animate the sprite while walking and that `too` means "also".
