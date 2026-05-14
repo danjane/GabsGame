@@ -125,3 +125,7 @@ Notes:
 - `2026-05-14 | TurnID: S-040`
   - Prompt: "a" / "a"
   - AI summary: Child correctly answered a spelling MCQ for "replace" instead of "replays", then correctly answered that a Python `for` loop repeats code for each item.
+
+- `2026-05-14 | TurnID: S-041`
+  - Prompt: "delete the monster part"
+  - AI summary: Removed the monster feature from the game by deleting monster constants, setup, sprite creation, update logic, and draw logic; modeled "remove the monster part" as the clearer phrase.
