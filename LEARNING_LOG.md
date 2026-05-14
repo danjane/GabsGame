@@ -27,8 +27,9 @@ Use status values:
 | Lists of objects | `game.py` | new | 2026-05-14 | Changed one house flag into `self.houses`, a list of house rectangles; awaiting check answer. |
 | Removing unused code | `game.py`, `config.py` | new | 2026-05-14 | Removed monster setup, update, drawing, and constants; awaiting check answer. |
 | Animation timers | `game.py` | secure | 2026-05-14 | Child correctly chose that `player_anim_time` helps the sprite animate while walking. |
+| Boolean state | `game.py` | new | 2026-05-14 | Added `inside_house` to switch between outside world drawing and house interior drawing; awaiting check answer. |
 | UI drawing flow | `ui.py` | new |  |  |
-| Spelling and wording | chat prompts | practicing | 2026-05-14 | Corrected "cheep" to "sheep", "replays" to "replace", and "to" to "too" successfully; "do you now" to "do you know", "taler" to "taller", and "make it so" still await follow-up. |
+| Spelling and wording | chat prompts | practicing | 2026-05-14 | Corrected "cheep" to "sheep", "replays" to "replace", and "to" to "too" successfully; modeled "changes to brown" for direction; "do you now" to "do you know", "taler" to "taller", and "make it so" still await follow-up. |
 
 ## Session Entries
 
@@ -187,3 +188,17 @@ Template:
 - Spelling/wording correction (if any): Modeled "too" instead of "to" in "could the main character be animated too".
 - Spelling/wording follow-up check: Pending: Which word means "also", `too` or `to`?
 - Spelling/wording outcome: Correct; child chose `too`.
+
+### 2026-05-14
+- File focus: `game.py`
+- Python concept: A boolean stores yes/no state. `inside_house` is `True` when the house interior should draw, and `False` when the outside world should draw.
+- Check question: When `inside_house` is `True`, what should the game draw? A. The house interior B. Only trees
+- Child answer summary: Not answered yet.
+- Correct/incorrect: practicing
+- What correction was given: Not yet; answer pending.
+- Did progress continue: yes
+- Next level adjustment: Keep boolean checks tied to visible screen changes.
+- Circle-back topic (if needed): Boolean state in `game.py`
+- Spelling/wording correction (if any): Modeled "changes to brown" instead of "changes too brown".
+- Spelling/wording follow-up check: Pending: Which word shows direction here, `to` or `too`?
+- Spelling/wording outcome: Not answered yet.

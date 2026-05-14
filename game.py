@@ -106,6 +106,7 @@ class Game:
         }
 
         self.houses: list[pygame.Rect] = []
+        self.inside_house = False
         self.stats = {
             "wood_collected": 0,
             "stone_collected": 0,
@@ -461,6 +462,23 @@ class Game:
         else:
             self.show_message("Need 2 wood+branches to build a house!")
 
+    def try_toggle_house_view(self) -> None:
+        if self.inside_house:
+            self.inside_house = False
+            self.show_message("Back outside.")
+            return
+
+        for house in self.houses:
+            if is_near(self.player, house, distance=55):
+                self.inside_house = True
+                self.action_mode = None
+                self.action_target_index = None
+                self.craft_menu_open = False
+                self.show_message("Inside the house.")
+                return
+
+        self.show_message("Press H near a house.")
+
     def metric_for_quest(self, kind: str) -> int:
         if kind == "build_house":
             return len(self.houses)
@@ -688,9 +706,12 @@ class Game:
             self.try_make_fire()
         if key == pygame.K_b:
             self.try_build_house()
+        if key == pygame.K_h:
+            self.try_toggle_house_view()
         if key == pygame.K_ESCAPE:
             self.selected_panel = None
             self.craft_menu_open = False
+            self.inside_house = False
         if key == pygame.K_c:
             if self.player.colliderect(self.home_area):
                 self.craft_menu_open = not self.craft_menu_open
@@ -872,6 +893,10 @@ class Game:
         self.update_celebration(dt)
 
     def draw_world(self) -> None:
+        if self.inside_house:
+            self.draw_house_interior()
+            return
+
         self.screen.fill((22, 96, 42))
 
         ground = pygame.Rect(0, 0, WORLD_WIDTH, WORLD_HEIGHT)
@@ -1019,6 +1044,28 @@ class Game:
 
         self.draw_mining_pickaxe()
 
+    def draw_house_interior(self) -> None:
+        self.screen.fill((116, 76, 44))
+        pygame.draw.rect(self.screen, (83, 52, 30), (0, 0, WIDTH, 90))
+        pygame.draw.rect(self.screen, (142, 92, 52), (0, 90, WIDTH, HEIGHT - 90))
+
+        for y in range(120, HEIGHT, 38):
+            pygame.draw.line(self.screen, (94, 60, 34), (0, y), (WIDTH, y), 2)
+        for x in range(-40, WIDTH, 95):
+            pygame.draw.line(self.screen, (100, 64, 36), (x, 90), (x + 90, HEIGHT), 2)
+
+        rug = pygame.Rect(WIDTH // 2 - 115, HEIGHT // 2 - 35, 230, 90)
+        pygame.draw.ellipse(self.screen, (122, 38, 36), rug)
+        pygame.draw.ellipse(self.screen, (176, 76, 52), rug.inflate(-24, -22), 3)
+
+        if self.player_sprite is not None:
+            sprite = self.player_sprite
+            if self.player_facing_left:
+                sprite = pygame.transform.flip(sprite, True, False)
+            self.screen.blit(sprite, (WIDTH // 2 - sprite.get_width() // 2, HEIGHT // 2 - sprite.get_height() // 2 + 35))
+        else:
+            pygame.draw.rect(self.screen, (170, 98, 38), (WIDTH // 2 - 20, HEIGHT // 2 + 20, 40, 40))
+
     def draw_mining_pickaxe(self) -> None:
         if (
             self.action_mode != "mine"
@@ -1093,7 +1140,7 @@ class Game:
             self.screen.blit(qs, ((WIDTH - qs.get_width()) // 2, 17))
 
     def draw_help_and_message(self) -> None:
-        help_text = "Move: arrows | Cut: L | Mine: X | Fire: F (1 wood + 2 stone) | Build: B | Craft: C (home) | Click inventory | 🏠"
+        help_text = "Move: arrows | Cut: L | Mine: X | Fire: F | Build: B | House: H | Craft: C | 🏠"
         help_surf = self.small_font.render(help_text, True, (255, 255, 255))
         pygame.draw.rect(self.screen, (0, 0, 0), (80, HEIGHT - 45, help_surf.get_width() + 10, 35))
         self.screen.blit(help_surf, (85, HEIGHT - 38))

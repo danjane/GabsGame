@@ -141,3 +141,7 @@ Notes:
 - `2026-05-14 | TurnID: S-044`
   - Prompt: "a"
   - AI summary: Child correctly answered that `player_anim_time` helps animate the sprite while walking and that `too` means "also".
+
+- `2026-05-14 | TurnID: S-045`
+  - Prompt: "more realistic. if you press \"H\" and you are near a house the background changes too brown (house)"
+  - AI summary: Added an `H` key house view: near a built house, the game switches to a brown house interior, and `H` or `ESC` returns outside; modeled "changes to brown" for direction.
