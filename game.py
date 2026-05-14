@@ -17,6 +17,7 @@ from config import (
     HEIGHT,
     HOME_AREA_OFFSET,
     HOME_AREA_SIZE,
+    HOUSE_SIZE,
     INITIAL_ANIMAL_COUNT,
     INITIAL_STONE_COUNT,
     INITIAL_TREE_COUNT,
@@ -101,7 +102,7 @@ class Game:
             "rare_stone": {"ruby": 0, "sapphire": 0},
         }
 
-        self.house_built = False
+        self.houses: list[pygame.Rect] = []
         self.stats = {
             "wood_collected": 0,
             "stone_collected": 0,
@@ -446,24 +447,20 @@ class Game:
         self.show_message("Back home!")
 
     def try_build_house(self) -> None:
-        if self.house_built:
-            self.show_message("House already built!")
-            return
-
-        if not self.player.colliderect(self.home_area):
-            self.show_message("Build at home area (green square).")
-            return
-
         if self.inventory["wood+branches"] >= 2:
             self.inventory["wood+branches"] -= 2
-            self.house_built = True
-            self.show_message("House built! (-2 wood+branches)")
+            house_x = self.player.centerx - HOUSE_SIZE[0] // 2
+            house_y = self.player.bottom - HOUSE_SIZE[1]
+            house_x = max(0, min(WORLD_WIDTH - HOUSE_SIZE[0], house_x))
+            house_y = max(0, min(WORLD_HEIGHT - HOUSE_SIZE[1], house_y))
+            self.houses.append(pygame.Rect(house_x, house_y, HOUSE_SIZE[0], HOUSE_SIZE[1]))
+            self.show_message("House built here! (-2 wood+branches)")
         else:
             self.show_message("Need 2 wood+branches to build a house!")
 
     def metric_for_quest(self, kind: str) -> int:
         if kind == "build_house":
-            return 1 if self.house_built else 0
+            return len(self.houses)
         if kind == "collect_wood":
             return int(self.stats["wood_collected"])
         if kind == "collect_stone":
@@ -499,7 +496,7 @@ class Game:
 
     def quest_label(self, kind: str, target: int) -> str:
         if kind == "build_house":
-            return "Build a house at home (B)"
+            return "Build a house (B)"
         if kind == "collect_wood":
             return f"Collect {target} wood"
         if kind == "collect_stone":
@@ -522,7 +519,7 @@ class Game:
             return
 
         kinds = ["collect_wood", "collect_stone", "collect_rare", "craft_fire", "cut_trees", "mine_stones", "go_home"]
-        if not self.house_built:
+        if not self.houses:
             kinds.append("build_house")
         if self.last_quest_kind in kinds and len(kinds) > 1:
             kinds.remove(str(self.last_quest_kind))
@@ -891,8 +888,7 @@ class Game:
             rect = animal["rect"]
             if isinstance(rect, pygame.Rect):
                 drawables.append((rect.bottom, "animal", rect, i))
-        if self.house_built:
-            house_rect = pygame.Rect(self.home_area.x + 15, self.home_area.y + 15, 70, 70)
+        for house_rect in self.houses:
             drawables.append((house_rect.bottom, "house", house_rect, -1))
         drawables.append((self.player.bottom, "player", self.player, -1))
         drawables.sort(key=lambda item: item[0])
@@ -1073,7 +1069,7 @@ class Game:
             self.screen.blit(qs, ((WIDTH - qs.get_width()) // 2, 17))
 
     def draw_help_and_message(self) -> None:
-        help_text = "Move: arrows | Cut: L | Mine: X | Fire: F (1 wood + 2 stone) | Build: B (home) | Craft: C (home) | Click inventory | 🏠"
+        help_text = "Move: arrows | Cut: L | Mine: X | Fire: F (1 wood + 2 stone) | Build: B | Craft: C (home) | Click inventory | 🏠"
         help_surf = self.small_font.render(help_text, True, (255, 255, 255))
         pygame.draw.rect(self.screen, (0, 0, 0), (80, HEIGHT - 45, help_surf.get_width() + 10, 35))
         self.screen.blit(help_surf, (85, HEIGHT - 38))

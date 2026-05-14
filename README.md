@@ -100,7 +100,7 @@ python main.py
 - Cut tree: `L`
 - Mine stone: `X` (requires pickaxe)
 - Make fire: `F` (cost: 1 wood + 2 stone)
-- Build house: `B` (at home area)
+- Build house: `B` (anywhere, costs 2 wood+branches)
 - Craft menu: `C` (at home area)
 - Home teleport / quest turn-in: click `🏠`
 - Close panels/menu: `ESC`

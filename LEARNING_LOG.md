@@ -24,9 +24,10 @@ Use status values:
 | For loops | `game.py` | secure | 2026-05-14 | Child correctly chose that a `for` loop repeats code for each item. |
 | If statements | `game.py` | new | 2026-05-13 | Used `if kind == "moss_cube"` to choose one monster sprite style. |
 | Imports and modules | `main.py` | new |  |  |
+| Lists of objects | `game.py` | new | 2026-05-14 | Changed one house flag into `self.houses`, a list of house rectangles; awaiting check answer. |
 | Removing unused code | `game.py`, `config.py` | new | 2026-05-14 | Removed monster setup, update, drawing, and constants; awaiting check answer. |
 | UI drawing flow | `ui.py` | new |  |  |
-| Spelling and wording | chat prompts | practicing | 2026-05-14 | Corrected "cheep" to "sheep" successfully; corrected "replays" to "replace" successfully; modeled "remove the monster part" instead of "delete the monster part"; "do you now" to "do you know" and "taler" to "taller" still await follow-up. |
+| Spelling and wording | chat prompts | practicing | 2026-05-14 | Corrected "cheep" to "sheep" successfully; corrected "replays" to "replace" successfully; modeled "remove the monster part" and "make it so you can build houses everywhere"; "do you now" to "do you know" and "taler" to "taller" still await follow-up. |
 
 ## Session Entries
 
@@ -156,4 +157,18 @@ Template:
 - Circle-back topic (if needed): Removing unused code in `game.py`
 - Spelling/wording correction (if any): Modeled "remove the monster part" instead of "delete the monster part".
 - Spelling/wording follow-up check: Pending: Which word sounds better for a game feature, `remove` or `delete`?
+- Spelling/wording outcome: Not answered yet.
+
+### 2026-05-14
+- File focus: `game.py`
+- Python concept: A list can store many things. `self.houses` stores each house rectangle, so the draw loop can show all built houses.
+- Check question: In `self.houses.append(new_house)`, what does `append` do? A. Adds one item to the list B. Deletes the whole game
+- Child answer summary: Not answered yet.
+- Correct/incorrect: practicing
+- What correction was given: Not yet; answer pending.
+- Did progress continue: yes
+- Next level adjustment: Keep list examples tied to visible houses.
+- Circle-back topic (if needed): Lists of objects in `game.py`
+- Spelling/wording correction (if any): Modeled "make it so you can build houses everywhere" instead of "make that you can make houses everywhere".
+- Spelling/wording follow-up check: Pending: Which phrase is clearer, `make it so` or `make that`?
 - Spelling/wording outcome: Not answered yet.

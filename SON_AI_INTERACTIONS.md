@@ -129,3 +129,7 @@ Notes:
 - `2026-05-14 | TurnID: S-041`
   - Prompt: "delete the monster part"
   - AI summary: Removed the monster feature from the game by deleting monster constants, setup, sprite creation, update logic, and draw logic; modeled "remove the monster part" as the clearer phrase.
+
+- `2026-05-14 | TurnID: S-042`
+  - Prompt: "make that you can make houses everywhere"
+  - AI summary: Changed house building so pressing `B` can build multiple houses anywhere in the world, each costing 2 wood+branches; modeled "make it so you can build houses everywhere" as the clearer phrase.
