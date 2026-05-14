@@ -55,6 +55,9 @@ class Game:
         self.iso_scale_x = 0.9
         self.iso_scale_y = 0.45
         self.player_sprite: pygame.Surface | None = None
+        self.player_anim_time = 0.0
+        self.player_is_moving = False
+        self.player_facing_left = False
         self.pickaxe_sprite: pygame.Surface | None = None
         self.stone_sprite: pygame.Surface | None = None
         self.tree_sprites: list[pygame.Surface] = []
@@ -734,18 +737,28 @@ class Game:
 
     def update_movement(self) -> None:
         keys = pygame.key.get_pressed()
+        self.player_is_moving = False
         if self.action_mode is None and not self.craft_menu_open:
             if keys[pygame.K_LEFT]:
                 self.player.x -= PLAYER_SPEED
+                self.player_is_moving = True
+                self.player_facing_left = True
             if keys[pygame.K_RIGHT]:
                 self.player.x += PLAYER_SPEED
+                self.player_is_moving = True
+                self.player_facing_left = False
             if keys[pygame.K_UP]:
                 self.player.y -= PLAYER_SPEED
+                self.player_is_moving = True
             if keys[pygame.K_DOWN]:
                 self.player.y += PLAYER_SPEED
+                self.player_is_moving = True
 
             self.player.x = max(0, min(WORLD_WIDTH - self.player.width, self.player.x))
             self.player.y = max(0, min(WORLD_HEIGHT - self.player.height, self.player.y))
+
+        if not self.player_is_moving:
+            self.player_anim_time = 0.0
 
     def update_message_timer(self, dt: float) -> None:
         if self.message_timer > 0:
@@ -852,6 +865,8 @@ class Game:
         self.update_respawns(dt)
         self.update_tree_growth(dt)
         self.update_animals(dt)
+        if self.player_is_moving:
+            self.player_anim_time += dt
         self.update_actions(dt)
         self.update_quest_status()
         self.update_celebration(dt)
@@ -971,10 +986,19 @@ class Game:
             elif kind == "player":
                 if self.player_sprite is not None:
                     px, py = self.iso_point(rect.centerx, rect.centery)
+                    sprite = self.player_sprite
+                    if self.player_facing_left:
+                        sprite = pygame.transform.flip(sprite, True, False)
+                    walk_bob = int(math.sin(self.player_anim_time * 12.0) * 4) if self.player_is_moving else 0
+                    walk_squash = abs(math.sin(self.player_anim_time * 12.0)) if self.player_is_moving else 0.0
+                    if walk_squash:
+                        new_w = sprite.get_width() + int(walk_squash * 4)
+                        new_h = sprite.get_height() - int(walk_squash * 3)
+                        sprite = pygame.transform.smoothscale(sprite, (new_w, new_h))
                     # Anchor sprite so feet align near the character's world position.
-                    sx = px - self.player_sprite.get_width() // 2
-                    sy = py - self.player_sprite.get_height() + 22
-                    self.screen.blit(self.player_sprite, (sx, sy))
+                    sx = px - sprite.get_width() // 2
+                    sy = py - sprite.get_height() + 22 + walk_bob
+                    self.screen.blit(sprite, (sx, sy))
                 else:
                     self.draw_iso_prism(
                         self.screen,

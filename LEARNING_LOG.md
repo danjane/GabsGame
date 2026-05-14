@@ -26,8 +26,9 @@ Use status values:
 | Imports and modules | `main.py` | new |  |  |
 | Lists of objects | `game.py` | new | 2026-05-14 | Changed one house flag into `self.houses`, a list of house rectangles; awaiting check answer. |
 | Removing unused code | `game.py`, `config.py` | new | 2026-05-14 | Removed monster setup, update, drawing, and constants; awaiting check answer. |
+| Animation timers | `game.py` | new | 2026-05-14 | Added `player_anim_time` so the player sprite bobs and squashes while walking; awaiting check answer. |
 | UI drawing flow | `ui.py` | new |  |  |
-| Spelling and wording | chat prompts | practicing | 2026-05-14 | Corrected "cheep" to "sheep" successfully; corrected "replays" to "replace" successfully; modeled "remove the monster part" and "make it so you can build houses everywhere"; "do you now" to "do you know" and "taler" to "taller" still await follow-up. |
+| Spelling and wording | chat prompts | practicing | 2026-05-14 | Corrected "cheep" to "sheep" successfully; corrected "replays" to "replace" successfully; modeled "too" instead of "to" for "also"; "do you now" to "do you know", "taler" to "taller", and "make it so" still await follow-up. |
 
 ## Session Entries
 
@@ -171,4 +172,18 @@ Template:
 - Circle-back topic (if needed): Lists of objects in `game.py`
 - Spelling/wording correction (if any): Modeled "make it so you can build houses everywhere" instead of "make that you can make houses everywhere".
 - Spelling/wording follow-up check: Pending: Which phrase is clearer, `make it so` or `make that`?
+- Spelling/wording outcome: Not answered yet.
+
+### 2026-05-14
+- File focus: `game.py`
+- Python concept: A timer variable can make animation change over time. `player_anim_time` grows while the player walks, and `math.sin(...)` turns that time into a smooth bobbing motion.
+- Check question: What does `player_anim_time` help the player sprite do? A. Animate while walking B. Stop drawing forever
+- Child answer summary: Not answered yet.
+- Correct/incorrect: practicing
+- What correction was given: Not yet; answer pending.
+- Did progress continue: yes
+- Next level adjustment: Keep animation explanations tied to visible movement.
+- Circle-back topic (if needed): Animation timers in `game.py`
+- Spelling/wording correction (if any): Modeled "too" instead of "to" in "could the main character be animated too".
+- Spelling/wording follow-up check: Pending: Which word means "also", `too` or `to`?
 - Spelling/wording outcome: Not answered yet.

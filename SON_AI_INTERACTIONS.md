@@ -133,3 +133,7 @@ Notes:
 - `2026-05-14 | TurnID: S-042`
   - Prompt: "make that you can make houses everywhere"
   - AI summary: Changed house building so pressing `B` can build multiple houses anywhere in the world, each costing 2 wood+branches; modeled "make it so you can build houses everywhere" as the clearer phrase.
+
+- `2026-05-14 | TurnID: S-043`
+  - Prompt: "great! could the main character be animated to"
+  - AI summary: Added a simple walking animation to the main character using a timer, bobbing/squashing the sprite while moving, and flipping it when moving left; modeled "too" instead of "to" for "also".
