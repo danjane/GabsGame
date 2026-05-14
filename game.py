@@ -107,6 +107,7 @@ class Game:
 
         self.houses: list[pygame.Rect] = []
         self.inside_house = False
+        self.indoor_player = pygame.Rect(WIDTH // 2 - 20, HEIGHT // 2 + 20, PLAYER_WIDTH, PLAYER_HEIGHT)
         self.stats = {
             "wood_collected": 0,
             "stone_collected": 0,
@@ -471,6 +472,7 @@ class Game:
         for house in self.houses:
             if is_near(self.player, house, distance=55):
                 self.inside_house = True
+                self.indoor_player.center = (WIDTH // 2, HEIGHT // 2 + 60)
                 self.action_mode = None
                 self.action_target_index = None
                 self.craft_menu_open = False
@@ -760,23 +762,28 @@ class Game:
         keys = pygame.key.get_pressed()
         self.player_is_moving = False
         if self.action_mode is None and not self.craft_menu_open:
+            move_rect = self.indoor_player if self.inside_house else self.player
             if keys[pygame.K_LEFT]:
-                self.player.x -= PLAYER_SPEED
+                move_rect.x -= PLAYER_SPEED
                 self.player_is_moving = True
                 self.player_facing_left = True
             if keys[pygame.K_RIGHT]:
-                self.player.x += PLAYER_SPEED
+                move_rect.x += PLAYER_SPEED
                 self.player_is_moving = True
                 self.player_facing_left = False
             if keys[pygame.K_UP]:
-                self.player.y -= PLAYER_SPEED
+                move_rect.y -= PLAYER_SPEED
                 self.player_is_moving = True
             if keys[pygame.K_DOWN]:
-                self.player.y += PLAYER_SPEED
+                move_rect.y += PLAYER_SPEED
                 self.player_is_moving = True
 
-            self.player.x = max(0, min(WORLD_WIDTH - self.player.width, self.player.x))
-            self.player.y = max(0, min(WORLD_HEIGHT - self.player.height, self.player.y))
+            if self.inside_house:
+                move_rect.x = max(40, min(WIDTH - move_rect.width - 40, move_rect.x))
+                move_rect.y = max(110, min(HEIGHT - move_rect.height - 55, move_rect.y))
+            else:
+                self.player.x = max(0, min(WORLD_WIDTH - self.player.width, self.player.x))
+                self.player.y = max(0, min(WORLD_HEIGHT - self.player.height, self.player.y))
 
         if not self.player_is_moving:
             self.player_anim_time = 0.0
@@ -1062,9 +1069,16 @@ class Game:
             sprite = self.player_sprite
             if self.player_facing_left:
                 sprite = pygame.transform.flip(sprite, True, False)
-            self.screen.blit(sprite, (WIDTH // 2 - sprite.get_width() // 2, HEIGHT // 2 - sprite.get_height() // 2 + 35))
+            walk_bob = int(math.sin(self.player_anim_time * 12.0) * 4) if self.player_is_moving else 0
+            self.screen.blit(
+                sprite,
+                (
+                    self.indoor_player.centerx - sprite.get_width() // 2,
+                    self.indoor_player.bottom - sprite.get_height() + 22 + walk_bob,
+                ),
+            )
         else:
-            pygame.draw.rect(self.screen, (170, 98, 38), (WIDTH // 2 - 20, HEIGHT // 2 + 20, 40, 40))
+            pygame.draw.rect(self.screen, (170, 98, 38), self.indoor_player)
 
     def draw_mining_pickaxe(self) -> None:
         if (

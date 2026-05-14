@@ -28,8 +28,9 @@ Use status values:
 | Removing unused code | `game.py`, `config.py` | new | 2026-05-14 | Removed monster setup, update, drawing, and constants; awaiting check answer. |
 | Animation timers | `game.py` | secure | 2026-05-14 | Child correctly chose that `player_anim_time` helps the sprite animate while walking. |
 | Boolean state | `game.py` | new | 2026-05-14 | Added `inside_house` to switch between outside world drawing and house interior drawing; awaiting check answer. |
+| Rect movement | `game.py` | practicing | 2026-05-14 | Added `indoor_player` rectangle so the character can move inside the house view; awaiting check answer. |
 | UI drawing flow | `ui.py` | new |  |  |
-| Spelling and wording | chat prompts | practicing | 2026-05-14 | Corrected "cheep" to "sheep", "replays" to "replace", and "to" to "too" successfully; modeled "changes to brown" for direction; "do you now" to "do you know", "taler" to "taller", and "make it so" still await follow-up. |
+| Spelling and wording | chat prompts | practicing | 2026-05-14 | Corrected "cheep" to "sheep", "replays" to "replace", and "to" to "too" successfully; modeled "why" instead of "wy"; "do you now" to "do you know", "taler" to "taller", "make it so", and "changes to brown" still await follow-up. |
 
 ## Session Entries
 
@@ -201,4 +202,18 @@ Template:
 - Circle-back topic (if needed): Boolean state in `game.py`
 - Spelling/wording correction (if any): Modeled "changes to brown" instead of "changes too brown".
 - Spelling/wording follow-up check: Pending: Which word shows direction here, `to` or `too`?
+- Spelling/wording outcome: Not answered yet.
+
+### 2026-05-14
+- File focus: `game.py`
+- Python concept: A `pygame.Rect` stores position and size. The new `indoor_player` rect lets the player move around inside the house without changing the outdoor world position.
+- Check question: Which value changes when a rect moves left or right? A. `x` B. `height`
+- Child answer summary: Not answered yet.
+- Correct/incorrect: practicing
+- What correction was given: Not yet; answer pending.
+- Did progress continue: yes
+- Next level adjustment: Keep rect movement checks concrete.
+- Circle-back topic (if needed): Rect movement in `game.py`
+- Spelling/wording correction (if any): Modeled "why" instead of "wy".
+- Spelling/wording follow-up check: Pending: Which spelling is right, `why` or `wy`?
 - Spelling/wording outcome: Not answered yet.

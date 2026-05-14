@@ -145,3 +145,7 @@ Notes:
 - `2026-05-14 | TurnID: S-045`
   - Prompt: "more realistic. if you press \"H\" and you are near a house the background changes too brown (house)"
   - AI summary: Added an `H` key house view: near a built house, the game switches to a brown house interior, and `H` or `ESC` returns outside; modeled "changes to brown" for direction.
+
+- `2026-05-14 | TurnID: S-046`
+  - Prompt: "wy can't I walk in the house"
+  - AI summary: Fixed house interior movement by adding a separate `indoor_player` rectangle that moves with arrow keys inside the house view; modeled "why" instead of "wy".
