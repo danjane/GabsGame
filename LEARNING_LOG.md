@@ -31,7 +31,7 @@ Use status values:
 | Rect movement | `game.py` | practicing | 2026-05-14 | Added `indoor_player` rectangle so the character can move inside the house view; awaiting check answer. |
 | Dictionaries | `game.py` | practicing | 2026-05-31 | Child correctly chose that `"smelted_stone"` is a dictionary key; keep practicing with inventory examples. |
 | UI drawing flow | `ui.py` | new |  |  |
-| Random seeds | `config.py`, `game.py`, `world.py` | practicing | 2026-05-31 | Added `LANDSCAPE_SEED`, `random.Random(...)`, seeded spawn helpers, and seeded hills/rivers/grass/flowers/dirt/reeds/pebbles/shore stones for repeatable starting landscapes; awaiting latest check answer. |
+| Random seeds | `config.py`, `game.py`, `world.py` | practicing | 2026-05-31 | Added `LANDSCAPE_SEED`, `random.Random(...)`, seeded spawn helpers, and seeded hills/rivers/grass/flowers/dirt/reeds/pebbles/sand/meadow patches for repeatable landscapes; awaiting latest check answer. |
 | Spelling and wording | chat prompts | practicing | 2026-05-31 | Corrected "cheep" to "sheep", "replays" to "replace", "to" to "too", "wy" to "why", "do you now" to "do you know", and "wil" to "will" successfully; modeled "pickaxe" instead of "picacks"; "taler" to "taller", "make it so", and "changes to brown" still await follow-up. |
 
 ## Session Entries
@@ -341,6 +341,20 @@ Template:
 - What correction was given: Not yet; answer pending.
 - Did progress continue: yes
 - Next level adjustment: Keep tuple checks visual and concrete.
+- Circle-back topic (if needed): Tuples in `game.py`.
+- Spelling/wording correction (if any): None.
+- Spelling/wording follow-up check: Pending from earlier: Which word is clearer for hills and rivers, `landscape` or `background`?
+- Spelling/wording outcome: Not answered yet.
+
+### 2026-05-31
+- File focus: `game.py`
+- Python concept: A tuple can store several values. `meadow_patches` uses `(x, y, radius, tone)` so each patch has a place, size, and color tone.
+- Check question: In `(x, y, radius, tone)`, which value helps choose the color? A. `tone` B. `x`
+- Child answer summary: Not answered yet.
+- Correct/incorrect: practicing
+- What correction was given: Not yet; answer pending.
+- Did progress continue: yes
+- Next level adjustment: Keep tuple examples tied to visible terrain patches.
 - Circle-back topic (if needed): Tuples in `game.py`.
 - Spelling/wording correction (if any): None.
 - Spelling/wording follow-up check: Pending from earlier: Which word is clearer for hills and rivers, `landscape` or `background`?

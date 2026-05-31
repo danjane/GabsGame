@@ -88,9 +88,11 @@ class Game:
             self.river_points,
             self.river_widths,
             self.hills,
+            self.meadow_patches,
             self.grass_patches,
             self.flower_patches,
             self.dirt_patches,
+            self.sand_bars,
             self.reed_patches,
             self.pebble_patches,
             self.shore_stones,
@@ -302,6 +304,8 @@ class Game:
         list[tuple[int, int]],
         list[int],
         list[pygame.Rect],
+        list[tuple[int, int, int, int]],
+        list[tuple[int, int, int]],
         list[tuple[int, int, int]],
         list[tuple[int, int, int]],
         list[tuple[int, int, int]],
@@ -329,6 +333,15 @@ class Game:
             if not hill.colliderect(home_buffer):
                 hills.append(hill)
 
+        meadow_patches: list[tuple[int, int, int, int]] = []
+        for _ in range(26):
+            x = self.terrain_rng.randint(80, WORLD_WIDTH - 80)
+            y = self.terrain_rng.randint(120, WORLD_HEIGHT - 120)
+            radius = self.terrain_rng.randint(55, 120)
+            tone = self.terrain_rng.randint(0, 2)
+            if not home_buffer.collidepoint(x, y):
+                meadow_patches.append((x, y, radius, tone))
+
         grass_patches: list[tuple[int, int, int]] = []
         for _ in range(55):
             x = self.terrain_rng.randint(50, WORLD_WIDTH - 50)
@@ -352,6 +365,17 @@ class Game:
             radius = self.terrain_rng.randint(18, 42)
             if not home_buffer.collidepoint(x, y):
                 dirt_patches.append((x, y, radius))
+
+        sand_bars: list[tuple[int, int, int]] = []
+        for x, y in river_points[1:-1]:
+            if self.terrain_rng.random() < 0.7:
+                sand_bars.append(
+                    (
+                        x + self.terrain_rng.randint(-70, 70),
+                        y + self.terrain_rng.choice((-1, 1)) * self.terrain_rng.randint(18, 36),
+                        self.terrain_rng.randint(18, 36),
+                    )
+                )
 
         reed_patches: list[tuple[int, int, int]] = []
         for x, y in river_points[1:-1]:
@@ -389,9 +413,11 @@ class Game:
             river_points,
             river_widths,
             hills,
+            meadow_patches,
             grass_patches,
             flower_patches,
             dirt_patches,
+            sand_bars,
             reed_patches,
             pebble_patches,
             shore_stones,
@@ -533,6 +559,15 @@ class Game:
         pygame.draw.polygon(surface, rim_color, [edge30, top[0], edge01, edge12, top[2], edge23], 1)
 
     def draw_seeded_terrain(self) -> None:
+        meadow_colors = [(38, 132, 50), (48, 142, 56), (70, 146, 58)]
+        for x, y, radius, tone in self.meadow_patches:
+            px, py = self.iso_point(x, y)
+            pygame.draw.ellipse(
+                self.screen,
+                meadow_colors[tone % len(meadow_colors)],
+                (px - radius, py - max(10, radius // 4), radius * 2, max(22, radius // 2)),
+            )
+
         for x, y, radius in self.dirt_patches:
             px, py = self.iso_point(x, y)
             pygame.draw.ellipse(
@@ -561,6 +596,14 @@ class Game:
 
         for stone in self.shore_stones:
             self.draw_iso_rock(self.screen, stone)
+
+        for x, y, radius in self.sand_bars:
+            px, py = self.iso_point(x, y)
+            pygame.draw.ellipse(
+                self.screen,
+                (171, 148, 91),
+                (px - radius, py - max(5, radius // 4), radius * 2, max(10, radius // 2)),
+            )
 
         for x, y, count in self.reed_patches:
             px, py = self.iso_point(x, y)
@@ -591,6 +634,10 @@ class Game:
             shade_start = self.iso_point(hill.left + hill.width * 0.16, hill.bottom - hill.height * 0.2)
             shade_end = self.iso_point(hill.right - hill.width * 0.18, hill.bottom - hill.height * 0.1)
             pygame.draw.line(self.screen, (38, 92, 42), shade_start, shade_end, 4)
+            for contour in (0.38, 0.56, 0.74):
+                contour_start = self.iso_point(hill.left + hill.width * 0.2, hill.top + hill.height * contour)
+                contour_end = self.iso_point(hill.right - hill.width * 0.2, hill.top + hill.height * (contour + 0.04))
+                pygame.draw.line(self.screen, (75, 137, 58), contour_start, contour_end, 2)
 
         flower_colors = [(245, 224, 80), (238, 116, 144), (190, 140, 245), (245, 245, 245)]
         for x, y, color_index in self.flower_patches:
