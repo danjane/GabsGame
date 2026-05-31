@@ -31,7 +31,7 @@ Use status values:
 | Rect movement | `game.py` | practicing | 2026-05-14 | Added `indoor_player` rectangle so the character can move inside the house view; awaiting check answer. |
 | Dictionaries | `game.py` | practicing | 2026-05-31 | Child correctly chose that `"smelted_stone"` is a dictionary key; keep practicing with inventory examples. |
 | UI drawing flow | `ui.py` | new |  |  |
-| Random seeds | `config.py`, `game.py`, `world.py` | new | 2026-05-31 | Added `LANDSCAPE_SEED`, `random.Random(...)`, and seeded spawn helpers for repeatable starting landscapes; awaiting check answer. |
+| Random seeds | `config.py`, `game.py`, `world.py` | practicing | 2026-05-31 | Added `LANDSCAPE_SEED`, `random.Random(...)`, and seeded spawn helpers for repeatable starting landscapes; changed default seed to `minecraft`; awaiting check answer. |
 | Spelling and wording | chat prompts | practicing | 2026-05-31 | Corrected "cheep" to "sheep", "replays" to "replace", "to" to "too", "wy" to "why", and "do you now" to "do you know" successfully; modeled "pickaxe" instead of "picacks" and "will" instead of "wil"; "taler" to "taller", "make it so", and "changes to brown" still await follow-up. |
 
 ## Session Entries
@@ -288,4 +288,18 @@ Template:
 - Circle-back topic (if needed): Virtual environments.
 - Spelling/wording correction (if any): Modeled `will` instead of `wil` after "I wil try it".
 - Spelling/wording follow-up check: Pending: Which spelling is right, `will` or `wil`?
+- Spelling/wording outcome: Not answered yet.
+
+### 2026-05-31
+- File focus: `config.py`
+- Python concept: A constant is a named value the game can reuse. `LANDSCAPE_SEED = "minecraft"` sets the default landscape seed in one place.
+- Check question: If `LANDSCAPE_SEED = "minecraft"`, what is the seed value? A. `minecraft` B. `stone`
+- Child answer summary: Not answered yet.
+- Correct/incorrect: practicing
+- What correction was given: Not yet; answer pending.
+- Did progress continue: yes
+- Next level adjustment: Keep constants tied to visible game settings.
+- Circle-back topic (if needed): Random seeds and constants.
+- Spelling/wording correction (if any): None.
+- Spelling/wording follow-up check: Pending from earlier: Which spelling is right, `will` or `wil`?
 - Spelling/wording outcome: Not answered yet.

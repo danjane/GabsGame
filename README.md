@@ -97,7 +97,7 @@ python main.py
 
 Use a landscape seed:
 ```bash
-python main.py gabs-landscape-1
+venv/bin/python main.py minecraft
 ```
 
 The same seed makes the same starting trees, stones, and animals.

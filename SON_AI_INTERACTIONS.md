@@ -169,3 +169,7 @@ Notes:
 - `2026-05-31 | TurnID: S-051`
   - Prompt: "I wil try it, just say Ok" / "it did not work" / "can you do that command" / "can you install it"
   - AI summary: Ran `python3 main.py cool-landscape`, found plain `python3` lacked `pygame`, then ran `venv/bin/python main.py cool-landscape` successfully; confirmed `pygame 2.6.1` is already installed in the project `venv`; modeled "will" instead of "wil".
+
+- `2026-05-31 | TurnID: S-052`
+  - Prompt: "can you put a Minecraft seed?"
+  - AI summary: Changed the default landscape seed to `minecraft` and updated the README seed example to use `venv/bin/python main.py minecraft`.
