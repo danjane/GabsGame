@@ -32,7 +32,7 @@ Use status values:
 | Dictionaries | `game.py` | practicing | 2026-05-31 | Child correctly chose that `"smelted_stone"` is a dictionary key; keep practicing with inventory examples. |
 | UI drawing flow | `ui.py` | new |  |  |
 | Random seeds | `config.py`, `game.py`, `world.py` | practicing | 2026-05-31 | Added `LANDSCAPE_SEED`, `random.Random(...)`, seeded spawn helpers, and seeded hills/rivers/grass/flowers/dirt/reeds/pebbles/sand/meadow patches for repeatable landscapes; awaiting latest check answer. |
-| Sprite loading | `game.py` | new | 2026-05-31 | Added terrain PNG sprites and `load_terrain_sprites()`; awaiting check answer. |
+| Sprite loading | `game.py` | new | 2026-05-31 | Added terrain PNG sprites, including river and hill sprites, and `load_terrain_sprites()`; awaiting check answer. |
 | Spelling and wording | chat prompts | practicing | 2026-05-31 | Corrected "cheep" to "sheep", "replays" to "replace", "to" to "too", "wy" to "why", "do you now" to "do you know", and "wil" to "will" successfully; modeled "sprites of everything" instead of "sprits of evry fing"; modeled "pickaxe" instead of "picacks"; "taler" to "taller", "make it so", and "changes to brown" still await follow-up. |
 
 ## Session Entries
@@ -358,6 +358,20 @@ Template:
 - Next level adjustment: Keep dictionary checks tied to visible sprites.
 - Circle-back topic (if needed): Dictionaries and sprite loading.
 - Spelling/wording correction (if any): Modeled "sprites of everything" instead of "sprits of evry fing".
+- Spelling/wording follow-up check: Pending: Which spelling is right, `sprites` or `sprits`?
+- Spelling/wording outcome: Not answered yet.
+
+### 2026-05-31
+- File focus: `game.py`
+- Python concept: A fallback is backup code. If a sprite like `"river"` is missing, the game can still draw the river with shapes.
+- Check question: What does a fallback help the game do? A. Keep working if a sprite is missing B. Delete the player
+- Child answer summary: Not answered yet.
+- Correct/incorrect: practicing
+- What correction was given: Not yet; answer pending.
+- Did progress continue: yes
+- Next level adjustment: Keep fallback examples tied to visible sprites.
+- Circle-back topic (if needed): Sprite loading fallbacks.
+- Spelling/wording correction (if any): Re-modeled "sprites of everything" instead of "sprits of evry fing".
 - Spelling/wording follow-up check: Pending: Which spelling is right, `sprites` or `sprits`?
 - Spelling/wording outcome: Not answered yet.
 
