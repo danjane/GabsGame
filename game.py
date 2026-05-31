@@ -84,7 +84,15 @@ class Game:
             HOME_AREA_SIZE[0],
             HOME_AREA_SIZE[1],
         )
-        self.river_points, self.hills, self.grass_patches, self.shore_stones = self.create_terrain_features()
+        (
+            self.river_points,
+            self.river_widths,
+            self.hills,
+            self.grass_patches,
+            self.flower_patches,
+            self.dirt_patches,
+            self.shore_stones,
+        ) = self.create_terrain_features()
 
         self.trees = [
             random_spawn_rect(
@@ -288,13 +296,23 @@ class Game:
 
     def create_terrain_features(
         self,
-    ) -> tuple[list[tuple[int, int]], list[pygame.Rect], list[tuple[int, int, int]], list[pygame.Rect]]:
+    ) -> tuple[
+        list[tuple[int, int]],
+        list[int],
+        list[pygame.Rect],
+        list[tuple[int, int, int]],
+        list[tuple[int, int, int]],
+        list[tuple[int, int, int]],
+        list[pygame.Rect],
+    ]:
         river_points: list[tuple[int, int]] = []
+        river_widths: list[int] = []
         river_y = self.terrain_rng.randint(260, WORLD_HEIGHT - 260)
         for x in range(-120, WORLD_WIDTH + 260, 220):
             river_y += self.terrain_rng.randint(-120, 120)
             river_y = max(180, min(WORLD_HEIGHT - 180, river_y))
             river_points.append((x, river_y))
+            river_widths.append(self.terrain_rng.randint(24, 38))
 
         hills: list[pygame.Rect] = []
         home_buffer = self.home_area.inflate(280, 240)
@@ -315,6 +333,22 @@ class Game:
             if not home_buffer.collidepoint(x, y):
                 grass_patches.append((x, y, radius))
 
+        flower_patches: list[tuple[int, int, int]] = []
+        for _ in range(28):
+            x = self.terrain_rng.randint(50, WORLD_WIDTH - 50)
+            y = self.terrain_rng.randint(110, WORLD_HEIGHT - 110)
+            color_index = self.terrain_rng.randint(0, 3)
+            if not home_buffer.collidepoint(x, y):
+                flower_patches.append((x, y, color_index))
+
+        dirt_patches: list[tuple[int, int, int]] = []
+        for _ in range(18):
+            x = self.terrain_rng.randint(80, WORLD_WIDTH - 80)
+            y = self.terrain_rng.randint(120, WORLD_HEIGHT - 120)
+            radius = self.terrain_rng.randint(18, 42)
+            if not home_buffer.collidepoint(x, y):
+                dirt_patches.append((x, y, radius))
+
         shore_stones: list[pygame.Rect] = []
         for x, y in river_points[1:-1]:
             for side in (-1, 1):
@@ -327,7 +361,7 @@ class Game:
                     )
                     shore_stones.append(stone)
 
-        return river_points, hills, grass_patches, shore_stones
+        return river_points, river_widths, hills, grass_patches, flower_patches, dirt_patches, shore_stones
 
     def remove_edge_background(self, sprite: pygame.Surface, tolerance: int = 36) -> pygame.Surface:
         width, height = sprite.get_size()
@@ -465,6 +499,14 @@ class Game:
         pygame.draw.polygon(surface, rim_color, [edge30, top[0], edge01, edge12, top[2], edge23], 1)
 
     def draw_seeded_terrain(self) -> None:
+        for x, y, radius in self.dirt_patches:
+            px, py = self.iso_point(x, y)
+            pygame.draw.ellipse(
+                self.screen,
+                (126, 112, 70),
+                (px - radius, py - max(6, radius // 4), radius * 2, max(12, radius // 2)),
+            )
+
         for x, y, radius in self.grass_patches:
             px, py = self.iso_point(x, y)
             pygame.draw.ellipse(
@@ -476,10 +518,11 @@ class Game:
         for i in range(len(self.river_points) - 1):
             start = self.iso_point(*self.river_points[i])
             end = self.iso_point(*self.river_points[i + 1])
-            pygame.draw.line(self.screen, (62, 106, 58), start, end, 42)
-            pygame.draw.line(self.screen, (122, 104, 66), start, end, 36)
-            pygame.draw.line(self.screen, (18, 92, 112), start, end, 28)
-            pygame.draw.line(self.screen, (44, 145, 185), start, end, 22)
+            width = (self.river_widths[i] + self.river_widths[i + 1]) // 2
+            pygame.draw.line(self.screen, (62, 106, 58), start, end, width + 18)
+            pygame.draw.line(self.screen, (122, 104, 66), start, end, width + 12)
+            pygame.draw.line(self.screen, (18, 92, 112), start, end, width + 4)
+            pygame.draw.line(self.screen, (44, 145, 185), start, end, width)
             pygame.draw.line(self.screen, (116, 202, 224), start, end, 5)
 
         for stone in self.shore_stones:
@@ -497,6 +540,16 @@ class Game:
             ridge_start = self.iso_point(hill.left + hill.width * 0.25, hill.top + hill.height * 0.35)
             ridge_end = self.iso_point(hill.right - hill.width * 0.22, hill.bottom - hill.height * 0.28)
             pygame.draw.line(self.screen, (128, 178, 82), ridge_start, ridge_end, 3)
+            shade_start = self.iso_point(hill.left + hill.width * 0.16, hill.bottom - hill.height * 0.2)
+            shade_end = self.iso_point(hill.right - hill.width * 0.18, hill.bottom - hill.height * 0.1)
+            pygame.draw.line(self.screen, (38, 92, 42), shade_start, shade_end, 4)
+
+        flower_colors = [(245, 224, 80), (238, 116, 144), (190, 140, 245), (245, 245, 245)]
+        for x, y, color_index in self.flower_patches:
+            px, py = self.iso_point(x, y)
+            color = flower_colors[color_index % len(flower_colors)]
+            pygame.draw.line(self.screen, (36, 112, 48), (px, py + 3), (px, py - 5), 1)
+            pygame.draw.circle(self.screen, color, (px, py - 6), 3)
 
     def show_message(self, text: str, seconds: float = 2.0) -> None:
         self.message = text
