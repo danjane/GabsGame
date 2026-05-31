@@ -1,7 +1,7 @@
 WIDTH, HEIGHT = 900, 600
 WINDOW_TITLE = "Survival Game"
 FPS = 60
-LANDSCAPE_SEED = "minecraft"
+LANDSCAPE_SEED = "2151901553968352745"
 
 # World-space size (bigger than the visible screen for exploration).
 WORLD_WIDTH, WORLD_HEIGHT = 2200, 1600

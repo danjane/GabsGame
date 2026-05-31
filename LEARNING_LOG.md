@@ -31,7 +31,7 @@ Use status values:
 | Rect movement | `game.py` | practicing | 2026-05-14 | Added `indoor_player` rectangle so the character can move inside the house view; awaiting check answer. |
 | Dictionaries | `game.py` | practicing | 2026-05-31 | Child correctly chose that `"smelted_stone"` is a dictionary key; keep practicing with inventory examples. |
 | UI drawing flow | `ui.py` | new |  |  |
-| Random seeds | `config.py`, `game.py`, `world.py` | practicing | 2026-05-31 | Added `LANDSCAPE_SEED`, `random.Random(...)`, and seeded spawn helpers for repeatable starting landscapes; child correctly identified `minecraft` as the seed value. |
+| Random seeds | `config.py`, `game.py`, `world.py` | practicing | 2026-05-31 | Added `LANDSCAPE_SEED`, `random.Random(...)`, and seeded spawn helpers for repeatable starting landscapes; changed default to a known Minecraft title-screen seed. |
 | Spelling and wording | chat prompts | practicing | 2026-05-31 | Corrected "cheep" to "sheep", "replays" to "replace", "to" to "too", "wy" to "why", "do you now" to "do you know", and "wil" to "will" successfully; modeled "pickaxe" instead of "picacks"; "taler" to "taller", "make it so", and "changes to brown" still await follow-up. |
 
 ## Session Entries
@@ -303,3 +303,17 @@ Template:
 - Spelling/wording correction (if any): None.
 - Spelling/wording follow-up check: Pending from earlier: Which spelling is right, `will` or `wil`?
 - Spelling/wording outcome: Correct; child chose `will`.
+
+### 2026-05-31
+- File focus: `config.py`
+- Python concept: A string can hold digits too. `LANDSCAPE_SEED = "2151901553968352745"` keeps the Minecraft seed as text so Python can pass it to `random.Random(...)`.
+- Check question: In `LANDSCAPE_SEED = "2151901553968352745"`, is the seed stored as text because it has quotes? A. Yes B. No
+- Child answer summary: Not answered yet.
+- Correct/incorrect: practicing
+- What correction was given: Not yet; answer pending.
+- Did progress continue: yes
+- Next level adjustment: Keep string examples short and tied to visible settings.
+- Circle-back topic (if needed): Strings and random seeds.
+- Spelling/wording correction (if any): None.
+- Spelling/wording follow-up check: Pending from earlier: Which phrase is clearer, `our game` or `my I mean our game`?
+- Spelling/wording outcome: Not answered yet.

@@ -97,7 +97,7 @@ python main.py
 
 Use a landscape seed:
 ```bash
-venv/bin/python main.py minecraft
+venv/bin/python main.py 2151901553968352745
 ```
 
 The same seed makes the same starting trees, stones, and animals.
