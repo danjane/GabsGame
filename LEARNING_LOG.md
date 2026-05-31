@@ -32,7 +32,8 @@ Use status values:
 | Dictionaries | `game.py` | practicing | 2026-05-31 | Child correctly chose that `"smelted_stone"` is a dictionary key; keep practicing with inventory examples. |
 | UI drawing flow | `ui.py` | new |  |  |
 | Random seeds | `config.py`, `game.py`, `world.py` | practicing | 2026-05-31 | Added `LANDSCAPE_SEED`, `random.Random(...)`, seeded spawn helpers, and seeded hills/rivers/grass/flowers/dirt/reeds/pebbles/sand/meadow patches for repeatable landscapes; awaiting latest check answer. |
-| Spelling and wording | chat prompts | practicing | 2026-05-31 | Corrected "cheep" to "sheep", "replays" to "replace", "to" to "too", "wy" to "why", "do you now" to "do you know", and "wil" to "will" successfully; modeled "pickaxe" instead of "picacks"; "taler" to "taller", "make it so", and "changes to brown" still await follow-up. |
+| Sprite loading | `game.py` | new | 2026-05-31 | Added terrain PNG sprites and `load_terrain_sprites()`; awaiting check answer. |
+| Spelling and wording | chat prompts | practicing | 2026-05-31 | Corrected "cheep" to "sheep", "replays" to "replace", "to" to "too", "wy" to "why", "do you now" to "do you know", and "wil" to "will" successfully; modeled "sprites of everything" instead of "sprits of evry fing"; modeled "pickaxe" instead of "picacks"; "taler" to "taller", "make it so", and "changes to brown" still await follow-up. |
 
 ## Session Entries
 
@@ -344,6 +345,20 @@ Template:
 - Circle-back topic (if needed): Tuples in `game.py`.
 - Spelling/wording correction (if any): None.
 - Spelling/wording follow-up check: Pending from earlier: Which word is clearer for hills and rivers, `landscape` or `background`?
+- Spelling/wording outcome: Not answered yet.
+
+### 2026-05-31
+- File focus: `game.py`
+- Python concept: A dictionary can store loaded sprites by name. `self.terrain_sprites["reeds"]` lets the draw code find the reeds image.
+- Check question: In `self.terrain_sprites["reeds"]`, what is `"reeds"`? A. A dictionary key B. A player speed number
+- Child answer summary: Not answered yet.
+- Correct/incorrect: practicing
+- What correction was given: Not yet; answer pending.
+- Did progress continue: yes
+- Next level adjustment: Keep dictionary checks tied to visible sprites.
+- Circle-back topic (if needed): Dictionaries and sprite loading.
+- Spelling/wording correction (if any): Modeled "sprites of everything" instead of "sprits of evry fing".
+- Spelling/wording follow-up check: Pending: Which spelling is right, `sprites` or `sprits`?
 - Spelling/wording outcome: Not answered yet.
 
 ### 2026-05-31

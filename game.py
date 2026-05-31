@@ -68,11 +68,13 @@ class Game:
         self.stone_sprite: pygame.Surface | None = None
         self.tree_sprites: list[pygame.Surface] = []
         self.animal_sprites: dict[str, list[pygame.Surface]] = {}
+        self.terrain_sprites: dict[str, pygame.Surface | list[pygame.Surface]] = {}
         self.load_player_sprite()
         self.load_pickaxe_sprite()
         self.load_stone_sprite()
         self.load_tree_sprites()
         self.load_animal_sprites()
+        self.load_terrain_sprites()
         self.landscape_seed = landscape_seed if landscape_seed is not None else LANDSCAPE_SEED
         self.landscape_rng = random.Random(self.landscape_seed)
         self.terrain_rng = random.Random(f"{self.landscape_seed}:terrain")
@@ -238,6 +240,40 @@ class Game:
             "sheep": [self.create_animal_sprite("sheep", 0), self.create_animal_sprite("sheep", 1)],
             "cow": [self.create_animal_sprite("cow", 0), self.create_animal_sprite("cow", 1)],
         }
+
+    def load_terrain_sprites(self) -> None:
+        terrain_dir = "assets/sprites/terrain"
+        names = {
+            "grass": "grass_patch.png",
+            "dirt": "dirt_patch.png",
+            "sand": "sand_bar.png",
+            "reeds": "reeds.png",
+            "pebbles": "pebble_cluster.png",
+        }
+        self.terrain_sprites = {}
+        for key, filename in names.items():
+            path = os.path.join(terrain_dir, filename)
+            try:
+                self.terrain_sprites[key] = pygame.image.load(path).convert_alpha()
+            except (pygame.error, FileNotFoundError):
+                continue
+
+        meadow_sprites: list[pygame.Surface] = []
+        flower_sprites: list[pygame.Surface] = []
+        for index in range(4):
+            try:
+                flower_sprites.append(pygame.image.load(os.path.join(terrain_dir, f"flower_{index}.png")).convert_alpha())
+            except (pygame.error, FileNotFoundError):
+                continue
+        for index in range(3):
+            try:
+                meadow_sprites.append(pygame.image.load(os.path.join(terrain_dir, f"meadow_{index}.png")).convert_alpha())
+            except (pygame.error, FileNotFoundError):
+                continue
+        if meadow_sprites:
+            self.terrain_sprites["meadow"] = meadow_sprites
+        if flower_sprites:
+            self.terrain_sprites["flowers"] = flower_sprites
 
     def create_animal_sprite(self, kind: str, step: int) -> pygame.Surface:
         sprite = pygame.Surface((72, 54), pygame.SRCALPHA)
@@ -562,27 +598,43 @@ class Game:
         meadow_colors = [(38, 132, 50), (48, 142, 56), (70, 146, 58)]
         for x, y, radius, tone in self.meadow_patches:
             px, py = self.iso_point(x, y)
-            pygame.draw.ellipse(
-                self.screen,
-                meadow_colors[tone % len(meadow_colors)],
-                (px - radius, py - max(10, radius // 4), radius * 2, max(22, radius // 2)),
-            )
+            meadow_sprites = self.terrain_sprites.get("meadow")
+            if isinstance(meadow_sprites, list) and meadow_sprites:
+                sprite = meadow_sprites[tone % len(meadow_sprites)]
+                scaled = pygame.transform.smoothscale(sprite, (radius * 2, max(22, radius // 2)))
+                self.screen.blit(scaled, (px - scaled.get_width() // 2, py - scaled.get_height() // 2))
+            else:
+                pygame.draw.ellipse(
+                    self.screen,
+                    meadow_colors[tone % len(meadow_colors)],
+                    (px - radius, py - max(10, radius // 4), radius * 2, max(22, radius // 2)),
+                )
 
         for x, y, radius in self.dirt_patches:
             px, py = self.iso_point(x, y)
-            pygame.draw.ellipse(
-                self.screen,
-                (126, 112, 70),
-                (px - radius, py - max(6, radius // 4), radius * 2, max(12, radius // 2)),
-            )
+            dirt_sprite = self.terrain_sprites.get("dirt")
+            if isinstance(dirt_sprite, pygame.Surface):
+                scaled = pygame.transform.smoothscale(dirt_sprite, (radius * 2, max(12, radius // 2)))
+                self.screen.blit(scaled, (px - scaled.get_width() // 2, py - scaled.get_height() // 2))
+            else:
+                pygame.draw.ellipse(
+                    self.screen,
+                    (126, 112, 70),
+                    (px - radius, py - max(6, radius // 4), radius * 2, max(12, radius // 2)),
+                )
 
         for x, y, radius in self.grass_patches:
             px, py = self.iso_point(x, y)
-            pygame.draw.ellipse(
-                self.screen,
-                (42, 128, 48),
-                (px - radius, py - max(5, radius // 3), radius * 2, max(10, radius // 2)),
-            )
+            grass_sprite = self.terrain_sprites.get("grass")
+            if isinstance(grass_sprite, pygame.Surface):
+                scaled = pygame.transform.smoothscale(grass_sprite, (radius * 2, max(10, radius // 2)))
+                self.screen.blit(scaled, (px - scaled.get_width() // 2, py - scaled.get_height() // 2))
+            else:
+                pygame.draw.ellipse(
+                    self.screen,
+                    (42, 128, 48),
+                    (px - radius, py - max(5, radius // 3), radius * 2, max(10, radius // 2)),
+                )
 
         for i in range(len(self.river_points) - 1):
             start = self.iso_point(*self.river_points[i])
@@ -599,25 +651,41 @@ class Game:
 
         for x, y, radius in self.sand_bars:
             px, py = self.iso_point(x, y)
-            pygame.draw.ellipse(
-                self.screen,
-                (171, 148, 91),
-                (px - radius, py - max(5, radius // 4), radius * 2, max(10, radius // 2)),
-            )
+            sand_sprite = self.terrain_sprites.get("sand")
+            if isinstance(sand_sprite, pygame.Surface):
+                scaled = pygame.transform.smoothscale(sand_sprite, (radius * 2, max(10, radius // 2)))
+                self.screen.blit(scaled, (px - scaled.get_width() // 2, py - scaled.get_height() // 2))
+            else:
+                pygame.draw.ellipse(
+                    self.screen,
+                    (171, 148, 91),
+                    (px - radius, py - max(5, radius // 4), radius * 2, max(10, radius // 2)),
+                )
 
         for x, y, count in self.reed_patches:
             px, py = self.iso_point(x, y)
-            for reed in range(count):
-                offset = reed * 3 - count * 2
-                height = 8 + (reed % 3) * 2
-                pygame.draw.line(self.screen, (36, 106, 42), (px + offset, py + 5), (px + offset + 1, py - height), 2)
+            reeds_sprite = self.terrain_sprites.get("reeds")
+            if isinstance(reeds_sprite, pygame.Surface):
+                width = max(20, count * 8)
+                scaled = pygame.transform.smoothscale(reeds_sprite, (width, 42))
+                self.screen.blit(scaled, (px - scaled.get_width() // 2, py - scaled.get_height() + 8))
+            else:
+                for reed in range(count):
+                    offset = reed * 3 - count * 2
+                    height = 8 + (reed % 3) * 2
+                    pygame.draw.line(self.screen, (36, 106, 42), (px + offset, py + 5), (px + offset + 1, py - height), 2)
 
         for x, y, count in self.pebble_patches:
             px, py = self.iso_point(x, y)
-            for pebble in range(count):
-                ox = (pebble % 3) * 5 - 5
-                oy = (pebble // 3) * 4
-                pygame.draw.circle(self.screen, (112, 118, 104), (px + ox, py + oy), 2)
+            pebble_sprite = self.terrain_sprites.get("pebbles")
+            if isinstance(pebble_sprite, pygame.Surface):
+                scaled = pygame.transform.smoothscale(pebble_sprite, (max(20, count * 8), 24))
+                self.screen.blit(scaled, (px - scaled.get_width() // 2, py - scaled.get_height() // 2))
+            else:
+                for pebble in range(count):
+                    ox = (pebble % 3) * 5 - 5
+                    oy = (pebble // 3) * 4
+                    pygame.draw.circle(self.screen, (112, 118, 104), (px + ox, py + oy), 2)
 
         for hill in self.hills:
             self.draw_iso_prism(
@@ -642,9 +710,14 @@ class Game:
         flower_colors = [(245, 224, 80), (238, 116, 144), (190, 140, 245), (245, 245, 245)]
         for x, y, color_index in self.flower_patches:
             px, py = self.iso_point(x, y)
-            color = flower_colors[color_index % len(flower_colors)]
-            pygame.draw.line(self.screen, (36, 112, 48), (px, py + 3), (px, py - 5), 1)
-            pygame.draw.circle(self.screen, color, (px, py - 6), 3)
+            flower_sprites = self.terrain_sprites.get("flowers")
+            if isinstance(flower_sprites, list) and flower_sprites:
+                sprite = flower_sprites[color_index % len(flower_sprites)]
+                self.screen.blit(sprite, (px - sprite.get_width() // 2, py - sprite.get_height() + 6))
+            else:
+                color = flower_colors[color_index % len(flower_colors)]
+                pygame.draw.line(self.screen, (36, 112, 48), (px, py + 3), (px, py - 5), 1)
+                pygame.draw.circle(self.screen, color, (px, py - 6), 3)
 
     def show_message(self, text: str, seconds: float = 2.0) -> None:
         self.message = text
