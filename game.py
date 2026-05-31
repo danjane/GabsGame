@@ -84,7 +84,7 @@ class Game:
             HOME_AREA_SIZE[0],
             HOME_AREA_SIZE[1],
         )
-        self.river_points, self.hills = self.create_terrain_features()
+        self.river_points, self.hills, self.grass_patches, self.shore_stones = self.create_terrain_features()
 
         self.trees = [
             random_spawn_rect(
@@ -286,7 +286,9 @@ class Game:
             )
         return animals
 
-    def create_terrain_features(self) -> tuple[list[tuple[int, int]], list[pygame.Rect]]:
+    def create_terrain_features(
+        self,
+    ) -> tuple[list[tuple[int, int]], list[pygame.Rect], list[tuple[int, int, int]], list[pygame.Rect]]:
         river_points: list[tuple[int, int]] = []
         river_y = self.terrain_rng.randint(260, WORLD_HEIGHT - 260)
         for x in range(-120, WORLD_WIDTH + 260, 220):
@@ -305,7 +307,27 @@ class Game:
             if not hill.colliderect(home_buffer):
                 hills.append(hill)
 
-        return river_points, hills
+        grass_patches: list[tuple[int, int, int]] = []
+        for _ in range(55):
+            x = self.terrain_rng.randint(50, WORLD_WIDTH - 50)
+            y = self.terrain_rng.randint(100, WORLD_HEIGHT - 100)
+            radius = self.terrain_rng.randint(14, 34)
+            if not home_buffer.collidepoint(x, y):
+                grass_patches.append((x, y, radius))
+
+        shore_stones: list[pygame.Rect] = []
+        for x, y in river_points[1:-1]:
+            for side in (-1, 1):
+                if self.terrain_rng.random() < 0.75:
+                    stone = pygame.Rect(
+                        x + self.terrain_rng.randint(-55, 55),
+                        y + side * self.terrain_rng.randint(34, 58),
+                        self.terrain_rng.randint(16, 28),
+                        self.terrain_rng.randint(10, 18),
+                    )
+                    shore_stones.append(stone)
+
+        return river_points, hills, grass_patches, shore_stones
 
     def remove_edge_background(self, sprite: pygame.Surface, tolerance: int = 36) -> pygame.Surface:
         width, height = sprite.get_size()
@@ -443,22 +465,38 @@ class Game:
         pygame.draw.polygon(surface, rim_color, [edge30, top[0], edge01, edge12, top[2], edge23], 1)
 
     def draw_seeded_terrain(self) -> None:
+        for x, y, radius in self.grass_patches:
+            px, py = self.iso_point(x, y)
+            pygame.draw.ellipse(
+                self.screen,
+                (42, 128, 48),
+                (px - radius, py - max(5, radius // 3), radius * 2, max(10, radius // 2)),
+            )
+
         for i in range(len(self.river_points) - 1):
             start = self.iso_point(*self.river_points[i])
             end = self.iso_point(*self.river_points[i + 1])
-            pygame.draw.line(self.screen, (18, 92, 112), start, end, 30)
-            pygame.draw.line(self.screen, (44, 145, 185), start, end, 24)
-            pygame.draw.line(self.screen, (96, 190, 220), start, end, 7)
+            pygame.draw.line(self.screen, (62, 106, 58), start, end, 42)
+            pygame.draw.line(self.screen, (122, 104, 66), start, end, 36)
+            pygame.draw.line(self.screen, (18, 92, 112), start, end, 28)
+            pygame.draw.line(self.screen, (44, 145, 185), start, end, 22)
+            pygame.draw.line(self.screen, (116, 202, 224), start, end, 5)
+
+        for stone in self.shore_stones:
+            self.draw_iso_rock(self.screen, stone)
 
         for hill in self.hills:
             self.draw_iso_prism(
                 self.screen,
                 hill,
-                height=max(10, hill.height // 9),
-                top_color=(78, 150, 62),
-                left_color=(46, 108, 48),
-                right_color=(58, 126, 52),
+                height=max(14, hill.height // 7),
+                top_color=(92, 156, 64),
+                left_color=(50, 108, 46),
+                right_color=(64, 126, 50),
             )
+            ridge_start = self.iso_point(hill.left + hill.width * 0.25, hill.top + hill.height * 0.35)
+            ridge_end = self.iso_point(hill.right - hill.width * 0.22, hill.bottom - hill.height * 0.28)
+            pygame.draw.line(self.screen, (128, 178, 82), ridge_start, ridge_end, 3)
 
     def show_message(self, text: str, seconds: float = 2.0) -> None:
         self.message = text

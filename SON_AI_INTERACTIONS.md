@@ -185,3 +185,7 @@ Notes:
 - `2026-05-31 | TurnID: S-055`
   - Prompt: "I mean one that changes the background makes hills rivers and stuff"
   - AI summary: Added seeded terrain features in `game.py`: each landscape seed now creates a repeatable river path and hills, drawn before trees, stones, houses, and the player; modeled "a seed that changes the landscape with hills and rivers" as clearer wording.
+
+- `2026-05-31 | TurnID: S-056`
+  - Prompt: "more realistic"
+  - AI summary: Improved seeded terrain realism by adding layered river banks, water highlights, seeded grass patches, shore stones, taller hills, and hill ridge highlights.
