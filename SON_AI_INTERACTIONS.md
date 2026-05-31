@@ -153,3 +153,7 @@ Notes:
 - `2026-05-14 | TurnID: S-047`
   - Prompt: "to make a furnace you need 8 stones and to use it you press 'U' it uses up 1 rare stone it makes a new rare stone 'smelted stone' (put it in the rare stones) in the crafting thing add a new picacks 'the smelted stone picacks' (it mines faster)"
   - AI summary: Added furnace crafting for 8 stone, `U` smelting near the furnace to convert ruby/sapphire into `smelted_stone` under rare stones, and a craftable smelted stone pickaxe that mines faster; modeled "pickaxe" instead of "picacks".
+
+- `2026-05-31 | TurnID: S-048`
+  - Prompt: "A" / "A"
+  - AI summary: Child correctly answered that `why` is the right spelling instead of `wy`, then correctly answered that `"smelted_stone"` is a dictionary key in `self.inventory["smelted_stone"]`.
