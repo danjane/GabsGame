@@ -31,7 +31,7 @@ Use status values:
 | Rect movement | `game.py` | practicing | 2026-05-14 | Added `indoor_player` rectangle so the character can move inside the house view; awaiting check answer. |
 | Dictionaries | `game.py` | practicing | 2026-05-31 | Child correctly chose that `"smelted_stone"` is a dictionary key; keep practicing with inventory examples. |
 | UI drawing flow | `ui.py` | new |  |  |
-| Random seeds | `config.py`, `game.py`, `world.py` | practicing | 2026-05-31 | Added `LANDSCAPE_SEED`, `random.Random(...)`, and seeded spawn helpers for repeatable starting landscapes; changed default to a known Minecraft title-screen seed. |
+| Random seeds | `config.py`, `game.py`, `world.py` | practicing | 2026-05-31 | Added `LANDSCAPE_SEED`, `random.Random(...)`, seeded spawn helpers, and seeded hills/rivers for repeatable starting landscapes; awaiting latest check answer. |
 | Spelling and wording | chat prompts | practicing | 2026-05-31 | Corrected "cheep" to "sheep", "replays" to "replace", "to" to "too", "wy" to "why", "do you now" to "do you know", and "wil" to "will" successfully; modeled "pickaxe" instead of "picacks"; "taler" to "taller", "make it so", and "changes to brown" still await follow-up. |
 
 ## Session Entries
@@ -316,4 +316,18 @@ Template:
 - Circle-back topic (if needed): Strings and random seeds.
 - Spelling/wording correction (if any): None.
 - Spelling/wording follow-up check: Pending from earlier: Which phrase is clearer, `our game` or `my I mean our game`?
+- Spelling/wording outcome: Not answered yet.
+
+### 2026-05-31
+- File focus: `game.py`
+- Python concept: A list can store many points. `river_points` stores the river path, and the draw code connects each point to make a river.
+- Check question: What does `river_points` store? A. Points for the river path B. The player's tools
+- Child answer summary: Not answered yet.
+- Correct/incorrect: practicing
+- What correction was given: Not yet; answer pending.
+- Did progress continue: yes
+- Next level adjustment: Keep list examples tied to visible rivers and hills.
+- Circle-back topic (if needed): Lists of points in `game.py`.
+- Spelling/wording correction (if any): Modeled "a seed that changes the landscape with hills and rivers" as clearer wording.
+- Spelling/wording follow-up check: Pending: Which word is clearer for hills and rivers, `landscape` or `background`?
 - Spelling/wording outcome: Not answered yet.

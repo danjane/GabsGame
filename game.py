@@ -75,6 +75,7 @@ class Game:
         self.load_animal_sprites()
         self.landscape_seed = landscape_seed if landscape_seed is not None else LANDSCAPE_SEED
         self.landscape_rng = random.Random(self.landscape_seed)
+        self.terrain_rng = random.Random(f"{self.landscape_seed}:terrain")
 
         self.player = pygame.Rect(START_POS[0], START_POS[1], PLAYER_WIDTH, PLAYER_HEIGHT)
         self.home_area = pygame.Rect(
@@ -83,6 +84,7 @@ class Game:
             HOME_AREA_SIZE[0],
             HOME_AREA_SIZE[1],
         )
+        self.river_points, self.hills = self.create_terrain_features()
 
         self.trees = [
             random_spawn_rect(
@@ -284,6 +286,27 @@ class Game:
             )
         return animals
 
+    def create_terrain_features(self) -> tuple[list[tuple[int, int]], list[pygame.Rect]]:
+        river_points: list[tuple[int, int]] = []
+        river_y = self.terrain_rng.randint(260, WORLD_HEIGHT - 260)
+        for x in range(-120, WORLD_WIDTH + 260, 220):
+            river_y += self.terrain_rng.randint(-120, 120)
+            river_y = max(180, min(WORLD_HEIGHT - 180, river_y))
+            river_points.append((x, river_y))
+
+        hills: list[pygame.Rect] = []
+        home_buffer = self.home_area.inflate(280, 240)
+        while len(hills) < 8:
+            width = self.terrain_rng.randint(170, 340)
+            height = self.terrain_rng.randint(100, 210)
+            x = self.terrain_rng.randint(40, WORLD_WIDTH - width - 40)
+            y = self.terrain_rng.randint(120, WORLD_HEIGHT - height - 120)
+            hill = pygame.Rect(x, y, width, height)
+            if not hill.colliderect(home_buffer):
+                hills.append(hill)
+
+        return river_points, hills
+
     def remove_edge_background(self, sprite: pygame.Surface, tolerance: int = 36) -> pygame.Surface:
         width, height = sprite.get_size()
         if width == 0 or height == 0:
@@ -418,6 +441,24 @@ class Game:
 
         rim_color = (clamp(top_color[0] - 8), clamp(top_color[1] - 8), clamp(top_color[2] - 8))
         pygame.draw.polygon(surface, rim_color, [edge30, top[0], edge01, edge12, top[2], edge23], 1)
+
+    def draw_seeded_terrain(self) -> None:
+        for i in range(len(self.river_points) - 1):
+            start = self.iso_point(*self.river_points[i])
+            end = self.iso_point(*self.river_points[i + 1])
+            pygame.draw.line(self.screen, (18, 92, 112), start, end, 30)
+            pygame.draw.line(self.screen, (44, 145, 185), start, end, 24)
+            pygame.draw.line(self.screen, (96, 190, 220), start, end, 7)
+
+        for hill in self.hills:
+            self.draw_iso_prism(
+                self.screen,
+                hill,
+                height=max(10, hill.height // 9),
+                top_color=(78, 150, 62),
+                left_color=(46, 108, 48),
+                right_color=(58, 126, 52),
+            )
 
     def show_message(self, text: str, seconds: float = 2.0) -> None:
         self.message = text
@@ -1031,6 +1072,7 @@ class Game:
 
         ground = pygame.Rect(0, 0, WORLD_WIDTH, WORLD_HEIGHT)
         pygame.draw.polygon(self.screen, (34, 139, 34), self.iso_rect_poly(ground))
+        self.draw_seeded_terrain()
 
         home_base = self.iso_rect_poly(self.home_area)
         pygame.draw.polygon(self.screen, (20, 110, 20), home_base, 2)
