@@ -157,3 +157,7 @@ Notes:
 - `2026-05-31 | TurnID: S-048`
   - Prompt: "A" / "A"
   - AI summary: Child correctly answered that `why` is the right spelling instead of `wy`, then correctly answered that `"smelted_stone"` is a dictionary key in `self.inventory["smelted_stone"]`.
+
+- `2026-05-31 | TurnID: S-049`
+  - Prompt: "do you now what is a seed that can make a landscape ?" / "a"
+  - AI summary: Explained that a seed is a value that can make random world generation repeat the same landscape, modeled "Do you know..." instead of "do you now...", and child correctly chose `know`.

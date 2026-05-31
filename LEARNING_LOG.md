@@ -31,7 +31,7 @@ Use status values:
 | Rect movement | `game.py` | practicing | 2026-05-14 | Added `indoor_player` rectangle so the character can move inside the house view; awaiting check answer. |
 | Dictionaries | `game.py` | practicing | 2026-05-31 | Child correctly chose that `"smelted_stone"` is a dictionary key; keep practicing with inventory examples. |
 | UI drawing flow | `ui.py` | new |  |  |
-| Spelling and wording | chat prompts | practicing | 2026-05-31 | Corrected "cheep" to "sheep", "replays" to "replace", "to" to "too", and "wy" to "why" successfully; modeled "pickaxe" instead of "picacks"; "do you now" to "do you know", "taler" to "taller", "make it so", and "changes to brown" still await follow-up. |
+| Spelling and wording | chat prompts | practicing | 2026-05-31 | Corrected "cheep" to "sheep", "replays" to "replace", "to" to "too", "wy" to "why", and "do you now" to "do you know" successfully; modeled "pickaxe" instead of "picacks"; "taler" to "taller", "make it so", and "changes to brown" still await follow-up. |
 
 ## Session Entries
 
@@ -245,4 +245,18 @@ Template:
 - Circle-back topic (if needed): Dictionaries in `game.py`
 - Spelling/wording correction (if any): Used the prior correction "why" instead of "wy".
 - Spelling/wording follow-up check: Which spelling is right? A. `why` B. `wy`
+- Spelling/wording outcome: Correct; child chose A.
+
+### 2026-05-31
+- File focus: `world.py`
+- Python concept: A seed is a value that can make random world generation repeat the same way.
+- Check question: Which word fits? "Do you ___ what a seed is?" A. `know` B. `now`
+- Child answer summary: Chose A.
+- Correct/incorrect: correct
+- What correction was given: Confirmed that `know` is the right word.
+- Did progress continue: yes
+- Next level adjustment: If seeds are added to the game later, tie the concept to `random.seed(...)` in world setup.
+- Circle-back topic (if needed): Random seeds in world generation.
+- Spelling/wording correction (if any): Modeled "Do you know..." instead of "do you now...".
+- Spelling/wording follow-up check: Which word fits? A. `know` B. `now`
 - Spelling/wording outcome: Correct; child chose A.
