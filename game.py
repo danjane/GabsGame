@@ -249,8 +249,6 @@ class Game:
             "sand": "sand_bar.png",
             "reeds": "reeds.png",
             "pebbles": "pebble_cluster.png",
-            "river": "river_segment.png",
-            "hill": "hill_patch.png",
         }
         self.terrain_sprites = {}
         for key, filename in names.items():
@@ -642,20 +640,11 @@ class Game:
             start = self.iso_point(*self.river_points[i])
             end = self.iso_point(*self.river_points[i + 1])
             width = (self.river_widths[i] + self.river_widths[i + 1]) // 2
-            river_sprite = self.terrain_sprites.get("river")
-            if isinstance(river_sprite, pygame.Surface):
-                length = max(40, int(math.dist(start, end)))
-                angle = -math.degrees(math.atan2(end[1] - start[1], end[0] - start[0]))
-                scaled = pygame.transform.smoothscale(river_sprite, (length + 18, width + 26))
-                rotated = pygame.transform.rotate(scaled, angle)
-                center = ((start[0] + end[0]) // 2, (start[1] + end[1]) // 2)
-                self.screen.blit(rotated, rotated.get_rect(center=center))
-            else:
-                pygame.draw.line(self.screen, (62, 106, 58), start, end, width + 18)
-                pygame.draw.line(self.screen, (122, 104, 66), start, end, width + 12)
-                pygame.draw.line(self.screen, (18, 92, 112), start, end, width + 4)
-                pygame.draw.line(self.screen, (44, 145, 185), start, end, width)
-                pygame.draw.line(self.screen, (116, 202, 224), start, end, 5)
+            pygame.draw.line(self.screen, (62, 106, 58), start, end, width + 18)
+            pygame.draw.line(self.screen, (122, 104, 66), start, end, width + 12)
+            pygame.draw.line(self.screen, (18, 92, 112), start, end, width + 4)
+            pygame.draw.line(self.screen, (44, 145, 185), start, end, width)
+            pygame.draw.line(self.screen, (116, 202, 224), start, end, 5)
 
         for stone in self.shore_stones:
             self.draw_iso_rock(self.screen, stone)
@@ -699,32 +688,24 @@ class Game:
                     pygame.draw.circle(self.screen, (112, 118, 104), (px + ox, py + oy), 2)
 
         for hill in self.hills:
-            hill_sprite = self.terrain_sprites.get("hill")
-            if isinstance(hill_sprite, pygame.Surface):
-                px, py = self.iso_point(hill.centerx, hill.centery)
-                width = max(80, int(hill.width * 0.85))
-                height = max(50, int(hill.height * 0.65))
-                scaled = pygame.transform.smoothscale(hill_sprite, (width, height))
-                self.screen.blit(scaled, (px - scaled.get_width() // 2, py - scaled.get_height() // 2))
-            else:
-                self.draw_iso_prism(
-                    self.screen,
-                    hill,
-                    height=max(14, hill.height // 7),
-                    top_color=(92, 156, 64),
-                    left_color=(50, 108, 46),
-                    right_color=(64, 126, 50),
-                )
-                ridge_start = self.iso_point(hill.left + hill.width * 0.25, hill.top + hill.height * 0.35)
-                ridge_end = self.iso_point(hill.right - hill.width * 0.22, hill.bottom - hill.height * 0.28)
-                pygame.draw.line(self.screen, (128, 178, 82), ridge_start, ridge_end, 3)
-                shade_start = self.iso_point(hill.left + hill.width * 0.16, hill.bottom - hill.height * 0.2)
-                shade_end = self.iso_point(hill.right - hill.width * 0.18, hill.bottom - hill.height * 0.1)
-                pygame.draw.line(self.screen, (38, 92, 42), shade_start, shade_end, 4)
-                for contour in (0.38, 0.56, 0.74):
-                    contour_start = self.iso_point(hill.left + hill.width * 0.2, hill.top + hill.height * contour)
-                    contour_end = self.iso_point(hill.right - hill.width * 0.2, hill.top + hill.height * (contour + 0.04))
-                    pygame.draw.line(self.screen, (75, 137, 58), contour_start, contour_end, 2)
+            self.draw_iso_prism(
+                self.screen,
+                hill,
+                height=max(14, hill.height // 7),
+                top_color=(92, 156, 64),
+                left_color=(50, 108, 46),
+                right_color=(64, 126, 50),
+            )
+            ridge_start = self.iso_point(hill.left + hill.width * 0.25, hill.top + hill.height * 0.35)
+            ridge_end = self.iso_point(hill.right - hill.width * 0.22, hill.bottom - hill.height * 0.28)
+            pygame.draw.line(self.screen, (128, 178, 82), ridge_start, ridge_end, 3)
+            shade_start = self.iso_point(hill.left + hill.width * 0.16, hill.bottom - hill.height * 0.2)
+            shade_end = self.iso_point(hill.right - hill.width * 0.18, hill.bottom - hill.height * 0.1)
+            pygame.draw.line(self.screen, (38, 92, 42), shade_start, shade_end, 4)
+            for contour in (0.38, 0.56, 0.74):
+                contour_start = self.iso_point(hill.left + hill.width * 0.2, hill.top + hill.height * contour)
+                contour_end = self.iso_point(hill.right - hill.width * 0.2, hill.top + hill.height * (contour + 0.04))
+                pygame.draw.line(self.screen, (75, 137, 58), contour_start, contour_end, 2)
 
         flower_colors = [(245, 224, 80), (238, 116, 144), (190, 140, 245), (245, 245, 245)]
         for x, y, color_index in self.flower_patches:

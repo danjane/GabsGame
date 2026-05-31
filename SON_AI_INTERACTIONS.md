@@ -205,7 +205,3 @@ Notes:
 - `2026-05-31 | TurnID: S-060`
   - Prompt: "take sprits of evry fing you added now and add them to the game"
   - AI summary: Generated project-local terrain PNG sprites for meadow, grass, dirt, sand, reeds, pebbles, and flowers; updated `game.py` to load them through `load_terrain_sprites()` and draw them with fallbacks; modeled "sprites of everything" instead of "sprits of evry fing".
-
-- `2026-05-31 | TurnID: S-061`
-  - Prompt: "take sprits of evry fing you added now and add them to the game"
-  - AI summary: Added the remaining project-local terrain PNG sprites for river segments and hills, then updated `game.py` to draw the river and hills from sprites with shape fallbacks.
