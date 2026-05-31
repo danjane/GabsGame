@@ -91,6 +91,8 @@ class Game:
             self.grass_patches,
             self.flower_patches,
             self.dirt_patches,
+            self.reed_patches,
+            self.pebble_patches,
             self.shore_stones,
         ) = self.create_terrain_features()
 
@@ -303,6 +305,8 @@ class Game:
         list[tuple[int, int, int]],
         list[tuple[int, int, int]],
         list[tuple[int, int, int]],
+        list[tuple[int, int, int]],
+        list[tuple[int, int, int]],
         list[pygame.Rect],
     ]:
         river_points: list[tuple[int, int]] = []
@@ -349,6 +353,26 @@ class Game:
             if not home_buffer.collidepoint(x, y):
                 dirt_patches.append((x, y, radius))
 
+        reed_patches: list[tuple[int, int, int]] = []
+        for x, y in river_points[1:-1]:
+            for side in (-1, 1):
+                if self.terrain_rng.random() < 0.85:
+                    reed_patches.append(
+                        (
+                            x + self.terrain_rng.randint(-70, 70),
+                            y + side * self.terrain_rng.randint(26, 46),
+                            self.terrain_rng.randint(3, 7),
+                        )
+                    )
+
+        pebble_patches: list[tuple[int, int, int]] = []
+        for _ in range(32):
+            x = self.terrain_rng.randint(60, WORLD_WIDTH - 60)
+            y = self.terrain_rng.randint(110, WORLD_HEIGHT - 110)
+            count = self.terrain_rng.randint(3, 6)
+            if not home_buffer.collidepoint(x, y):
+                pebble_patches.append((x, y, count))
+
         shore_stones: list[pygame.Rect] = []
         for x, y in river_points[1:-1]:
             for side in (-1, 1):
@@ -361,7 +385,17 @@ class Game:
                     )
                     shore_stones.append(stone)
 
-        return river_points, river_widths, hills, grass_patches, flower_patches, dirt_patches, shore_stones
+        return (
+            river_points,
+            river_widths,
+            hills,
+            grass_patches,
+            flower_patches,
+            dirt_patches,
+            reed_patches,
+            pebble_patches,
+            shore_stones,
+        )
 
     def remove_edge_background(self, sprite: pygame.Surface, tolerance: int = 36) -> pygame.Surface:
         width, height = sprite.get_size()
@@ -527,6 +561,20 @@ class Game:
 
         for stone in self.shore_stones:
             self.draw_iso_rock(self.screen, stone)
+
+        for x, y, count in self.reed_patches:
+            px, py = self.iso_point(x, y)
+            for reed in range(count):
+                offset = reed * 3 - count * 2
+                height = 8 + (reed % 3) * 2
+                pygame.draw.line(self.screen, (36, 106, 42), (px + offset, py + 5), (px + offset + 1, py - height), 2)
+
+        for x, y, count in self.pebble_patches:
+            px, py = self.iso_point(x, y)
+            for pebble in range(count):
+                ox = (pebble % 3) * 5 - 5
+                oy = (pebble // 3) * 4
+                pygame.draw.circle(self.screen, (112, 118, 104), (px + ox, py + oy), 2)
 
         for hill in self.hills:
             self.draw_iso_prism(

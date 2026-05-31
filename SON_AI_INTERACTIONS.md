@@ -193,3 +193,7 @@ Notes:
 - `2026-05-31 | TurnID: S-057`
   - Prompt: "more"
   - AI summary: Added another seeded terrain detail pass with variable river widths, flower clusters, dirt patches, and extra hill shadow lines.
+
+- `2026-05-31 | TurnID: S-058`
+  - Prompt: "more"
+  - AI summary: Added more seeded terrain details: reed patches near the river and pebble clusters across the landscape.
