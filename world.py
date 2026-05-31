@@ -3,11 +3,20 @@ import random
 import pygame
 
 
-def random_spawn_rect(width, height, home_area: pygame.Rect, w: int, h: int, margin: int = 20) -> pygame.Rect:
+def random_spawn_rect(
+    width,
+    height,
+    home_area: pygame.Rect,
+    w: int,
+    h: int,
+    margin: int = 20,
+    rng: random.Random | None = None,
+) -> pygame.Rect:
     # Avoid spawning too near the home area and keep clear of UI bars.
+    chooser = rng if rng is not None else random
     while True:
-        x = random.randint(margin, width - margin - w)
-        y = random.randint(margin + 80, height - margin - h - 70)
+        x = chooser.randint(margin, width - margin - w)
+        y = chooser.randint(margin + 80, height - margin - h - 70)
         rect = pygame.Rect(x, y, w, h)
         if not rect.colliderect(home_area.inflate(140, 140)):
             return rect

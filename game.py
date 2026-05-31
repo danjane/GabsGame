@@ -23,6 +23,7 @@ from config import (
     INITIAL_ANIMAL_COUNT,
     INITIAL_STONE_COUNT,
     INITIAL_TREE_COUNT,
+    LANDSCAPE_SEED,
     MINE_TIME_SECONDS,
     PICK_COST_STONE,
     PICK_COST_WOOD,
@@ -49,7 +50,7 @@ from world import is_near, nearest_rect, random_spawn_rect
 
 
 class Game:
-    def __init__(self) -> None:
+    def __init__(self, landscape_seed: str | None = None) -> None:
         pygame.init()
 
         self.screen = pygame.display.set_mode((WIDTH, HEIGHT))
@@ -72,6 +73,8 @@ class Game:
         self.load_stone_sprite()
         self.load_tree_sprites()
         self.load_animal_sprites()
+        self.landscape_seed = landscape_seed if landscape_seed is not None else LANDSCAPE_SEED
+        self.landscape_rng = random.Random(self.landscape_seed)
 
         self.player = pygame.Rect(START_POS[0], START_POS[1], PLAYER_WIDTH, PLAYER_HEIGHT)
         self.home_area = pygame.Rect(
@@ -82,15 +85,29 @@ class Game:
         )
 
         self.trees = [
-            random_spawn_rect(WORLD_WIDTH, WORLD_HEIGHT, self.home_area, TREE_SIZE[0], TREE_SIZE[1])
+            random_spawn_rect(
+                WORLD_WIDTH,
+                WORLD_HEIGHT,
+                self.home_area,
+                TREE_SIZE[0],
+                TREE_SIZE[1],
+                rng=self.landscape_rng,
+            )
             for _ in range(INITIAL_TREE_COUNT)
         ]
-        self.tree_growth = [random.uniform(0.08, 0.30) for _ in range(INITIAL_TREE_COUNT)]
-        self.tree_types = [self.random_tree_type() for _ in range(INITIAL_TREE_COUNT)]
+        self.tree_growth = [self.landscape_rng.uniform(0.08, 0.30) for _ in range(INITIAL_TREE_COUNT)]
+        self.tree_types = [self.random_tree_type(self.landscape_rng) for _ in range(INITIAL_TREE_COUNT)]
         self.tree_mature_threshold = 0.95
         self.tree_growth_rate = 0.06
         self.stones = [
-            random_spawn_rect(WORLD_WIDTH, WORLD_HEIGHT, self.home_area, STONE_SIZE[0], STONE_SIZE[1])
+            random_spawn_rect(
+                WORLD_WIDTH,
+                WORLD_HEIGHT,
+                self.home_area,
+                STONE_SIZE[0],
+                STONE_SIZE[1],
+                rng=self.landscape_rng,
+            )
             for _ in range(INITIAL_STONE_COUNT)
         ]
         self.animals = self.create_animals()
@@ -196,10 +213,11 @@ class Game:
             except pygame.error:
                 continue
 
-    def random_tree_type(self) -> int:
+    def random_tree_type(self, rng: random.Random | None = None) -> int:
         if not self.tree_sprites:
             return -1
-        return random.randint(0, len(self.tree_sprites) - 1)
+        chooser = rng if rng is not None else random
+        return chooser.randint(0, len(self.tree_sprites) - 1)
 
     def load_animal_sprites(self) -> None:
         self.animal_sprites = {
@@ -242,9 +260,16 @@ class Game:
         animals: list[dict[str, object]] = []
         for i in range(INITIAL_ANIMAL_COUNT):
             kind = "sheep" if i % 2 == 0 else "cow"
-            rect = random_spawn_rect(WORLD_WIDTH, WORLD_HEIGHT, self.home_area, ANIMAL_SIZE[0], ANIMAL_SIZE[1])
-            vx = random.choice((-1.0, 1.0)) * ANIMAL_SPEED
-            vy = random.uniform(-0.45, 0.45) * ANIMAL_SPEED
+            rect = random_spawn_rect(
+                WORLD_WIDTH,
+                WORLD_HEIGHT,
+                self.home_area,
+                ANIMAL_SIZE[0],
+                ANIMAL_SIZE[1],
+                rng=self.landscape_rng,
+            )
+            vx = self.landscape_rng.choice((-1.0, 1.0)) * ANIMAL_SPEED
+            vy = self.landscape_rng.uniform(-0.45, 0.45) * ANIMAL_SPEED
             animals.append(
                 {
                     "kind": kind,
@@ -253,8 +278,8 @@ class Game:
                     "y": float(rect.y),
                     "vx": vx,
                     "vy": vy,
-                    "wander_timer": random.uniform(*ANIMAL_WANDER_SECONDS),
-                    "anim_time": random.uniform(0.0, 1.0),
+                    "wander_timer": self.landscape_rng.uniform(*ANIMAL_WANDER_SECONDS),
+                    "anim_time": self.landscape_rng.uniform(0.0, 1.0),
                 }
             )
         return animals
@@ -879,11 +904,29 @@ class Game:
             item["time"] -= dt
             if item["time"] <= 0:
                 if item["kind"] == "tree":
-                    self.trees.append(random_spawn_rect(WORLD_WIDTH, WORLD_HEIGHT, self.home_area, TREE_SIZE[0], TREE_SIZE[1]))
+                    self.trees.append(
+                        random_spawn_rect(
+                            WORLD_WIDTH,
+                            WORLD_HEIGHT,
+                            self.home_area,
+                            TREE_SIZE[0],
+                            TREE_SIZE[1],
+                            rng=self.landscape_rng,
+                        )
+                    )
                     self.tree_growth.append(0.0)
-                    self.tree_types.append(self.random_tree_type())
+                    self.tree_types.append(self.random_tree_type(self.landscape_rng))
                 elif item["kind"] == "stone":
-                    self.stones.append(random_spawn_rect(WORLD_WIDTH, WORLD_HEIGHT, self.home_area, STONE_SIZE[0], STONE_SIZE[1]))
+                    self.stones.append(
+                        random_spawn_rect(
+                            WORLD_WIDTH,
+                            WORLD_HEIGHT,
+                            self.home_area,
+                            STONE_SIZE[0],
+                            STONE_SIZE[1],
+                            rng=self.landscape_rng,
+                        )
+                    )
                 self.respawn_queue.remove(item)
 
     def update_tree_growth(self, dt: float) -> None:
@@ -1256,6 +1299,9 @@ class Game:
         help_surf = self.small_font.render(help_text, True, (255, 255, 255))
         pygame.draw.rect(self.screen, (0, 0, 0), (80, HEIGHT - 45, help_surf.get_width() + 10, 35))
         self.screen.blit(help_surf, (85, HEIGHT - 38))
+        seed_surf = self.small_font.render(f"Seed: {self.landscape_seed}", True, (20, 45, 20))
+        pygame.draw.rect(self.screen, (205, 235, 190), (8, 8, seed_surf.get_width() + 8, 24))
+        self.screen.blit(seed_surf, (10, 10))
 
         if self.message:
             msg_surf = self.font.render(self.message, True, (255, 255, 255))

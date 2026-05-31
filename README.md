@@ -95,6 +95,13 @@ pip install pygame
 python main.py
 ```
 
+Use a landscape seed:
+```bash
+python main.py gabs-landscape-1
+```
+
+The same seed makes the same starting trees, stones, and animals.
+
 ## Controls
 - Move: Arrow keys
 - Cut tree: `L`

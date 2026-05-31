@@ -31,6 +31,7 @@ Use status values:
 | Rect movement | `game.py` | practicing | 2026-05-14 | Added `indoor_player` rectangle so the character can move inside the house view; awaiting check answer. |
 | Dictionaries | `game.py` | practicing | 2026-05-31 | Child correctly chose that `"smelted_stone"` is a dictionary key; keep practicing with inventory examples. |
 | UI drawing flow | `ui.py` | new |  |  |
+| Random seeds | `config.py`, `game.py`, `world.py` | new | 2026-05-31 | Added `LANDSCAPE_SEED`, `random.Random(...)`, and seeded spawn helpers for repeatable starting landscapes; awaiting check answer. |
 | Spelling and wording | chat prompts | practicing | 2026-05-31 | Corrected "cheep" to "sheep", "replays" to "replace", "to" to "too", "wy" to "why", and "do you now" to "do you know" successfully; modeled "pickaxe" instead of "picacks"; "taler" to "taller", "make it so", and "changes to brown" still await follow-up. |
 
 ## Session Entries
@@ -260,3 +261,17 @@ Template:
 - Spelling/wording correction (if any): Modeled "Do you know..." instead of "do you now...".
 - Spelling/wording follow-up check: Which word fits? A. `know` B. `now`
 - Spelling/wording outcome: Correct; child chose A.
+
+### 2026-05-31
+- File focus: `config.py`, `game.py`, and `world.py`
+- Python concept: `random.Random(seed)` makes its own random number picker. If the seed is the same, the starting tree, stone, and animal positions repeat.
+- Check question: If two games use the same landscape seed, what should happen? A. Same starting landscape B. Always a totally different landscape
+- Child answer summary: Not answered yet.
+- Correct/incorrect: practicing
+- What correction was given: Not yet; answer pending.
+- Did progress continue: yes
+- Next level adjustment: Keep seed checks concrete and tied to visible trees/stones.
+- Circle-back topic (if needed): Random seeds in world generation.
+- Spelling/wording correction (if any): Modeled "Can you add a landscape seed to our game?" as clearer wording.
+- Spelling/wording follow-up check: Pending: Which phrase is clearer, `our game` or `my I mean our game`?
+- Spelling/wording outcome: Not answered yet.

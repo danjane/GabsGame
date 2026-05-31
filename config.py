@@ -1,6 +1,7 @@
 WIDTH, HEIGHT = 900, 600
 WINDOW_TITLE = "Survival Game"
 FPS = 60
+LANDSCAPE_SEED = "gabs-landscape-1"
 
 # World-space size (bigger than the visible screen for exploration).
 WORLD_WIDTH, WORLD_HEIGHT = 2200, 1600
