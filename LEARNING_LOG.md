@@ -32,7 +32,7 @@ Use status values:
 | Dictionaries | `game.py` | practicing | 2026-05-31 | Child correctly chose that `"smelted_stone"` is a dictionary key; keep practicing with inventory examples. |
 | UI drawing flow | `ui.py` | new |  |  |
 | Random seeds | `config.py`, `game.py`, `world.py` | new | 2026-05-31 | Added `LANDSCAPE_SEED`, `random.Random(...)`, and seeded spawn helpers for repeatable starting landscapes; awaiting check answer. |
-| Spelling and wording | chat prompts | practicing | 2026-05-31 | Corrected "cheep" to "sheep", "replays" to "replace", "to" to "too", "wy" to "why", and "do you now" to "do you know" successfully; modeled "pickaxe" instead of "picacks"; "taler" to "taller", "make it so", and "changes to brown" still await follow-up. |
+| Spelling and wording | chat prompts | practicing | 2026-05-31 | Corrected "cheep" to "sheep", "replays" to "replace", "to" to "too", "wy" to "why", and "do you now" to "do you know" successfully; modeled "pickaxe" instead of "picacks" and "will" instead of "wil"; "taler" to "taller", "make it so", and "changes to brown" still await follow-up. |
 
 ## Session Entries
 
@@ -274,4 +274,18 @@ Template:
 - Circle-back topic (if needed): Random seeds in world generation.
 - Spelling/wording correction (if any): Modeled "Can you add a landscape seed to our game?" as clearer wording.
 - Spelling/wording follow-up check: Pending: Which phrase is clearer, `our game` or `my I mean our game`?
+- Spelling/wording outcome: Not answered yet.
+
+### 2026-05-31
+- File focus: setup command
+- Python concept: The project virtual environment has its own installed packages; `venv/bin/python` can use `pygame` even when plain `python3` cannot.
+- Check question: Not asked; this was an install/setup request.
+- Child answer summary: Not applicable.
+- Correct/incorrect: practicing
+- What correction was given: Explained that `pygame` is already installed in `venv`.
+- Did progress continue: yes
+- Next level adjustment: Keep setup commands short and concrete.
+- Circle-back topic (if needed): Virtual environments.
+- Spelling/wording correction (if any): Modeled `will` instead of `wil` after "I wil try it".
+- Spelling/wording follow-up check: Pending: Which spelling is right, `will` or `wil`?
 - Spelling/wording outcome: Not answered yet.
