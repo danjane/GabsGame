@@ -257,3 +257,7 @@ Notes:
 - `2026-06-10 | TurnID: S-073`
   - Prompt: "more realistic"
   - AI summary: Improved the rare castle and tower drawing in `game.py` with battlements, windows, roof detail, and stronger stone styling.
+
+- `2026-06-10 | TurnID: S-074`
+  - Prompt: "more realistic"
+  - AI summary: Added stone-course texture, roof line variation, and arched windows to the rare castles and towers in `game.py`.

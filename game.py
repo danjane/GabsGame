@@ -583,6 +583,19 @@ class Game:
         pygame.draw.polygon(surface, rim_color, [edge30, top[0], edge01, edge12, top[2], edge23], 1)
 
     def draw_rare_building(self, surface: pygame.Surface, rect: pygame.Rect, kind: str) -> None:
+        def draw_stone_courses(target: pygame.Surface, base_rect: pygame.Rect, rows: int = 3) -> None:
+            if rows <= 0:
+                return
+            for row in range(rows):
+                y = base_rect.top + int(base_rect.height * (row + 1) / (rows + 1))
+                px1, py1 = self.iso_point(base_rect.left + 6, y)
+                px2, py2 = self.iso_point(base_rect.right - 6, y + 2)
+                pygame.draw.line(target, (150, 154, 160), (px1, py1), (px2, py2), 1)
+                for col in range(2, 6):
+                    sx = base_rect.left + int(base_rect.width * col / 6)
+                    split_x, split_y = self.iso_point(sx, y)
+                    pygame.draw.line(target, (140, 144, 150), (split_x - 2, split_y - 2), (split_x + 2, split_y + 2), 1)
+
         def draw_windows(target: pygame.Surface, base_rect: pygame.Rect, count: int = 2) -> None:
             if count <= 0:
                 return
@@ -591,7 +604,9 @@ class Game:
                 wx = base_rect.left + spacing * (i + 1)
                 wy = base_rect.top + base_rect.height // 2
                 px, py = self.iso_point(wx, wy)
-                pygame.draw.rect(target, (58, 42, 28), pygame.Rect(px - 3, py - 10, 6, 14))
+                arch = pygame.Rect(px - 4, py - 11, 8, 15)
+                pygame.draw.rect(target, (58, 42, 28), arch)
+                pygame.draw.arc(target, (206, 198, 180), arch.inflate(-2, -6), 3.14, 0, 1)
 
         def draw_battlements(target: pygame.Surface, base_rect: pygame.Rect, step: int = 22) -> None:
             base = self.iso_rect_poly(base_rect)
@@ -621,7 +636,10 @@ class Game:
             roof = self.iso_rect_poly(body)
             peak = ((roof[0][0] + roof[1][0]) // 2, min(roof[0][1], roof[1][1]) - 16)
             pygame.draw.polygon(surface, (96, 102, 110), [roof[0], roof[1], peak])
+            pygame.draw.line(surface, (138, 144, 150), (roof[0][0], roof[0][1]), peak, 1)
+            pygame.draw.line(surface, (82, 88, 96), peak, (roof[1][0], roof[1][1]), 1)
             pygame.draw.line(surface, (208, 196, 138), peak, (peak[0], peak[1] - 12), 2)
+            draw_stone_courses(surface, body, rows=3)
             draw_windows(surface, body, count=2)
             return
 
@@ -637,25 +655,25 @@ class Game:
             surface,
             keep,
             height=max(40, rect.height // 3),
-            top_color=(182, 186, 190),
-            left_color=(110, 118, 126),
-            right_color=(132, 138, 144),
+            top_color=(186, 190, 194),
+            left_color=(114, 122, 130),
+            right_color=(136, 142, 148),
         )
         self.draw_iso_prism(
             surface,
             left_tower,
             height=max(50, rect.height // 2),
-            top_color=(176, 180, 186),
-            left_color=(100, 108, 116),
-            right_color=(120, 128, 134),
+            top_color=(180, 184, 190),
+            left_color=(104, 112, 120),
+            right_color=(124, 132, 138),
         )
         self.draw_iso_prism(
             surface,
             right_tower,
             height=max(50, rect.height // 2),
-            top_color=(176, 180, 186),
-            left_color=(100, 108, 116),
-            right_color=(120, 128, 134),
+            top_color=(180, 184, 190),
+            left_color=(104, 112, 120),
+            right_color=(124, 132, 138),
         )
         self.draw_iso_prism(
             surface,
@@ -669,19 +687,25 @@ class Game:
         roof_points = self.iso_rect_poly(keep)
         roof_peak = ((roof_points[0][0] + roof_points[1][0]) // 2, min(roof_points[0][1], roof_points[1][1]) - 18)
         pygame.draw.polygon(surface, (104, 110, 116), [roof_points[0], roof_points[1], roof_peak])
+        pygame.draw.line(surface, (144, 150, 156), roof_points[0], roof_peak, 1)
+        pygame.draw.line(surface, (90, 96, 104), roof_peak, roof_points[1], 1)
         draw_battlements(surface, keep, step=18)
         draw_windows(surface, keep, count=3)
+        draw_stone_courses(surface, keep, rows=4)
         for tower in (left_tower, right_tower):
             tower_roof = self.iso_rect_poly(tower)
             tower_peak = ((tower_roof[0][0] + tower_roof[1][0]) // 2, min(tower_roof[0][1], tower_roof[1][1]) - 16)
             pygame.draw.polygon(surface, (98, 102, 112), [tower_roof[0], tower_roof[1], tower_peak])
             draw_battlements(surface, tower, step=14)
             pygame.draw.line(surface, (214, 196, 132), tower_peak, (tower_peak[0], tower_peak[1] - 14), 2)
+            draw_stone_courses(surface, tower, rows=3)
             draw_windows(surface, tower, count=2)
 
         gate_center = self.iso_point(gate.centerx, gate.bottom)
         pygame.draw.rect(surface, (52, 36, 24), pygame.Rect(gate_center[0] - 10, gate_center[1] - 24, 20, 26))
         pygame.draw.rect(surface, (206, 206, 194), pygame.Rect(gate_center[0] - 4, gate_center[1] - 20, 8, 18))
+        pygame.draw.line(surface, (88, 64, 48), (gate_center[0] - 9, gate_center[1] - 23), (gate_center[0] - 9, gate_center[1] - 1), 1)
+        pygame.draw.line(surface, (88, 64, 48), (gate_center[0] + 9, gate_center[1] - 23), (gate_center[0] + 9, gate_center[1] - 1), 1)
 
     def draw_seeded_terrain(self) -> None:
         for i in range(len(self.river_points) - 1):

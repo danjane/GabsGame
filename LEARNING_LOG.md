@@ -426,6 +426,20 @@ Template:
 - Spelling/wording correction (if any): None.
 - Spelling/wording follow-up check: None.
 - Spelling/wording outcome: None.
+
+### 2026-06-10
+- File focus: `game.py`
+- Python concept: A `for` loop can repeat small drawing details across a shape. `draw_stone_courses()` uses a loop to add wall lines.
+- Check question: What does the `for row in range(rows):` loop help do? A. Repeat wall details B. Start the game C. Move the player
+- Child answer summary: Pending
+- Correct/incorrect: practicing
+- What correction was given: None.
+- Did progress continue: yes
+- Next level adjustment: Keep loop checks tied to repeated texture or wall details.
+- Circle-back topic (if needed): Loops in drawing helpers
+- Spelling/wording correction (if any): None.
+- Spelling/wording follow-up check: None.
+- Spelling/wording outcome: None.
 - Circle-back topic (if needed): Random seeds in world generation.
 - Spelling/wording correction (if any): Modeled "Do you know..." instead of "do you now...".
 - Spelling/wording follow-up check: Which word fits? A. `know` B. `now`
