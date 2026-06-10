@@ -4,7 +4,7 @@ FPS = 60
 LANDSCAPE_SEED = "2151901553968352745"
 
 # World-space size (bigger than the visible screen for exploration).
-WORLD_WIDTH, WORLD_HEIGHT = 5200, 3200
+WORLD_WIDTH, WORLD_HEIGHT = 6200, 4000
 
 START_POS = (WORLD_WIDTH // 2, WORLD_HEIGHT // 2)
 PLAYER_WIDTH = 40

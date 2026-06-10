@@ -356,6 +356,20 @@ Template:
 - Spelling/wording correction (if any): None.
 - Spelling/wording follow-up check: None.
 - Spelling/wording outcome: None.
+
+### 2026-06-10
+- File focus: `config.py`
+- Python concept: Two size constants can work together; `WORLD_WIDTH` and `WORLD_HEIGHT` both change how far the edges are from the center.
+- Check question: Which constants make the world edges farther away? A. `WORLD_WIDTH` and `WORLD_HEIGHT` B. `FPS` and `PLAYER_SPEED` C. `HOUSE_SIZE` and `FURNACE_SIZE`
+- Child answer summary: Pending
+- Correct/incorrect: practicing
+- What correction was given: Modeled `edges` as the clearer word for the world boundaries.
+- Did progress continue: yes
+- Next level adjustment: Keep size questions tied to the world-edge effect.
+- Circle-back topic (if needed): Constants in `config.py`
+- Spelling/wording correction (if any): Modeled `edges` as the clearer word.
+- Spelling/wording follow-up check: Which word is clearer here, `edges` or `boundaries`?
+- Spelling/wording outcome: Pending
 - Circle-back topic (if needed): Random seeds in world generation.
 - Spelling/wording correction (if any): Modeled "Do you know..." instead of "do you now...".
 - Spelling/wording follow-up check: Which word fits? A. `know` B. `now`
