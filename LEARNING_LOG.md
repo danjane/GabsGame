@@ -272,6 +272,20 @@ Template:
 - Spelling/wording correction (if any): Modeled `sheep` instead of `cheep`.
 - Spelling/wording follow-up check: Which spelling is right: `sheep` or `cheep`?
 - Spelling/wording outcome: Pending
+
+### 2026-06-10
+- File focus: `game.py`
+- Python concept: When a function returns several values in one tuple, the code that receives them must unpack the same number in the same order.
+- Check question: If `create_terrain_features()` stops returning `meadow_patches`, should the unpacking still expect it? A. Yes B. No
+- Child answer summary: Pending
+- Correct/incorrect: practicing
+- What correction was given: Modeled `meadow patches` instead of `light patches` for the ground ovals.
+- Did progress continue: yes
+- Next level adjustment: Keep tuple unpacking examples tied to real return values and one removed item at a time.
+- Circle-back topic (if needed): Tuple unpacking in `game.py`
+- Spelling/wording correction (if any): Modeled `meadow patches` as the clearer phrase.
+- Spelling/wording follow-up check: Which phrase is clearer for the ground ovals, `meadow patches` or `light patches`?
+- Spelling/wording outcome: Pending
 - Circle-back topic (if needed): Random seeds in world generation.
 - Spelling/wording correction (if any): Modeled "Do you know..." instead of "do you now...".
 - Spelling/wording follow-up check: Which word fits? A. `know` B. `now`

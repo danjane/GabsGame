@@ -90,7 +90,6 @@ class Game:
             self.river_points,
             self.river_widths,
             self.hills,
-            self.meadow_patches,
             self.grass_patches,
             self.flower_patches,
             self.dirt_patches,
@@ -258,20 +257,12 @@ class Game:
             except (pygame.error, FileNotFoundError):
                 continue
 
-        meadow_sprites: list[pygame.Surface] = []
         flower_sprites: list[pygame.Surface] = []
         for index in range(4):
             try:
                 flower_sprites.append(pygame.image.load(os.path.join(terrain_dir, f"flower_{index}.png")).convert_alpha())
             except (pygame.error, FileNotFoundError):
                 continue
-        for index in range(3):
-            try:
-                meadow_sprites.append(pygame.image.load(os.path.join(terrain_dir, f"meadow_{index}.png")).convert_alpha())
-            except (pygame.error, FileNotFoundError):
-                continue
-        if meadow_sprites:
-            self.terrain_sprites["meadow"] = meadow_sprites
         if flower_sprites:
             self.terrain_sprites["flowers"] = flower_sprites
 
@@ -369,15 +360,6 @@ class Game:
             if not hill.colliderect(home_buffer):
                 hills.append(hill)
 
-        meadow_patches: list[tuple[int, int, int, int]] = []
-        for _ in range(26):
-            x = self.terrain_rng.randint(80, WORLD_WIDTH - 80)
-            y = self.terrain_rng.randint(120, WORLD_HEIGHT - 120)
-            radius = self.terrain_rng.randint(55, 120)
-            tone = self.terrain_rng.randint(0, 2)
-            if not home_buffer.collidepoint(x, y):
-                meadow_patches.append((x, y, radius, tone))
-
         grass_patches: list[tuple[int, int, int]] = []
         for _ in range(55):
             x = self.terrain_rng.randint(50, WORLD_WIDTH - 50)
@@ -449,7 +431,6 @@ class Game:
             river_points,
             river_widths,
             hills,
-            meadow_patches,
             grass_patches,
             flower_patches,
             dirt_patches,
@@ -595,21 +576,6 @@ class Game:
         pygame.draw.polygon(surface, rim_color, [edge30, top[0], edge01, edge12, top[2], edge23], 1)
 
     def draw_seeded_terrain(self) -> None:
-        meadow_colors = [(38, 132, 50), (48, 142, 56), (70, 146, 58)]
-        for x, y, radius, tone in self.meadow_patches:
-            px, py = self.iso_point(x, y)
-            meadow_sprites = self.terrain_sprites.get("meadow")
-            if isinstance(meadow_sprites, list) and meadow_sprites:
-                sprite = meadow_sprites[tone % len(meadow_sprites)]
-                scaled = pygame.transform.smoothscale(sprite, (radius * 2, max(22, radius // 2)))
-                self.screen.blit(scaled, (px - scaled.get_width() // 2, py - scaled.get_height() // 2))
-            else:
-                pygame.draw.ellipse(
-                    self.screen,
-                    meadow_colors[tone % len(meadow_colors)],
-                    (px - radius, py - max(10, radius // 4), radius * 2, max(22, radius // 2)),
-                )
-
         for x, y, radius in self.dirt_patches:
             px, py = self.iso_point(x, y)
             dirt_sprite = self.terrain_sprites.get("dirt")
