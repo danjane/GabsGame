@@ -249,3 +249,7 @@ Notes:
 - `2026-06-10 | TurnID: S-071`
   - Prompt: "more animals"
   - AI summary: Increased `INITIAL_ANIMAL_COUNT` in `config.py` so the world spawns more animals at start.
+
+- `2026-06-10 | TurnID: S-072`
+  - Prompt: "could you put buildings (castles...) that are rare"
+  - AI summary: Added rare castle and tower buildings to `game.py` terrain generation and drawing, with spawn limits controlled by `config.py`.

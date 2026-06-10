@@ -398,6 +398,20 @@ Template:
 - Spelling/wording correction (if any): None.
 - Spelling/wording follow-up check: None.
 - Spelling/wording outcome: None.
+
+### 2026-06-10
+- File focus: `game.py`
+- Python concept: A list can grow one item at a time with `append()`. `rare_buildings.append((kind, building))` adds each rare castle or tower to the world list.
+- Check question: In `rare_buildings.append((kind, building))`, what does `append` do? A. Adds one item to the list B. Deletes the list C. Changes the screen size
+- Child answer summary: Pending
+- Correct/incorrect: practicing
+- What correction was given: None.
+- Did progress continue: yes
+- Next level adjustment: Keep list examples tied to visible world objects.
+- Circle-back topic (if needed): Lists and append in `game.py`
+- Spelling/wording correction (if any): None.
+- Spelling/wording follow-up check: None.
+- Spelling/wording outcome: None.
 - Circle-back topic (if needed): Random seeds in world generation.
 - Spelling/wording correction (if any): Modeled "Do you know..." instead of "do you now...".
 - Spelling/wording follow-up check: Which word fits? A. `know` B. `now`

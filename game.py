@@ -32,6 +32,8 @@ from config import (
     PLAYER_WIDTH,
     QUEST_COUNT,
     RARE_DROP_CHANCE,
+    RARE_BUILDING_ATTEMPTS,
+    RARE_BUILDING_COUNT,
     SMELTED_PICK_COST_SMELTED_STONE,
     SMELTED_PICK_COST_WOOD,
     SMELTED_PICK_MINE_TIME_SECONDS,
@@ -90,6 +92,7 @@ class Game:
             self.river_points,
             self.river_widths,
             self.hills,
+            self.rare_buildings,
             self.flower_patches,
             self.reed_patches,
             self.pebble_patches,
@@ -325,9 +328,7 @@ class Game:
         list[tuple[int, int]],
         list[int],
         list[pygame.Rect],
-        list[tuple[int, int, int, int]],
-        list[tuple[int, int, int]],
-        list[tuple[int, int, int]],
+        list[tuple[str, pygame.Rect]],
         list[tuple[int, int, int]],
         list[tuple[int, int, int]],
         list[tuple[int, int, int]],
@@ -353,6 +354,27 @@ class Game:
             hill = pygame.Rect(x, y, width, height)
             if not hill.colliderect(home_buffer):
                 hills.append(hill)
+
+        rare_buildings: list[tuple[str, pygame.Rect]] = []
+        attempts = 0
+        while len(rare_buildings) < RARE_BUILDING_COUNT and attempts < RARE_BUILDING_ATTEMPTS:
+            attempts += 1
+            kind = "castle" if self.terrain_rng.random() < 0.7 else "tower"
+            if kind == "castle":
+                width = self.terrain_rng.randint(180, 280)
+                height = self.terrain_rng.randint(120, 180)
+            else:
+                width = self.terrain_rng.randint(90, 140)
+                height = self.terrain_rng.randint(160, 240)
+
+            x = self.terrain_rng.randint(60, WORLD_WIDTH - width - 60)
+            y = self.terrain_rng.randint(150, WORLD_HEIGHT - height - 150)
+            building = pygame.Rect(x, y, width, height)
+            if building.colliderect(home_buffer):
+                continue
+            if any(building.colliderect(hill.inflate(80, 70)) for hill in hills):
+                continue
+            rare_buildings.append((kind, building))
 
         flower_patches: list[tuple[int, int, int]] = []
         for _ in range(40):
@@ -398,6 +420,7 @@ class Game:
             river_points,
             river_widths,
             hills,
+            rare_buildings,
             flower_patches,
             reed_patches,
             pebble_patches,
@@ -558,6 +581,78 @@ class Game:
 
         rim_color = (clamp(top_color[0] - 8), clamp(top_color[1] - 8), clamp(top_color[2] - 8))
         pygame.draw.polygon(surface, rim_color, [edge30, top[0], edge01, edge12, top[2], edge23], 1)
+
+    def draw_rare_building(self, surface: pygame.Surface, rect: pygame.Rect, kind: str) -> None:
+        if kind == "tower":
+            body = rect.inflate(-max(16, rect.width // 3), 0)
+            body.x = rect.x + rect.width // 2 - body.width // 2
+            self.draw_iso_prism(
+                surface,
+                body,
+                height=max(34, rect.height // 2),
+                top_color=(158, 164, 170),
+                left_color=(92, 100, 108),
+                right_color=(112, 120, 128),
+            )
+            roof = self.iso_rect_poly(body)
+            peak = ((roof[0][0] + roof[1][0]) // 2, min(roof[0][1], roof[1][1]) - 18)
+            pygame.draw.polygon(surface, (78, 84, 92), [roof[0], roof[1], peak])
+            pygame.draw.line(surface, (225, 192, 72), peak, (peak[0], peak[1] - 12), 2)
+            return
+
+        keep = rect.inflate(-18, -10)
+        keep.height = max(keep.height, rect.height - 10)
+        keep.x = rect.x + 9
+        keep.y = rect.y + 4
+        left_tower = pygame.Rect(rect.x, rect.y + 8, max(34, rect.width // 5), rect.height - 12)
+        right_tower = pygame.Rect(rect.right - max(34, rect.width // 5), rect.y + 8, max(34, rect.width // 5), rect.height - 12)
+        gate = pygame.Rect(rect.centerx - max(16, rect.width // 10), rect.bottom - max(28, rect.height // 4), max(32, rect.width // 5), max(24, rect.height // 4))
+
+        self.draw_iso_prism(
+            surface,
+            keep,
+            height=max(40, rect.height // 3),
+            top_color=(170, 174, 180),
+            left_color=(104, 112, 120),
+            right_color=(126, 132, 138),
+        )
+        self.draw_iso_prism(
+            surface,
+            left_tower,
+            height=max(50, rect.height // 2),
+            top_color=(162, 168, 174),
+            left_color=(96, 104, 112),
+            right_color=(118, 126, 132),
+        )
+        self.draw_iso_prism(
+            surface,
+            right_tower,
+            height=max(50, rect.height // 2),
+            top_color=(162, 168, 174),
+            left_color=(96, 104, 112),
+            right_color=(118, 126, 132),
+        )
+        self.draw_iso_prism(
+            surface,
+            gate,
+            height=max(18, rect.height // 8),
+            top_color=(138, 112, 84),
+            left_color=(92, 74, 56),
+            right_color=(110, 88, 66),
+        )
+
+        roof_points = self.iso_rect_poly(keep)
+        roof_peak = ((roof_points[0][0] + roof_points[1][0]) // 2, min(roof_points[0][1], roof_points[1][1]) - 20)
+        pygame.draw.polygon(surface, (118, 82, 72), [roof_points[0], roof_points[1], roof_peak])
+        for tower in (left_tower, right_tower):
+            tower_roof = self.iso_rect_poly(tower)
+            tower_peak = ((tower_roof[0][0] + tower_roof[1][0]) // 2, min(tower_roof[0][1], tower_roof[1][1]) - 18)
+            pygame.draw.polygon(surface, (92, 72, 84), [tower_roof[0], tower_roof[1], tower_peak])
+            pygame.draw.line(surface, (224, 196, 84), tower_peak, (tower_peak[0], tower_peak[1] - 14), 2)
+
+        gate_center = self.iso_point(gate.centerx, gate.bottom)
+        pygame.draw.rect(surface, (62, 44, 28), pygame.Rect(gate_center[0] - 10, gate_center[1] - 24, 20, 26))
+        pygame.draw.rect(surface, (208, 208, 196), pygame.Rect(gate_center[0] - 4, gate_center[1] - 20, 8, 18))
 
     def draw_seeded_terrain(self) -> None:
         for i in range(len(self.river_points) - 1):
@@ -1261,6 +1356,8 @@ class Game:
                 pygame.draw.circle(self.screen, color, stem_top, max(2, size // 2))
 
         drawables: list[tuple[int, str, pygame.Rect, int]] = []
+        for kind, building_rect in self.rare_buildings:
+            drawables.append((building_rect.bottom, kind, building_rect, -1))
         for i, _tree in enumerate(self.trees):
             tree_rect = self.get_tree_rect(i)
             drawables.append((tree_rect.bottom, "tree", tree_rect, i))
@@ -1365,6 +1462,8 @@ class Game:
                 front = self.iso_point(rect.centerx, rect.centery + 12)
                 pygame.draw.circle(self.screen, (255, 118, 42), front, 7)
                 pygame.draw.circle(self.screen, (255, 205, 92), front, 3)
+            elif kind in ("castle", "tower"):
+                self.draw_rare_building(self.screen, rect, kind)
             elif kind == "player":
                 if self.player_sprite is not None:
                     px, py = self.iso_point(rect.centerx, rect.centery)
