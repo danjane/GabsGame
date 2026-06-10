@@ -241,3 +241,7 @@ Notes:
 - `2026-06-10 | TurnID: S-069`
   - Prompt: "could you make the boundaries further away"
   - AI summary: Made the world edges farther away by increasing `WORLD_WIDTH` and `WORLD_HEIGHT` in `config.py`; modeled `edges` as the clearer word for the world boundaries.
+
+- `2026-06-10 | TurnID: S-070`
+  - Prompt: "could you put hills wer  you animate the characters to go up and down"
+  - AI summary: Added hill elevation offsets in `game.py` so player and animal sprites rise and fall as they move across hills; modeled `where` as the clearer spelling.

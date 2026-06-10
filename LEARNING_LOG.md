@@ -370,6 +370,20 @@ Template:
 - Spelling/wording correction (if any): Modeled `edges` as the clearer word.
 - Spelling/wording follow-up check: Which word is clearer here, `edges` or `boundaries`?
 - Spelling/wording outcome: Pending
+
+### 2026-06-10
+- File focus: `game.py`
+- Python concept: A helper function can return a number that other code uses to adjust drawing. `hill_height_at()` returns how high the sprite should lift on a hill.
+- Check question: What does `hill_height_at()` return? A. A lift amount B. A tree sprite C. A key press
+- Child answer summary: Pending
+- Correct/incorrect: practicing
+- What correction was given: Modeled `where` instead of `wer`.
+- Did progress continue: yes
+- Next level adjustment: Keep helper-function questions tied to one clear return value.
+- Circle-back topic (if needed): Helper functions and return values in `game.py`
+- Spelling/wording correction (if any): Modeled `where` as the clearer spelling.
+- Spelling/wording follow-up check: Which spelling is right, `where` or `wer`?
+- Spelling/wording outcome: Pending
 - Circle-back topic (if needed): Random seeds in world generation.
 - Spelling/wording correction (if any): Modeled "Do you know..." instead of "do you now...".
 - Spelling/wording follow-up check: Which word fits? A. `know` B. `now`

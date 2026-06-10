@@ -459,6 +459,26 @@ class Game:
         sy = int((dx + dy) * self.iso_scale_y + HEIGHT * 0.48)
         return sx, sy
 
+    def hill_height_at(self, wx: float, wy: float) -> int:
+        highest = 0
+        for hill in self.hills:
+            if not hill.collidepoint(int(wx), int(wy)):
+                continue
+
+            center_x = hill.centerx
+            center_y = hill.centery
+            half_w = max(1.0, hill.width / 2)
+            half_h = max(1.0, hill.height / 2)
+            dx = abs(wx - center_x) / half_w
+            dy = abs(wy - center_y) / half_h
+            distance = min(1.0, (dx + dy) / 2.0)
+            hill_height = max(14, hill.height // 7)
+            lift = int(round(hill_height * (1.0 - distance) * 0.9))
+            if lift > highest:
+                highest = lift
+
+        return highest
+
     def iso_rect_poly(self, rect: pygame.Rect) -> list[tuple[int, int]]:
         tl = self.iso_point(rect.left, rect.top)
         tr = self.iso_point(rect.right, rect.top)
@@ -1319,7 +1339,8 @@ class Game:
                         sprite = pygame.transform.flip(sprite, True, False)
                     px, py = self.iso_point(rect.centerx, rect.bottom)
                     bob = int(math.sin(float(animal["anim_time"]) * 8.0) * 2)
-                    self.screen.blit(sprite, (px - sprite.get_width() // 2, py - sprite.get_height() + 8 + bob))
+                    hill_lift = self.hill_height_at(rect.centerx, rect.bottom)
+                    self.screen.blit(sprite, (px - sprite.get_width() // 2, py - sprite.get_height() + 8 + bob - hill_lift))
             elif kind == "house":
                 self.draw_iso_prism(
                     self.screen,
@@ -1358,7 +1379,8 @@ class Game:
                         sprite = pygame.transform.smoothscale(sprite, (new_w, new_h))
                     # Anchor sprite so feet align near the character's world position.
                     sx = px - sprite.get_width() // 2
-                    sy = py - sprite.get_height() + 22 + walk_bob
+                    hill_lift = self.hill_height_at(rect.centerx, rect.centery)
+                    sy = py - sprite.get_height() + 22 + walk_bob - hill_lift
                     self.screen.blit(sprite, (sx, sy))
                 else:
                     self.draw_iso_prism(
@@ -1399,11 +1421,12 @@ class Game:
             if self.player_facing_left:
                 sprite = pygame.transform.flip(sprite, True, False)
             walk_bob = int(math.sin(self.player_anim_time * 12.0) * 4) if self.player_is_moving else 0
+            hill_lift = self.hill_height_at(self.indoor_player.centerx, self.indoor_player.centery)
             self.screen.blit(
                 sprite,
                 (
                     self.indoor_player.centerx - sprite.get_width() // 2,
-                    self.indoor_player.bottom - sprite.get_height() + 22 + walk_bob,
+                    self.indoor_player.bottom - sprite.get_height() + 22 + walk_bob - hill_lift,
                 ),
             )
         else:
