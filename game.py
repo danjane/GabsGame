@@ -90,7 +90,6 @@ class Game:
             self.river_points,
             self.river_widths,
             self.hills,
-            self.grass_patches,
             self.flower_patches,
             self.reed_patches,
             self.pebble_patches,
@@ -241,7 +240,6 @@ class Game:
     def load_terrain_sprites(self) -> None:
         terrain_dir = "assets/sprites/terrain"
         names = {
-            "grass": "grass_patch.png",
             "reeds": "reeds.png",
             "pebbles": "pebble_cluster.png",
         }
@@ -356,14 +354,6 @@ class Game:
             if not hill.colliderect(home_buffer):
                 hills.append(hill)
 
-        grass_patches: list[tuple[int, int, int]] = []
-        for _ in range(55):
-            x = self.terrain_rng.randint(50, WORLD_WIDTH - 50)
-            y = self.terrain_rng.randint(100, WORLD_HEIGHT - 100)
-            radius = self.terrain_rng.randint(14, 34)
-            if not home_buffer.collidepoint(x, y):
-                grass_patches.append((x, y, radius))
-
         flower_patches: list[tuple[int, int, int]] = []
         for _ in range(28):
             x = self.terrain_rng.randint(50, WORLD_WIDTH - 50)
@@ -408,7 +398,6 @@ class Game:
             river_points,
             river_widths,
             hills,
-            grass_patches,
             flower_patches,
             reed_patches,
             pebble_patches,
@@ -551,19 +540,6 @@ class Game:
         pygame.draw.polygon(surface, rim_color, [edge30, top[0], edge01, edge12, top[2], edge23], 1)
 
     def draw_seeded_terrain(self) -> None:
-        for x, y, radius in self.grass_patches:
-            px, py = self.iso_point(x, y)
-            grass_sprite = self.terrain_sprites.get("grass")
-            if isinstance(grass_sprite, pygame.Surface):
-                scaled = pygame.transform.smoothscale(grass_sprite, (radius * 2, max(10, radius // 2)))
-                self.screen.blit(scaled, (px - scaled.get_width() // 2, py - scaled.get_height() // 2))
-            else:
-                pygame.draw.ellipse(
-                    self.screen,
-                    (42, 128, 48),
-                    (px - radius, py - max(5, radius // 3), radius * 2, max(10, radius // 2)),
-                )
-
         for i in range(len(self.river_points) - 1):
             start = self.iso_point(*self.river_points[i])
             end = self.iso_point(*self.river_points[i + 1])

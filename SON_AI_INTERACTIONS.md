@@ -221,3 +221,7 @@ Notes:
 - `2026-06-10 | TurnID: S-064`
   - Prompt: "could you hide the brown patches and the sand ones to"
   - AI summary: Removed the brown dirt patches and sand bars from `game.py` terrain loading, generation, and drawing; modeled `too` as the clearer word for “also”.
+
+- `2026-06-10 | TurnID: S-065`
+  - Prompt: "the dark green ones too"
+  - AI summary: Removed the dark green grass patches from `game.py` terrain loading, generation, and drawing; kept the rest of the terrain layers intact.

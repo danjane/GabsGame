@@ -300,6 +300,20 @@ Template:
 - Spelling/wording correction (if any): Modeled `too` for "also".
 - Spelling/wording follow-up check: Which word means "also" here, `too` or `to`?
 - Spelling/wording outcome: Pending
+
+### 2026-06-10
+- File focus: `game.py`
+- Python concept: Unpacking a returned tuple only works when the left side has the same number of targets as the function returns values.
+- Check question: If `create_terrain_features()` stops returning `grass_patches`, should the unpacking still expect `grass_patches`? A. Yes B. No
+- Child answer summary: Pending
+- Correct/incorrect: practicing
+- What correction was given: Modeled `too` instead of `to` because you meant "also".
+- Did progress continue: yes
+- Next level adjustment: Keep tuple-unpacking checks tied to one removed return value at a time.
+- Circle-back topic (if needed): Tuple unpacking in `game.py`
+- Spelling/wording correction (if any): Modeled `too` for "also".
+- Spelling/wording follow-up check: Which word means "also" here, `too` or `to`?
+- Spelling/wording outcome: Pending
 - Circle-back topic (if needed): Random seeds in world generation.
 - Spelling/wording correction (if any): Modeled "Do you know..." instead of "do you now...".
 - Spelling/wording follow-up check: Which word fits? A. `know` B. `now`
