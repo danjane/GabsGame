@@ -328,6 +328,20 @@ Template:
 - Spelling/wording correction (if any): Modeled `stuff` as the clearer spelling.
 - Spelling/wording follow-up check: Which spelling is right, `stuff` or `stuf`?
 - Spelling/wording outcome: Pending
+
+### 2026-06-10
+- File focus: `config.py`
+- Python concept: One constant can drive a whole feature; `WORLD_WIDTH` controls how wide the world is everywhere it is used.
+- Check question: Which constant makes the world wider? A. `WORLD_WIDTH` B. `WORLD_HEIGHT` C. `FPS`
+- Child answer summary: Pending
+- Correct/incorrect: practicing
+- What correction was given: None.
+- Did progress continue: yes
+- Next level adjustment: Keep constant questions tied to the exact setting they change.
+- Circle-back topic (if needed): Constants in `config.py`
+- Spelling/wording correction (if any): None.
+- Spelling/wording follow-up check: None.
+- Spelling/wording outcome: None.
 - Circle-back topic (if needed): Random seeds in world generation.
 - Spelling/wording correction (if any): Modeled "Do you know..." instead of "do you now...".
 - Spelling/wording follow-up check: Which word fits? A. `know` B. `now`
