@@ -286,6 +286,20 @@ Template:
 - Spelling/wording correction (if any): Modeled `meadow patches` as the clearer phrase.
 - Spelling/wording follow-up check: Which phrase is clearer for the ground ovals, `meadow patches` or `light patches`?
 - Spelling/wording outcome: Pending
+
+### 2026-06-10
+- File focus: `game.py`
+- Python concept: If a function returns a tuple with fewer items, the left-side unpacking must shrink too; otherwise Python cannot match the values.
+- Check question: If `create_terrain_features()` stops returning `dirt_patches` and `sand_bars`, should the unpacking still expect them? A. Yes B. No
+- Child answer summary: Pending
+- Correct/incorrect: practicing
+- What correction was given: Modeled `too` instead of `to` because the request means "also".
+- Did progress continue: yes
+- Next level adjustment: Keep tuple-unpacking examples concrete and tied to removed return values.
+- Circle-back topic (if needed): Tuple unpacking in `game.py`
+- Spelling/wording correction (if any): Modeled `too` for "also".
+- Spelling/wording follow-up check: Which word means "also" here, `too` or `to`?
+- Spelling/wording outcome: Pending
 - Circle-back topic (if needed): Random seeds in world generation.
 - Spelling/wording correction (if any): Modeled "Do you know..." instead of "do you now...".
 - Spelling/wording follow-up check: Which word fits? A. `know` B. `now`

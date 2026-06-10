@@ -217,3 +217,7 @@ Notes:
 - `2026-06-10 | TurnID: S-063`
   - Prompt: "can you delete the ovals on the ground (light patches…)"
   - AI summary: Removed the meadow patch ovals from `game.py` terrain generation and drawing; recorded the clearer wording `meadow patches` for those ground shapes.
+
+- `2026-06-10 | TurnID: S-064`
+  - Prompt: "could you hide the brown patches and the sand ones to"
+  - AI summary: Removed the brown dirt patches and sand bars from `game.py` terrain loading, generation, and drawing; modeled `too` as the clearer word for “also”.

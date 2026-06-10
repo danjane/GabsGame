@@ -92,8 +92,6 @@ class Game:
             self.hills,
             self.grass_patches,
             self.flower_patches,
-            self.dirt_patches,
-            self.sand_bars,
             self.reed_patches,
             self.pebble_patches,
             self.shore_stones,
@@ -244,8 +242,6 @@ class Game:
         terrain_dir = "assets/sprites/terrain"
         names = {
             "grass": "grass_patch.png",
-            "dirt": "dirt_patch.png",
-            "sand": "sand_bar.png",
             "reeds": "reeds.png",
             "pebbles": "pebble_cluster.png",
         }
@@ -376,25 +372,6 @@ class Game:
             if not home_buffer.collidepoint(x, y):
                 flower_patches.append((x, y, color_index))
 
-        dirt_patches: list[tuple[int, int, int]] = []
-        for _ in range(18):
-            x = self.terrain_rng.randint(80, WORLD_WIDTH - 80)
-            y = self.terrain_rng.randint(120, WORLD_HEIGHT - 120)
-            radius = self.terrain_rng.randint(18, 42)
-            if not home_buffer.collidepoint(x, y):
-                dirt_patches.append((x, y, radius))
-
-        sand_bars: list[tuple[int, int, int]] = []
-        for x, y in river_points[1:-1]:
-            if self.terrain_rng.random() < 0.7:
-                sand_bars.append(
-                    (
-                        x + self.terrain_rng.randint(-70, 70),
-                        y + self.terrain_rng.choice((-1, 1)) * self.terrain_rng.randint(18, 36),
-                        self.terrain_rng.randint(18, 36),
-                    )
-                )
-
         reed_patches: list[tuple[int, int, int]] = []
         for x, y in river_points[1:-1]:
             for side in (-1, 1):
@@ -433,8 +410,6 @@ class Game:
             hills,
             grass_patches,
             flower_patches,
-            dirt_patches,
-            sand_bars,
             reed_patches,
             pebble_patches,
             shore_stones,
@@ -576,19 +551,6 @@ class Game:
         pygame.draw.polygon(surface, rim_color, [edge30, top[0], edge01, edge12, top[2], edge23], 1)
 
     def draw_seeded_terrain(self) -> None:
-        for x, y, radius in self.dirt_patches:
-            px, py = self.iso_point(x, y)
-            dirt_sprite = self.terrain_sprites.get("dirt")
-            if isinstance(dirt_sprite, pygame.Surface):
-                scaled = pygame.transform.smoothscale(dirt_sprite, (radius * 2, max(12, radius // 2)))
-                self.screen.blit(scaled, (px - scaled.get_width() // 2, py - scaled.get_height() // 2))
-            else:
-                pygame.draw.ellipse(
-                    self.screen,
-                    (126, 112, 70),
-                    (px - radius, py - max(6, radius // 4), radius * 2, max(12, radius // 2)),
-                )
-
         for x, y, radius in self.grass_patches:
             px, py = self.iso_point(x, y)
             grass_sprite = self.terrain_sprites.get("grass")
@@ -614,19 +576,6 @@ class Game:
 
         for stone in self.shore_stones:
             self.draw_iso_rock(self.screen, stone)
-
-        for x, y, radius in self.sand_bars:
-            px, py = self.iso_point(x, y)
-            sand_sprite = self.terrain_sprites.get("sand")
-            if isinstance(sand_sprite, pygame.Surface):
-                scaled = pygame.transform.smoothscale(sand_sprite, (radius * 2, max(10, radius // 2)))
-                self.screen.blit(scaled, (px - scaled.get_width() // 2, py - scaled.get_height() // 2))
-            else:
-                pygame.draw.ellipse(
-                    self.screen,
-                    (171, 148, 91),
-                    (px - radius, py - max(5, radius // 4), radius * 2, max(10, radius // 2)),
-                )
 
         for x, y, count in self.reed_patches:
             px, py = self.iso_point(x, y)
