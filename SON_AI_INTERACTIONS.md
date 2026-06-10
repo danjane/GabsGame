@@ -205,3 +205,11 @@ Notes:
 - `2026-05-31 | TurnID: S-060`
   - Prompt: "take sprits of evry fing you added now and add them to the game"
   - AI summary: Generated project-local terrain PNG sprites for meadow, grass, dirt, sand, reeds, pebbles, and flowers; updated `game.py` to load them through `load_terrain_sprites()` and draw them with fallbacks; modeled "sprites of everything" instead of "sprits of evry fing".
+
+- `2026-06-10 | TurnID: S-061`
+  - Prompt: "Which spelling is right: `sheep` or `cheep`?"
+  - AI summary: Started the session with a spelling MCQ from the interaction log; correction and answer pending.
+
+- `2026-06-10 | TurnID: S-062`
+  - Prompt: "In `main.py`, what does an import help the file do?"
+  - AI summary: Asked a beginner Python concept check about imports and modules in the entry file; answer pending.

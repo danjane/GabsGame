@@ -258,6 +258,20 @@ Template:
 - What correction was given: Confirmed that `know` is the right word.
 - Did progress continue: yes
 - Next level adjustment: If seeds are added to the game later, tie the concept to `random.seed(...)` in world setup.
+
+### 2026-06-10
+- File focus: `main.py`
+- Python concept: An import lets one file use code from another file or library; `main.py` uses imports to reach the game entry point cleanly.
+- Check question: In `main.py`, what does an `import` help the file do? A. use code from another file B. delete sprites C. change the screen size by itself
+- Child answer summary: Pending
+- Correct/incorrect: practicing
+- What correction was given: Modeled "sheep" instead of "cheep" for the spelling check.
+- Did progress continue: yes
+- Next level adjustment: Keep import checks simple and tied to the entry file.
+- Circle-back topic (if needed): Imports and modules in `main.py`
+- Spelling/wording correction (if any): Modeled `sheep` instead of `cheep`.
+- Spelling/wording follow-up check: Which spelling is right: `sheep` or `cheep`?
+- Spelling/wording outcome: Pending
 - Circle-back topic (if needed): Random seeds in world generation.
 - Spelling/wording correction (if any): Modeled "Do you know..." instead of "do you now...".
 - Spelling/wording follow-up check: Which word fits? A. `know` B. `now`
