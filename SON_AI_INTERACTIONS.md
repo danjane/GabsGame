@@ -245,3 +245,7 @@ Notes:
 - `2026-06-10 | TurnID: S-070`
   - Prompt: "could you put hills wer  you animate the characters to go up and down"
   - AI summary: Added hill elevation offsets in `game.py` so player and animal sprites rise and fall as they move across hills; modeled `where` as the clearer spelling.
+
+- `2026-06-10 | TurnID: S-071`
+  - Prompt: "more animals"
+  - AI summary: Increased `INITIAL_ANIMAL_COUNT` in `config.py` so the world spawns more animals at start.

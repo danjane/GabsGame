@@ -384,6 +384,20 @@ Template:
 - Spelling/wording correction (if any): Modeled `where` as the clearer spelling.
 - Spelling/wording follow-up check: Which spelling is right, `where` or `wer`?
 - Spelling/wording outcome: Pending
+
+### 2026-06-10
+- File focus: `config.py`
+- Python concept: A count constant controls how many objects the game creates at start. `INITIAL_ANIMAL_COUNT` sets the first animal population.
+- Check question: Which constant controls how many animals start in the world? A. `INITIAL_ANIMAL_COUNT` B. `ANIMAL_SPEED` C. `WINDOW_TITLE`
+- Child answer summary: Pending
+- Correct/incorrect: practicing
+- What correction was given: None.
+- Did progress continue: yes
+- Next level adjustment: Keep count questions tied to spawn quantity, not movement speed.
+- Circle-back topic (if needed): Constants in `config.py`
+- Spelling/wording correction (if any): None.
+- Spelling/wording follow-up check: None.
+- Spelling/wording outcome: None.
 - Circle-back topic (if needed): Random seeds in world generation.
 - Spelling/wording correction (if any): Modeled "Do you know..." instead of "do you now...".
 - Spelling/wording follow-up check: Which word fits? A. `know` B. `now`
