@@ -342,6 +342,20 @@ Template:
 - Spelling/wording correction (if any): None.
 - Spelling/wording follow-up check: None.
 - Spelling/wording outcome: None.
+
+### 2026-06-10
+- File focus: `config.py`
+- Python concept: Changing `WORLD_WIDTH` and `WORLD_HEIGHT` changes the size of the world everywhere those constants are used.
+- Check question: Which constant makes the world taller? A. `WORLD_WIDTH` B. `WORLD_HEIGHT` C. `PLAYER_SPEED`
+- Child answer summary: Pending
+- Correct/incorrect: practicing
+- What correction was given: None.
+- Did progress continue: yes
+- Next level adjustment: Keep size questions tied to one direction at a time.
+- Circle-back topic (if needed): Constants in `config.py`
+- Spelling/wording correction (if any): None.
+- Spelling/wording follow-up check: None.
+- Spelling/wording outcome: None.
 - Circle-back topic (if needed): Random seeds in world generation.
 - Spelling/wording correction (if any): Modeled "Do you know..." instead of "do you now...".
 - Spelling/wording follow-up check: Which word fits? A. `know` B. `now`
