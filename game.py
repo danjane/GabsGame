@@ -345,7 +345,7 @@ class Game:
 
         hills: list[pygame.Rect] = []
         home_buffer = self.home_area.inflate(280, 240)
-        while len(hills) < 8:
+        while len(hills) < 12:
             width = self.terrain_rng.randint(170, 340)
             height = self.terrain_rng.randint(100, 210)
             x = self.terrain_rng.randint(40, WORLD_WIDTH - width - 40)
@@ -355,7 +355,7 @@ class Game:
                 hills.append(hill)
 
         flower_patches: list[tuple[int, int, int]] = []
-        for _ in range(28):
+        for _ in range(40):
             x = self.terrain_rng.randint(50, WORLD_WIDTH - 50)
             y = self.terrain_rng.randint(110, WORLD_HEIGHT - 110)
             color_index = self.terrain_rng.randint(0, 3)
@@ -375,7 +375,7 @@ class Game:
                     )
 
         pebble_patches: list[tuple[int, int, int]] = []
-        for _ in range(32):
+        for _ in range(48):
             x = self.terrain_rng.randint(60, WORLD_WIDTH - 60)
             y = self.terrain_rng.randint(110, WORLD_HEIGHT - 110)
             count = self.terrain_rng.randint(3, 6)

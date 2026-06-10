@@ -314,6 +314,20 @@ Template:
 - Spelling/wording correction (if any): Modeled `too` for "also".
 - Spelling/wording follow-up check: Which word means "also" here, `too` or `to`?
 - Spelling/wording outcome: Pending
+
+### 2026-06-10
+- File focus: `config.py`
+- Python concept: Constants are named values that other files can import and reuse; changing `WORLD_WIDTH` and `WORLD_HEIGHT` makes the whole world bigger in one place.
+- Check question: In `config.py`, what do constants help keep in one place? A. Tunable values B. Only images C. Only loops
+- Child answer summary: Pending
+- Correct/incorrect: practicing
+- What correction was given: Modeled `stuff` instead of `stuf`.
+- Did progress continue: yes
+- Next level adjustment: Keep constant examples tied to visible game settings like world size and spawn counts.
+- Circle-back topic (if needed): Constants in `config.py`
+- Spelling/wording correction (if any): Modeled `stuff` as the clearer spelling.
+- Spelling/wording follow-up check: Which spelling is right, `stuff` or `stuf`?
+- Spelling/wording outcome: Pending
 - Circle-back topic (if needed): Random seeds in world generation.
 - Spelling/wording correction (if any): Modeled "Do you know..." instead of "do you now...".
 - Spelling/wording follow-up check: Which word fits? A. `know` B. `now`
