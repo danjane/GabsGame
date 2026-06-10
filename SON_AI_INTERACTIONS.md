@@ -253,3 +253,7 @@ Notes:
 - `2026-06-10 | TurnID: S-072`
   - Prompt: "could you put buildings (castles...) that are rare"
   - AI summary: Added rare castle and tower buildings to `game.py` terrain generation and drawing, with spawn limits controlled by `config.py`.
+
+- `2026-06-10 | TurnID: S-073`
+  - Prompt: "more realistic"
+  - AI summary: Improved the rare castle and tower drawing in `game.py` with battlements, windows, roof detail, and stronger stone styling.

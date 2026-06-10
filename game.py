@@ -583,76 +583,105 @@ class Game:
         pygame.draw.polygon(surface, rim_color, [edge30, top[0], edge01, edge12, top[2], edge23], 1)
 
     def draw_rare_building(self, surface: pygame.Surface, rect: pygame.Rect, kind: str) -> None:
+        def draw_windows(target: pygame.Surface, base_rect: pygame.Rect, count: int = 2) -> None:
+            if count <= 0:
+                return
+            spacing = base_rect.width // (count + 1)
+            for i in range(count):
+                wx = base_rect.left + spacing * (i + 1)
+                wy = base_rect.top + base_rect.height // 2
+                px, py = self.iso_point(wx, wy)
+                pygame.draw.rect(target, (58, 42, 28), pygame.Rect(px - 3, py - 10, 6, 14))
+
+        def draw_battlements(target: pygame.Surface, base_rect: pygame.Rect, step: int = 22) -> None:
+            base = self.iso_rect_poly(base_rect)
+            top_left = base[0]
+            top_right = base[1]
+            span = max(1, top_right[0] - top_left[0])
+            num = max(2, span // step)
+            for i in range(num + 1):
+                x = top_left[0] + int(span * i / max(1, num))
+                pygame.draw.rect(target, (210, 214, 220), pygame.Rect(x - 3, top_left[1] - 10, 6, 8))
+
+        shadow = [(x + 10, y + 10) for x, y in self.iso_rect_poly(rect)]
+        pygame.draw.polygon(surface, (20, 58, 24), shadow)
+
         if kind == "tower":
-            body = rect.inflate(-max(16, rect.width // 3), 0)
+            body = rect.inflate(-max(18, rect.width // 3), 0)
             body.x = rect.x + rect.width // 2 - body.width // 2
             self.draw_iso_prism(
                 surface,
                 body,
                 height=max(34, rect.height // 2),
-                top_color=(158, 164, 170),
-                left_color=(92, 100, 108),
-                right_color=(112, 120, 128),
+                top_color=(178, 182, 186),
+                left_color=(104, 110, 118),
+                right_color=(124, 130, 136),
             )
+            draw_battlements(surface, body, step=16)
             roof = self.iso_rect_poly(body)
-            peak = ((roof[0][0] + roof[1][0]) // 2, min(roof[0][1], roof[1][1]) - 18)
-            pygame.draw.polygon(surface, (78, 84, 92), [roof[0], roof[1], peak])
-            pygame.draw.line(surface, (225, 192, 72), peak, (peak[0], peak[1] - 12), 2)
+            peak = ((roof[0][0] + roof[1][0]) // 2, min(roof[0][1], roof[1][1]) - 16)
+            pygame.draw.polygon(surface, (96, 102, 110), [roof[0], roof[1], peak])
+            pygame.draw.line(surface, (208, 196, 138), peak, (peak[0], peak[1] - 12), 2)
+            draw_windows(surface, body, count=2)
             return
 
-        keep = rect.inflate(-18, -10)
-        keep.height = max(keep.height, rect.height - 10)
-        keep.x = rect.x + 9
+        keep = rect.inflate(-20, -12)
+        keep.height = max(keep.height, rect.height - 12)
+        keep.x = rect.x + 10
         keep.y = rect.y + 4
-        left_tower = pygame.Rect(rect.x, rect.y + 8, max(34, rect.width // 5), rect.height - 12)
-        right_tower = pygame.Rect(rect.right - max(34, rect.width // 5), rect.y + 8, max(34, rect.width // 5), rect.height - 12)
-        gate = pygame.Rect(rect.centerx - max(16, rect.width // 10), rect.bottom - max(28, rect.height // 4), max(32, rect.width // 5), max(24, rect.height // 4))
+        left_tower = pygame.Rect(rect.x + 2, rect.y + 8, max(38, rect.width // 5), rect.height - 14)
+        right_tower = pygame.Rect(rect.right - max(40, rect.width // 5) - 2, rect.y + 8, max(38, rect.width // 5), rect.height - 14)
+        gate = pygame.Rect(rect.centerx - max(18, rect.width // 10), rect.bottom - max(30, rect.height // 4), max(36, rect.width // 5), max(26, rect.height // 4))
 
         self.draw_iso_prism(
             surface,
             keep,
             height=max(40, rect.height // 3),
-            top_color=(170, 174, 180),
-            left_color=(104, 112, 120),
-            right_color=(126, 132, 138),
+            top_color=(182, 186, 190),
+            left_color=(110, 118, 126),
+            right_color=(132, 138, 144),
         )
         self.draw_iso_prism(
             surface,
             left_tower,
             height=max(50, rect.height // 2),
-            top_color=(162, 168, 174),
-            left_color=(96, 104, 112),
-            right_color=(118, 126, 132),
+            top_color=(176, 180, 186),
+            left_color=(100, 108, 116),
+            right_color=(120, 128, 134),
         )
         self.draw_iso_prism(
             surface,
             right_tower,
             height=max(50, rect.height // 2),
-            top_color=(162, 168, 174),
-            left_color=(96, 104, 112),
-            right_color=(118, 126, 132),
+            top_color=(176, 180, 186),
+            left_color=(100, 108, 116),
+            right_color=(120, 128, 134),
         )
         self.draw_iso_prism(
             surface,
             gate,
             height=max(18, rect.height // 8),
-            top_color=(138, 112, 84),
-            left_color=(92, 74, 56),
-            right_color=(110, 88, 66),
+            top_color=(124, 96, 70),
+            left_color=(82, 64, 46),
+            right_color=(102, 80, 58),
         )
 
         roof_points = self.iso_rect_poly(keep)
-        roof_peak = ((roof_points[0][0] + roof_points[1][0]) // 2, min(roof_points[0][1], roof_points[1][1]) - 20)
-        pygame.draw.polygon(surface, (118, 82, 72), [roof_points[0], roof_points[1], roof_peak])
+        roof_peak = ((roof_points[0][0] + roof_points[1][0]) // 2, min(roof_points[0][1], roof_points[1][1]) - 18)
+        pygame.draw.polygon(surface, (104, 110, 116), [roof_points[0], roof_points[1], roof_peak])
+        draw_battlements(surface, keep, step=18)
+        draw_windows(surface, keep, count=3)
         for tower in (left_tower, right_tower):
             tower_roof = self.iso_rect_poly(tower)
-            tower_peak = ((tower_roof[0][0] + tower_roof[1][0]) // 2, min(tower_roof[0][1], tower_roof[1][1]) - 18)
-            pygame.draw.polygon(surface, (92, 72, 84), [tower_roof[0], tower_roof[1], tower_peak])
-            pygame.draw.line(surface, (224, 196, 84), tower_peak, (tower_peak[0], tower_peak[1] - 14), 2)
+            tower_peak = ((tower_roof[0][0] + tower_roof[1][0]) // 2, min(tower_roof[0][1], tower_roof[1][1]) - 16)
+            pygame.draw.polygon(surface, (98, 102, 112), [tower_roof[0], tower_roof[1], tower_peak])
+            draw_battlements(surface, tower, step=14)
+            pygame.draw.line(surface, (214, 196, 132), tower_peak, (tower_peak[0], tower_peak[1] - 14), 2)
+            draw_windows(surface, tower, count=2)
 
         gate_center = self.iso_point(gate.centerx, gate.bottom)
-        pygame.draw.rect(surface, (62, 44, 28), pygame.Rect(gate_center[0] - 10, gate_center[1] - 24, 20, 26))
-        pygame.draw.rect(surface, (208, 208, 196), pygame.Rect(gate_center[0] - 4, gate_center[1] - 20, 8, 18))
+        pygame.draw.rect(surface, (52, 36, 24), pygame.Rect(gate_center[0] - 10, gate_center[1] - 24, 20, 26))
+        pygame.draw.rect(surface, (206, 206, 194), pygame.Rect(gate_center[0] - 4, gate_center[1] - 20, 8, 18))
 
     def draw_seeded_terrain(self) -> None:
         for i in range(len(self.river_points) - 1):

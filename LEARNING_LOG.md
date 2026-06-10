@@ -412,6 +412,20 @@ Template:
 - Spelling/wording correction (if any): None.
 - Spelling/wording follow-up check: None.
 - Spelling/wording outcome: None.
+
+### 2026-06-10
+- File focus: `game.py`
+- Python concept: A helper function can group repeated drawing steps, so the main drawing code stays shorter and easier to read.
+- Check question: What does a helper like `draw_battlements()` help the code do? A. Reuse drawing steps B. Start the game C. Change the seed
+- Child answer summary: Pending
+- Correct/incorrect: practicing
+- What correction was given: None.
+- Did progress continue: yes
+- Next level adjustment: Keep helper-function checks tied to repeated drawing work.
+- Circle-back topic (if needed): Helper functions in `game.py`
+- Spelling/wording correction (if any): None.
+- Spelling/wording follow-up check: None.
+- Spelling/wording outcome: None.
 - Circle-back topic (if needed): Random seeds in world generation.
 - Spelling/wording correction (if any): Modeled "Do you know..." instead of "do you now...".
 - Spelling/wording follow-up check: Which word fits? A. `know` B. `now`
